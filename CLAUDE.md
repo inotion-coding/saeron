@@ -1,7 +1,7 @@
-# {{PROJECT_NAME}} - Claude Configuration
+# 새론학원 홈페이지 - Claude Configuration
 
-> {{ONE_LINE_PROJECT_DESCRIPTION}}
-<!-- 예: "JSON 설정 파일 기반 AI 패션 룩북 이미지 생성 프로젝트" -->
+> 입시/종합 "새론학원"의 공식 소개 웹사이트 — 학원 정보 전달 및 상담 문의 유도 (Next.js + TypeScript + Tailwind)
+> 개발 절차는 [PROCESS.md](PROCESS.md), 디자인 시스템은 [DESIGN.md](DESIGN.md) 참조.
 > 이 문서의 규칙은 Claude Code뿐 아니라 Codex CLI(및 이 프로젝트 내에서 사용하는 다른 AI 코드 도우미)에도 동일하게 적용됩니다.
 
 ---
@@ -10,11 +10,12 @@
 
 **MANDATORY: Always verify related files and code before providing any code solutions**
 
-<!-- 작성 가이드: 이 프로젝트가 무엇을 하는지 3~5개 항목으로. 기술 스택/언어/핵심 특징 위주 -->
-- {{CORE_PURPOSE}}              <!-- 예: AI-powered fashion lookbook image generation -->
-- {{TECH_OR_FORMAT}}            <!-- 예: JSON-based prompt and parameter definitions -->
-- {{KEY_FEATURE_1}}            <!-- 예: Multi-language support (English/Korean) -->
-- {{KEY_FEATURE_2}}            <!-- 예: Template-based layout system -->
+- **목적**: 입시/종합 "새론학원" 소개 웹사이트 — 학원 정보(소개·강사·프로그램·시간표) 전달 + 상담 문의 유도
+- **스택**: Next.js (App Router) + React + TypeScript + Tailwind CSS, 폰트 Pretendard(후보)
+- **페이지**: 메인(상단바·공지·하단바) / 학원 소개 / 프로그램 / 수업 시간표 / 상담·문의 / 강사 소개
+- **핵심 특징 1**: 모든 기기 폭(320~1920px)에서 깨지지 않는 **유동(fluid) 반응형** 레이아웃 (PROCESS.md §3-1)
+- **핵심 특징 2**: **색상 토큰 기반** 디자인 시스템 — 색상 값은 추후 확정, 토큰만 교체 (DESIGN.md §2)
+- **콘텐츠**: 강사·프로그램·시간표·공지는 `lib/data/*` 더미로 시작해 실제 정보로 교체
 
 ---
 
@@ -24,8 +25,26 @@
      초기 구성은 프로젝트 시작 시 자유롭게 작성하고, 아래 갱신 규칙을 반드시 따를 것 -->
 
 ```
-{{프로젝트 구조를 여기에 기록 — 아직 비어 있다면 첫 구성 시 작성}}
+.
+├── app/                      # Next.js App Router 라우트 (page.tsx 등은 각 단계에서 생성)
+│   ├── about/                # 학원 소개 (2단계)
+│   ├── teachers/             # 강사 소개 (6단계)
+│   ├── programs/             # 프로그램 (3단계)
+│   ├── schedule/             # 수업 시간표 (4단계)
+│   └── contact/              # 상담·문의 (5단계)
+├── components/
+│   ├── layout/               # Container, Section, Header(상단바), Footer(하단바·사업자정보)
+│   └── ui/                   # Button, Badge 등 공용 UI
+│   # NoticeBar, TeacherCard, ProgramCard, ScheduleTable, ContactForm 등은 해당 단계에서 추가
+├── lib/
+│   └── data/                 # site.ts(학원·사업자정보), notices/teachers/programs/schedule (더미)
+├── public/                   # 이미지·정적 자산
+├── CLAUDE.md                 # 작업 규칙 (본 문서)
+├── PROCESS.md                # 개발 절차·로드맵
+├── DESIGN.md                 # 디자인 시스템
+└── .gitignore
 ```
+> 현재는 디렉토리 스켈레톤 단계. Next.js 스캐폴딩(`create-next-app`) 및 각 파일은 PROCESS.md 단계대로 추가되며, 추가 시 위 구조를 갱신한다.
 
 ### 📌 File Structure 갱신 규칙 (MANDATORY)
 
@@ -75,8 +94,7 @@
 **CRITICAL: 파일 수정 시 반드시 백업 생성 필수**
 **APPLIES TO: Claude Code, Codex CLI, 그리고 파일을 직접/간접으로 수정하는 모든 AI 코드 도우미**
 
-<!-- 작성 가이드: 백업이 특히 중요한 파일/디렉토리가 있으면 아래에 명시. 없으면 "모든 수정 대상 파일" 유지 -->
-**백업 필수 대상**: {{CRITICAL_FILES_OR_DIRS}}   <!-- 예: 설정 파일 전체, /config/*.json. 미지정 시 모든 수정 파일 -->
+**백업 필수 대상**: `CLAUDE.md` / `PROCESS.md` / `DESIGN.md`, `lib/data/*.ts`(콘텐츠·사업자정보), 그 외 모든 수정 대상 파일
 
 #### 백업 파일 명명 규칙
 ```bash
@@ -167,7 +185,7 @@ auto_activation:
 ```yaml
 auto_activation:
   keywords: ["주석", "comment", "JSDoc", "코멘트", "문서화"]
-  file_patterns: {{대상 확장자}}   # 예: ["*.js", "*.ts", "*.py"]
+  file_patterns: ["*.tsx", "*.ts", "*.css"]
 ```
 
 ##### 4. VERSION_RULES.md - 버전 생성 규칙
@@ -185,7 +203,8 @@ auto_activation:
 "백업 파일들을 정리하자"               → CLEANUP_RULES.md 활성화
 "디렉토리 삭제해"                     → DIRECTORY_DELETE_RULES.md 활성화
 "파일명 버전을 생성해"                 → VERSION_RULES.md 활성화
-{{프로젝트 고유 트리거 문구}}          → {{CUSTOM_RULE}}.md 활성화
+"반응형/유동 레이아웃 점검해"          → PROCESS.md §3-1 + DESIGN.md §7 규칙 적용
+"색상/디자인 토큰 적용해"              → DESIGN.md §2 (hex 직접 사용 금지, 토큰만)
 ```
 
 #### 자동 감지 활성화 (키워드 기반)
@@ -201,7 +220,7 @@ auto_activation:
 
   COMMENT_RULES:
     keywords: ["주석", "comment", "JSDoc", "문서화"]
-    files: {{대상 확장자}}   # 예: ["*.js", "*.py"]
+    files: ["*.tsx", "*.ts", "*.css"]
 
   VERSION_RULES:
     keywords: ["버전 생성", "create version", "새 버전"]
@@ -220,9 +239,9 @@ auto_activation:
 ├── DIRECTORY_DELETE_RULES.md # 🔴 디렉토리 안전 규칙 (CRITICAL)
 ├── COMMENT_RULES.md          # 주석 작성 규칙
 ├── VERSION_RULES.md          # 버전 생성 및 draft 관리 규칙
-├── {{CUSTOM_RULE}}.md        # 🔴 프로젝트 고유 규칙 (선택)
 └── RULES_INDEX.md            # 규칙 인덱스 및 관리
 ```
+> 위 `.claude/rules/` 파일들은 필요 시 생성한다(현재 미생성). 프로젝트 고유 불변 규칙(유동 레이아웃·디자인 토큰·콘텐츠 분리)은 PROCESS.md / DESIGN.md에 정의되어 있다.
 
 ---
 
@@ -233,19 +252,17 @@ auto_activation:
 
 ### Workflow
 
-<!-- 작성 가이드: 입력 → 처리 → 출력 흐름을 단계별로. 각 단계의 입력원과 산출물을 명확히 -->
-1. {{STEP_1}}   <!-- 예: Image 1 (Model) → 포즈/외모 추출 -->
-2. {{STEP_2}}   <!-- 예: Image 2 (Looksheet) → 흰 배경에서 패션 아이템 추출 -->
-3. {{STEP_3}}   <!-- 예: Image 3 (Template) → 레이아웃 구조 적용 -->
-4. {{STEP_N}}
+1. **콘텐츠/데이터**: 공지·강사·프로그램·시간표 등은 `lib/data/*.ts`에 타입과 함께 정의 → 페이지 컴포넌트가 import (UI에 하드코딩 금지)
+2. **디자인 적용**: 디자인 토큰(`--color-*` 등, DESIGN.md §2) → `tailwind.config` 테마 → 컴포넌트 순으로 적용 (색상 hex 직접 사용 금지)
+3. **개발 순서**: PROCESS.md 로드맵대로 — 메인 골격(상단바·공지·하단바) → 학원 소개 → 프로그램 → 시간표 → 상담 → 강사 → 마무리(메인 본문·폼 전송·최적화)
+4. **구조 동기화**: 디렉토리/파일 변경 시 위 File Structure 섹션을 즉시 갱신
 
 ### Critical Rules (도메인 불변 규칙)
 
-<!-- 작성 가이드: 절대 위반하면 안 되는 도메인 제약. "무엇을 보존하고 무엇을 생성 금지하는가" 중심 -->
-- {{INVARIANT_1}}   <!-- 예: Image 1의 모델 포즈/외모는 완벽히 보존 -->
-- {{INVARIANT_2}}   <!-- 예: Image 1에 보이는 아이템만 출력에 포함 -->
-- {{INVARIANT_3}}   <!-- 예: 아이템은 생성이 아니라 Image 2에서 추출 -->
-- {{INVARIANT_4}}   <!-- 예: 레이아웃은 Image 3 템플릿 구조를 따름 -->
+- **유동 반응형 불변**: 320~1920px 전 구간에서 레이아웃이 깨지지 않아야 함. 고정 px 폭·브레이크포인트 점프 의존 금지 (PROCESS.md §3-1)
+- **색상 토큰만 사용**: 컴포넌트에 hex 색상 직접 작성 금지. `--color-*` 토큰/시맨틱 클래스만 사용 (DESIGN.md §2)
+- **콘텐츠 분리**: 페이지/컴포넌트에 콘텐츠 하드코딩 금지. 반드시 `lib/data`에서 주입
+- **사업자 정보 단일 출처**: 상호·대표자·사업자등록번호·연락처 등은 `lib/data/site.ts`에만 두고 Footer가 참조. 임의 값 생성·변경 금지(실제 값 확보 시에만 교체)
 
 ---
 
@@ -303,19 +320,20 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - [ ] ✅ Read/Grep로 연관 파일 확인 후 검증된 코드 제공
 - [ ] ❌ 추측/가정 기반 코드 금지
 
-<!-- ▼ 프로젝트 고유 규칙 체크 항목이 있으면 아래에 추가 -->
-#### {{CUSTOM_RULE}} 적용 시
-- [ ] ✅ {{고유 규칙 체크 항목}}
+#### 반응형/디자인 적용 시
+- [ ] ✅ 320~1920px 폭 연속 검증(가로 스크롤·겹침 없음)
+- [ ] ✅ 색상은 토큰만 사용(hex 하드코딩 금지)
+- [ ] ✅ 콘텐츠는 `lib/data`에서 주입(하드코딩 금지)
 
 ---
 
-**Last Updated**: {{YYYY-MM-DD}}
-**Version**: {{VERSION}}
-**Maintainer**: {{TEAM_OR_OWNER}}
+**Last Updated**: 2026-06-30
+**Version**: 0.1.0
+**Maintainer**: 새론학원 (inotion-coding)
 
 **⚠️ CRITICAL RULES 요약:**
 - 백업 파일 삭제 절대 금지 (`rm` 금지, `mv _bak/` 필수)
 - 사용자 동의 없는 디렉토리 삭제/이름변경 절대 금지
 - 코드 제공 전 연관 파일 검증 필수
 - File Structure 변경 시 문서 즉시 동기화
-- {{프로젝트 고유 CRITICAL 규칙}}
+- 유동 레이아웃 불변(320~1920px 깨짐 금지) + 색상은 토큰만 + 콘텐츠는 lib/data 주입
