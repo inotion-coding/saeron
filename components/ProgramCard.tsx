@@ -16,7 +16,7 @@ export default function ProgramCard({
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col rounded-[var(--radius-sm)] border border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point"
+      className="group flex h-full flex-col rounded-[var(--radius-sm)] border-2 border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point"
     >
       <span className="text-xs font-bold uppercase tracking-[0.06em] text-accent">
         {program.target}

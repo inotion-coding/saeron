@@ -42,7 +42,7 @@ export const site = {
 
   /** 상단바·푸터 공통 내비게이션 */
   nav: [
-    { href: "/about", label: "학원 소개" },
+    { href: "/#about", label: "학원 소개" },
     { href: "/programs", label: "프로그램" },
     { href: "/schedule", label: "수업 시간표" },
     { href: "/teachers", label: "강사 소개" },

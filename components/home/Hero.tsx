@@ -10,8 +10,9 @@ import { hero, stats } from "@/lib/data/home";
 export default function Hero() {
   return (
     <section
+      id="about"
       data-tone="paper"
-      className="relative overflow-hidden"
+      className="relative scroll-mt-20 overflow-hidden"
     >
       {/* 브랜드 데코 — 토큰 기반, 정적 (backdrop 위, 콘텐츠 아래) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
@@ -21,13 +22,13 @@ export default function Hero() {
       </div>
 
       <Container className="relative z-10 py-[clamp(5.5rem,3.5rem+8vw,11rem)]">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto max-w-4xl text-center">
           <span className="eyebrow justify-center">
             <span className="h-px w-7 bg-point" aria-hidden="true" />
             {hero.eyebrow}
           </span>
 
-          <h1 className="mt-6 whitespace-pre-line text-display font-extrabold text-foreground">
+          <h1 className="mt-6 text-balance break-keep text-display font-extrabold text-foreground">
             {hero.title}
           </h1>
 
@@ -45,13 +46,17 @@ export default function Hero() {
           </div>
         </Reveal>
 
-        {/* 신뢰 지표 스트립 */}
+        {/* 신뢰 지표 — 박스 없이 골드 얇은 선으로만 구분 */}
         <Reveal delay={150}>
-          <dl className="mx-auto mt-20 grid max-w-4xl grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-border bg-border shadow-card md:grid-cols-4">
-            {stats.map((stat) => (
+          <dl className="mx-auto mt-20 grid max-w-4xl grid-cols-2 md:grid-cols-4">
+            {stats.map((stat, i) => (
               <div
                 key={stat.label}
-                className="flex flex-col items-center gap-1 bg-background px-4 py-7 text-center"
+                className={`flex flex-col items-center gap-1 px-4 py-4 text-center border-point ${
+                  i % 2 === 1 ? "border-l" : ""
+                } ${i >= 2 ? "border-t" : ""} md:border-t-0 ${
+                  i === 0 ? "md:border-l-0" : "md:border-l"
+                }`}
               >
                 <dt className="order-2 text-sm text-muted-foreground">
                   {stat.label}

@@ -5,8 +5,8 @@
 
 export const hero = {
   eyebrow: "입시·종합 새론학원",
-  title: "한 명의 가능성을\n끝까지 책임지는 학원",
-  description: "데이터로 설계하고 사람으로 관리하는, 결과로 증명하는 밀착 교육.",
+  title: "날마다 새로운 생각과 도전으로 신세계를 창조하라",
+  description: "수원외고 · 유신고 · 이의고 · 창현고 · 광교고 전담 학원",
   primary: { label: "상담 신청하기", href: "/contact" },
   secondary: { label: "프로그램 살펴보기", href: "/programs" },
 };

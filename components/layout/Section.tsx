@@ -8,16 +8,19 @@ import Container from "./Container";
 export default function Section({
   children,
   tone,
+  id,
   className = "",
   containerClassName = "",
 }: {
   children: ReactNode;
   tone?: "paper" | "mist" | "deep";
+  id?: string;
   className?: string;
   containerClassName?: string;
 }) {
   return (
     <section
+      id={id}
       data-tone={tone}
       className={`py-[clamp(4.5rem,3rem+6vw,9rem)] ${className}`}
     >

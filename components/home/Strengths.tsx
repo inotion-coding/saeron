@@ -9,19 +9,20 @@ import { strengths, type Strength } from "@/lib/data/home";
  */
 export default function Strengths() {
   return (
-    <Section tone="mist">
+    <Section tone="deep">
       <Reveal>
         <SectionHeading
           eyebrow="WHY 새론"
           title="결과로 증명하는 학습 시스템"
           description="새론학원은 설계 · 관리 · 검증의 선순환으로 학생의 성장을 끝까지 책임집니다."
+          onDark
         />
       </Reveal>
 
       <ul className="mt-16 grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-6">
         {strengths.map((item, i) => (
           <Reveal as="li" key={item.id} delay={i * 90}>
-            <div className="flex h-full flex-col rounded-[var(--radius-sm)] border border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point">
+            <div className="flex h-full flex-col rounded-[var(--radius-sm)] border-2 border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point">
               <span className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] bg-accent/10 text-accent">
                 <Icon name={item.icon} />
               </span>

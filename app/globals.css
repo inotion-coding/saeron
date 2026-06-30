@@ -39,8 +39,8 @@
     -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
     sans-serif;
 
-  --text-display: clamp(2.5rem, 1.7rem + 3.6vw, 4.25rem);
-  --text-display--line-height: 1.08;
+  --text-display: clamp(2.1rem, 1.6rem + 2.6vw, 3.6rem);
+  --text-display--line-height: 1.12;
   --text-display--letter-spacing: -0.02em;
 
   --text-h1: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
@@ -88,10 +88,10 @@
 } /* 쿨 near-white */
 :root[data-tone="mist"] {
   --page-bg: #eef4fa;
-} /* 연한 블루 틴트 */
+} /* 연한 블루 틴트 (WHY 새론) */
 :root[data-tone="deep"] {
   --page-bg: #1a2944;
-} /* 딥 네이비 */
+} /* 딥 네이비 (Programs) */
 
 .page-backdrop {
   position: fixed;

@@ -119,13 +119,13 @@
 | `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 헤더 아래 공지 배너, **최신 1건 정적 노출**(슬라이드 없음), 닫기 |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
-| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone mist. 각진 아이콘 카드 그리드(유동), hover 골드 테두리, Reveal 스태거 |
-| `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | tone paper. 헤더 + 추천 ProgramCard 그리드 + 전체보기 |
-| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone deep. 딥 네이비 위 글래스 패널, inverse 버튼, 상담 유도 |
+| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone deep(다크). onDark 헤더 + 각진 흰 아이콘 카드(유동), hover 골드 2px 테두리, Reveal 스태거 |
+| `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | tone deep(다크). onDark 헤더 + 흰 ProgramCard 대비 + inverse 전체보기 |
+| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone paper. 라이트 패널 + 골드 eyebrow + 네이비 버튼, 상담 유도 |
 
 **카드 디자인 규약 (각진 에디토리얼)**:
 - **모서리**: 카드는 `rounded-[var(--radius-sm)]`(3px)로 **각지게**. 과한 둥근 모서리 금지(전문성 저하).
-- **호버**: 위로 뜨는 모션(`-translate-y`) 사용 금지. 대신 **골드 포인트 얇은 테두리**(`border-border` → `hover:border-point`, `transition-colors`). 정적 `shadow-card`로만 은은한 깊이.
+- **호버**: 위로 뜨는 모션(`-translate-y`) 사용 금지. 대신 **골드 포인트 테두리**(`border-2 border-border` → `hover:border-point`, `transition-colors`). 2px로 또렷하게(레이아웃 시프트 없음). 정적 `shadow-card`로만 은은한 깊이.
 - **콘텐츠 최소화**: 카드당 핵심 정보만(라벨·제목·한 줄 요약·진입 화살표). 태그 나열·장문 설명 지양.
 - 화살표 등 미세 이동(`group-hover:translate-x-0.5`)은 허용.
 
@@ -140,10 +140,10 @@
 ```
 [ Header (sticky, 풀폭) ]
 [ NoticeBar (tone paper) — 최신 공지 1건 ]
-[ Hero (tone paper) — eyebrow · 디스플레이 제목 · 리드 · CTA · 신뢰 지표 4종 ]
-[ Strengths (tone mist) — WHY 새론, 강점 4 카드 ]
-[ ProgramsPreview (tone paper) — 추천 프로그램 3 + 전체보기 ]
-[ CtaBand (tone deep) — 딥 네이비 전환 + 글래스 패널, 무료 상담 유도 ]
+[ Hero (tone paper) — eyebrow · 디스플레이 제목 · 리드 · CTA · 신뢰 지표 4종(골드 선 구분) ]
+[ Strengths (tone deep) — WHY 새론, 딥 네이비 + 흰 카드, onDark 헤더 ]
+[ ProgramsPreview (tone deep) — 딥 네이비 유지, 흰 카드 대비, onDark 헤더 ]
+[ CtaBand (tone paper) — 라이트 패널, 차분한 마무리, 무료 상담 유도 ]
 [ Footer — 사업자 정보 ]
 ```
 
@@ -216,9 +216,9 @@
 **톤 값** (globals.css `:root[data-tone="…"]`)
 | tone | `--page-bg` | 용도 |
 |------|------|------|
-| `paper` | `#fbfcfe` | 기본(공지·히어로·프로그램) |
-| `mist` | `#eef4fa` | 연한 블루 틴트(강점) |
-| `deep` | `#1a2944` | 딥 네이비(상담 CTA) |
+| `paper` | `#fbfcfe` | 기본(공지·히어로·상담 CTA) |
+| `mist` | `#eef4fa` | 연한 블루 틴트(보조) |
+| `deep` | `#1a2944` | 딥 네이비(WHY 새론·Programs) — 흰 카드 대비, 다크 모먼트 |
 
 **규칙**
 - 섹션 배경은 **투명**, 카드/표면만 불투명(`bg-background`)으로 띄운다.
