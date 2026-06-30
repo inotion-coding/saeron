@@ -24,33 +24,31 @@ export type Strength = {
   id: string;
   title: string;
   desc: string;
-  icon: "compass" | "users" | "badge" | "report";
+  icon: "data" | "teacher" | "studyroom";
+  href: string; // 바로가기 링크 (TODO(content): 실제 페이지 연결)
 };
 
 export const strengths: Strength[] = [
   {
-    id: "curriculum",
+    id: "data",
     title: "데이터 기반 학습 설계",
-    desc: "학생별 취약점에 맞춘 커리큘럼.",
-    icon: "compass",
-  },
-  {
-    id: "care",
-    title: "1:1 밀착 학습 관리",
-    desc: "담임 멘토의 일상 학습 점검.",
-    icon: "users",
+    desc: "축적된 데이터로 맞춤 커리큘럼 구성",
+    icon: "data",
+    href: "/programs",
   },
   {
     id: "teachers",
-    title: "검증된 전임 강사진",
-    desc: "과목별 전임의 책임 지도.",
-    icon: "badge",
+    title: "검증된 전문 강사진",
+    desc: "과목별 경력직 전문 강사의 책임 지도",
+    icon: "teacher",
+    href: "/teachers",
   },
   {
-    id: "report",
-    title: "정기 학부모 리포트",
-    desc: "성적·태도의 투명한 공유.",
-    icon: "report",
+    id: "studyroom",
+    title: "쾌적한 자습실",
+    desc: "강좌 2개 이상 수강 시 자습실 자리 제공",
+    icon: "studyroom",
+    href: "/contact",
   },
 ];
 
