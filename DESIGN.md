@@ -62,6 +62,7 @@
 ### 2.2 타이포그래피
 
 - **폰트**: `Pretendard` (CDN, 폴백 system-ui). 토큰 `--font-sans`.
+- **명조(serif)**: `Noto Serif KR` (CDN). 토큰 `--font-serif` → `font-serif`. 권위/신뢰 톤이 필요한 곳(강사 소개 제목·강사명)에만 한정 사용.
 - **유동 스케일** — 모두 `clamp()`로 폭에 따라 연속 보간. Tailwind 유틸로 노출(`text-display` 등).
 
 | 유틸 | 크기(min→max) | line-height | tracking | 용도 |
@@ -121,6 +122,9 @@
 | `NoticePoster` | [NoticePoster.tsx](components/NoticePoster.tsx) | 공지 대표 썸네일(=images[0]) — PosterFrame 래퍼 |
 | `NoticeGallery` | [NoticeGallery.tsx](components/NoticeGallery.tsx) | 포스터 갤러리 1/2/3+ 배치(3+: 서브 2개 가로 꽉+스크롤) |
 | `NoticeArticle` | [NoticeArticle.tsx](components/NoticeArticle.tsx) | 공지 상세 본문(제목·날짜·갤러리·본문). 상세/주요공지 공용 |
+| `TeacherPhoto` | [TeacherPhoto.tsx](components/TeacherPhoto.tsx) | 강사 3:4 인물(이미지/실루엣 플레이스홀더) |
+| `TeacherCard` | [teachers/TeacherCard.tsx](components/teachers/TeacherCard.tsx) | 강사 카드(미니멀: 사진·과목·이름 serif·경력1줄, hover 줌+"프로필 보기") |
+| `TeacherDirectory` | [teachers/TeacherDirectory.tsx](components/teachers/TeacherDirectory.tsx) | client. 2단계 필터(부·과목) + 강사 그리드 |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
 | `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone deep(다크). onDark 헤더 + 각진 흰 아이콘 카드(유동), hover 골드 2px 테두리, Reveal 스태거 |
@@ -173,7 +177,7 @@
 - **학원 소개(/about)**: 서브 히어로 → 교육 철학(리드+측면 포인트) → 강점 상세(Strengths 재사용/확장) → 연혁/시설 → CtaBand.
 - **프로그램(/programs)**: 서브 히어로 → 대상/학년 그룹별 `ProgramCard` 그리드 → CtaBand.
 - **시간표(/schedule)**: 서브 히어로 → 시간표 테이블(넓은 폭 가로 테이블 / 좁은 폭 가로 스크롤·요일 카드) → 안내.
-- **강사 소개(/teachers)**: 서브 히어로 → `TeacherCard` 그리드(ProgramCard와 동일 카드 언어) → CtaBand.
+- **강사 소개(/teachers)**: 로펌 프로필형(신뢰·권위, 무채색+골드, **serif 제목**). 중앙 서브 히어로(제목 `font-serif`) → **필터 디렉토리**([TeacherDirectory](components/teachers/TeacherDirectory.tsx), client): 1차 부(중등부/고등부)·2차 과목(전체/국어/수학/영어/탐구) 칩 → 강사 카드 그리드(2/3/4열) → CtaBand. 카드([TeacherCard](components/teachers/TeacherCard.tsx)): **사진 중심 미니멀**(팀 카드 베스트프랙티스 — 적을수록 좋다) — 3:4 인물([TeacherPhoto](components/TeacherPhoto.tsx)) · 과목 · 이름(serif) · 경력 1줄만. **hover: 사진 살짝 줌 + 하단 "프로필 보기" 스트립**(얼굴 위 정보 과적 금지). 상세 이력은 클릭→상세 페이지. 상세 `/teachers/[id]`(async params, `generateStaticParams`/`generateMetadata`, `notFound`): 사진 + 이름·과목 + 학력/이력/실적/저서(골드 라벨·헤어라인). 데이터 [lib/data/teachers.ts](lib/data/teachers.ts)(`divisions`/`subjectGroup`).
 - **상담·문의(/contact)**: 서브 히어로 → 2열(폼 | 연락처·운영시간·약도) → 좁은 폭 1열. 폼 입력은 `border-border`·포커스 링·에러는 `text-error`+`aria-invalid`.
 
 ---
@@ -236,7 +240,7 @@
 ### 진입 모션 (Reveal)
 - [Reveal](components/ui/Reveal.tsx): 뷰포트 **중앙 영역에 들어올 때마다** 페이드업(`opacity`+`translateY(18px)`, 700ms)으로 등장하고, 벗어나면 다시 숨겨 **위·아래 반복 스크롤 시 매번 재생**(IntersectionObserver `rootMargin: -12%`, observer 유지). `delay`로 카드 스태거.
 - `prefers-reduced-motion: reduce` 또는 IntersectionObserver 미지원 시 **즉시 표시(정적)**.
-- 적용: 히어로 텍스트·지표, 강점/프로그램 카드(스태거), CTA 등 모든 Reveal 요소 일관.
+- **적용 범위(일관)**: 모든 **카드·포스터·섹션 제목**에 적용한다 — 히어로 텍스트·지표, 강점/프로그램 카드, CTA, 각 페이지 **서브 히어로 제목**(공지·강사 등), **공지 포스터 그리드·주요공지·상세 갤러리**, **강사 카드·상세 프로필**. 그리드 항목은 `delay`로 스태거. 새 페이지/카드 추가 시에도 동일하게 Reveal로 감쌀 것.
 
 ---
 

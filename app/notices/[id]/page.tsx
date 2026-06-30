@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
+import Reveal from "@/components/ui/Reveal";
 import NoticeArticle from "@/components/NoticeArticle";
 import { notices, getNoticeById } from "@/lib/data/notices";
 
@@ -42,9 +43,9 @@ export default async function NoticeDetailPage({ params }: Params) {
           공지 목록
         </Link>
 
-        <div className="mt-8">
+        <Reveal className="mt-8">
           <NoticeArticle notice={notice} as="h1" titleClassName="text-h1" />
-        </div>
+        </Reveal>
 
         <div className="mt-12 flex justify-center border-t border-border pt-8">
           <Button href="/notices" variant="secondary" withArrow>

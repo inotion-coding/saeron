@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Section from "@/components/layout/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 import NoticePoster from "@/components/NoticePoster";
 import NoticeArticle from "@/components/NoticeArticle";
 import { getSortedNotices, getFeaturedNotices } from "@/lib/data/notices";
@@ -28,17 +29,19 @@ export default async function NoticesPage({
   return (
     <>
       <Section tone="paper">
-        <SectionHeading
-          align="center"
-          eyebrow="NOTICE"
-          title="공지사항"
-          description="새론학원의 소식과 안내를 포스터로 확인하세요."
-        />
+        <Reveal>
+          <SectionHeading
+            align="center"
+            eyebrow="NOTICE"
+            title="공지사항"
+            description="새론학원의 소식과 안내를 포스터로 확인하세요."
+          />
+        </Reveal>
 
         {/* 포스터 그리드 (5개씩) */}
         <ul className="mt-14 grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:grid-cols-5">
-          {items.map((notice) => (
-            <li key={notice.id}>
+          {items.map((notice, i) => (
+            <Reveal as="li" key={notice.id} delay={(i % 5) * 70}>
               <Link href={`/notices/${notice.id}`} className="group block">
                 <NoticePoster
                   notice={notice}
@@ -54,7 +57,7 @@ export default async function NoticesPage({
                   {notice.date.replaceAll("-", ".")}
                 </time>
               </Link>
-            </li>
+            </Reveal>
           ))}
         </ul>
 
@@ -85,18 +88,25 @@ export default async function NoticesPage({
       {/* 하단: 주요 공지 — featured 3~5개의 상세 모습을 그대로 펼쳐 표시(경계선 구분) */}
       {featured.length > 0 && (
         <Section tone="mist">
-          <SectionHeading
-            align="center"
-            eyebrow="PICK"
-            title="주요 공지"
-            description="메인 배너에 등록된 주요 공지를 한눈에 모아 보여드립니다."
-            className="mx-auto"
-          />
+          <Reveal>
+            <SectionHeading
+              align="center"
+              eyebrow="PICK"
+              title="주요 공지"
+              description="메인 배너에 등록된 주요 공지를 한눈에 모아 보여드립니다."
+              className="mx-auto"
+            />
+          </Reveal>
           <div className="mx-auto mt-12 max-w-3xl divide-y divide-border">
-            {featured.map((notice) => (
-              <div key={notice.id} className="py-12 first:pt-0 last:pb-0">
+            {featured.map((notice, i) => (
+              <Reveal
+                as="div"
+                key={notice.id}
+                delay={(i % 3) * 80}
+                className="py-12 first:pt-0 last:pb-0"
+              >
                 <NoticeArticle notice={notice} as="h3" titleClassName="text-h2" />
-              </div>
+              </Reveal>
             ))}
           </div>
         </Section>
