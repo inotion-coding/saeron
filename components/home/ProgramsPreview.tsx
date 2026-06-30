@@ -17,8 +17,8 @@ export default function ProgramsPreview() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <SectionHeading
             eyebrow="PROGRAMS"
-            title="학년·목표별 맞춤 프로그램"
-            description="현재 위치에서 목표까지, 단계에 맞는 과정을 제안합니다."
+            title="학교 학년별 맞춤 프로그램"
+            description="현재 위치에서 목표까지 학교 학년별 맞춤 과정을 제안합니다."
             onDark
           />
           <div className="shrink-0">
