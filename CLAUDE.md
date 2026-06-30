@@ -47,7 +47,8 @@
 │   ├── schedule/
 │   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (client)
 │   │   └── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
-│   └── NoticeBar.tsx         # 메인 공지 영역
+│   ├── NoticeBar.tsx         # 메인 공지 영역
+│   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션(client, 정적 export 호환)
 │   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
 ├── lib/
 │   └── data/
@@ -55,6 +56,7 @@
 │       ├── notices.ts        # 공지 더미
 │       ├── teachers.ts       # 강사 데이터(부·과목·각오·이력)
 │       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
+├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
 ├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
 ├── CLAUDE.md / PROCESS.md / DESIGN.md

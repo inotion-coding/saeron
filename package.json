@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "preview": "next build && next start",
+    "preview": "next build && npx serve@latest out",
     "lint": "next lint"
   },
   "dependencies": {
