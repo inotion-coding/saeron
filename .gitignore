@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+out/
+
+# Backups (CLAUDE.md 백업 규칙)
+_bak/
+*_bak_*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+
+# Cache
+.cache/
+*.tmp
