@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/*
+ * 디자인 토큰 (DESIGN.md §2)
+ * 색상 값은 추후 브랜드 컬러 확정 시 이 블록만 교체한다.
+ * 현재는 중립(neutral) 위주의 임시 값 — TODO(design): 최종 색상으로 교체.
+ */
+@theme {
+  /* Brand */
+  --color-primary: #1f4e8c;            /* TODO(design): 임시 브랜드색 */
+  --color-primary-hover: #173d6e;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #0f766e;          /* TODO(design): 임시 보조색 */
+  --color-accent: #e08a1e;             /* TODO(design): 임시 포인트색 */
+
+  /* Neutral */
+  --color-background: #ffffff;
+  --color-surface: #f6f8fb;
+  --color-border: #e2e8f0;
+  --color-foreground: #14213a;
+  --color-muted-foreground: #5b6b86;
+
+  /* Status */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  /* 폰트 */
+  --font-sans: "Pretendard", "Pretendard Variable", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
+    sans-serif;
+
+  /* 라운드 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* 컨테이너 최대폭 (DESIGN.md §3) */
+  --container-page: 72rem; /* 1152px */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 키보드 포커스 가시성 (DESIGN.md §6) */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

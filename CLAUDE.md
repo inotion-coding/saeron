@@ -26,25 +26,35 @@
 
 ```
 .
-├── app/                      # Next.js App Router 라우트 (page.tsx 등은 각 단계에서 생성)
-│   ├── about/                # 학원 소개 (2단계)
-│   ├── teachers/             # 강사 소개 (6단계)
-│   ├── programs/             # 프로그램 (3단계)
-│   ├── schedule/             # 수업 시간표 (4단계)
-│   └── contact/              # 상담·문의 (5단계)
+├── app/                      # Next.js App Router
+│   ├── layout.tsx            # 루트 레이아웃 (Header/Footer, 폰트, 메타데이터)
+│   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
+│   ├── page.tsx              # 메인 (1단계: 공지 + 임시 본문)
+│   ├── about/                # 학원 소개 (2단계, 미구현)
+│   ├── teachers/             # 강사 소개 (6단계, 미구현)
+│   ├── programs/             # 프로그램 (3단계, 미구현)
+│   ├── schedule/             # 수업 시간표 (4단계, 미구현)
+│   └── contact/              # 상담·문의 (5단계, 미구현)
 ├── components/
-│   ├── layout/               # Container, Section, Header(상단바), Footer(하단바·사업자정보)
-│   └── ui/                   # Button, Badge 등 공용 UI
-│   # NoticeBar, TeacherCard, ProgramCard, ScheduleTable, ContactForm 등은 해당 단계에서 추가
+│   ├── layout/
+│   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
+│   │   ├── Section.tsx       # 섹션 수직 리듬
+│   │   ├── Header.tsx        # 상단바 (내비·모바일 햄버거)
+│   │   └── Footer.tsx        # 하단바 (사업자 정보)
+│   ├── ui/
+│   │   └── Button.tsx        # 공용 버튼 (link/button)
+│   └── NoticeBar.tsx         # 메인 공지 영역
+│   # TeacherCard, ProgramCard, ScheduleTable, ContactForm 등은 해당 단계에서 추가
 ├── lib/
-│   └── data/                 # site.ts(학원·사업자정보), notices/teachers/programs/schedule (더미)
+│   └── data/
+│       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
+│       └── notices.ts        # 공지 더미
 ├── public/                   # 이미지·정적 자산
-├── CLAUDE.md                 # 작업 규칙 (본 문서)
-├── PROCESS.md                # 개발 절차·로드맵
-├── DESIGN.md                 # 디자인 시스템
+├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
+├── CLAUDE.md / PROCESS.md / DESIGN.md
 └── .gitignore
 ```
-> 현재는 디렉토리 스켈레톤 단계. Next.js 스캐폴딩(`create-next-app`) 및 각 파일은 PROCESS.md 단계대로 추가되며, 추가 시 위 구조를 갱신한다.
+> 1단계(메인 골격) 구현 완료. Tailwind는 v4(CSS `@theme` 기반)로 설정되어 `tailwind.config.ts` 대신 `app/globals.css`에서 토큰을 정의한다. 이후 파일은 PROCESS.md 단계대로 추가되며, 추가 시 위 구조를 갱신한다.
 
 ### 📌 File Structure 갱신 규칙 (MANDATORY)
 
