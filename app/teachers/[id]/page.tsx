@@ -67,8 +67,8 @@ export default async function TeacherDetailPage({ params }: Params) {
               <h1 className="mt-3 text-h1 font-bold text-foreground">
                 {teacher.name}
               </h1>
-              <p className="mt-2 text-lead text-muted-foreground">
-                {teacher.career}
+              <p className="mt-2 whitespace-pre-line text-lead text-muted-foreground">
+                {teacher.resolve}
               </p>
             </div>
           </div>

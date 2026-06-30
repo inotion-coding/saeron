@@ -4,7 +4,7 @@ import TeacherPhoto from "@/components/TeacherPhoto";
 
 /**
  * 강사 카드 — DESIGN.md §6 (강사)
- * 사진 중심의 미니멀 카드(핵심만): 사진(3:4) · 과목 · 이름(serif) · 핵심 경력 1줄.
+ * 사진 중심의 미니멀 카드(핵심만): 사진(3:4) · 과목 · 이름 · 강사 각오 1줄.
  * hover 시 사진 살짝 줌 + 하단 "프로필 보기"만 은은히. 상세 이력은 상세 페이지에서.
  * (팀 카드 베스트프랙티스: 적을수록 좋다 — 얼굴 위 정보 과적 지양)
  */
@@ -49,7 +49,7 @@ export default function TeacherCard({ teacher }: { teacher: Teacher }) {
           {teacher.name}
         </h3>
         <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-          {teacher.career}
+          {teacher.resolve}
         </p>
       </div>
     </Link>
