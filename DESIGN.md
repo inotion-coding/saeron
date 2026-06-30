@@ -61,8 +61,7 @@
 
 ### 2.2 타이포그래피
 
-- **폰트**: `Pretendard` (CDN, 폴백 system-ui). 토큰 `--font-sans`.
-- **명조(serif)**: `Noto Serif KR` (CDN). 토큰 `--font-serif` → `font-serif`. 권위/신뢰 톤이 필요한 곳(강사 소개 제목·강사명)에만 한정 사용.
+- **폰트**: `Pretendard` (CDN, 폴백 system-ui). 토큰 `--font-sans`. **전 페이지 단일 폰트로 통일**(serif 미사용).
 - **유동 스케일** — 모두 `clamp()`로 폭에 따라 연속 보간. Tailwind 유틸로 노출(`text-display` 등).
 
 | 유틸 | 크기(min→max) | line-height | tracking | 용도 |
@@ -123,7 +122,7 @@
 | `NoticeGallery` | [NoticeGallery.tsx](components/NoticeGallery.tsx) | 포스터 갤러리 1/2/3+ 배치(3+: 서브 2개 가로 꽉+스크롤) |
 | `NoticeArticle` | [NoticeArticle.tsx](components/NoticeArticle.tsx) | 공지 상세 본문(제목·날짜·갤러리·본문). 상세/주요공지 공용 |
 | `TeacherPhoto` | [TeacherPhoto.tsx](components/TeacherPhoto.tsx) | 강사 3:4 인물(이미지/실루엣 플레이스홀더) |
-| `TeacherCard` | [teachers/TeacherCard.tsx](components/teachers/TeacherCard.tsx) | 강사 카드(미니멀: 사진·과목·이름 serif·경력1줄, hover 줌+"프로필 보기") |
+| `TeacherCard` | [teachers/TeacherCard.tsx](components/teachers/TeacherCard.tsx) | 강사 카드(미니멀: 사진·과목·이름·경력1줄, hover 줌+"프로필 보기") |
 | `TeacherDirectory` | [teachers/TeacherDirectory.tsx](components/teachers/TeacherDirectory.tsx) | client. 2단계 필터(부·과목) + 강사 그리드 |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
@@ -177,7 +176,7 @@
 - **학원 소개(/about)**: 서브 히어로 → 교육 철학(리드+측면 포인트) → 강점 상세(Strengths 재사용/확장) → 연혁/시설 → CtaBand.
 - **프로그램(/programs)**: 서브 히어로 → 대상/학년 그룹별 `ProgramCard` 그리드 → CtaBand.
 - **시간표(/schedule)**: 서브 히어로 → 시간표 테이블(넓은 폭 가로 테이블 / 좁은 폭 가로 스크롤·요일 카드) → 안내.
-- **강사 소개(/teachers)**: 로펌 프로필형(신뢰·권위, 무채색+골드, **serif 제목**). 중앙 서브 히어로(제목 `font-serif`) → **필터 디렉토리**([TeacherDirectory](components/teachers/TeacherDirectory.tsx), client): 1차 부(중등부/고등부)·2차 과목(전체/국어/수학/영어/탐구) 칩 → 강사 카드 그리드(2/3/4열) → CtaBand. 카드([TeacherCard](components/teachers/TeacherCard.tsx)): **사진 중심 미니멀**(팀 카드 베스트프랙티스 — 적을수록 좋다) — 3:4 인물([TeacherPhoto](components/TeacherPhoto.tsx)) · 과목 · 이름(serif) · 경력 1줄만. **hover: 사진 살짝 줌 + 하단 "프로필 보기" 스트립**(얼굴 위 정보 과적 금지). 상세 이력은 클릭→상세 페이지. 상세 `/teachers/[id]`(async params, `generateStaticParams`/`generateMetadata`, `notFound`): 사진 + 이름·과목 + 학력/이력/실적/저서(골드 라벨·헤어라인). 데이터 [lib/data/teachers.ts](lib/data/teachers.ts)(`divisions`/`subjectGroup`).
+- **강사 소개(/teachers)**: 로펌 프로필형(신뢰·권위, 무채색+골드). 중앙 서브 히어로 → **필터 디렉토리**([TeacherDirectory](components/teachers/TeacherDirectory.tsx), client): 1차 부(중등부/고등부)·2차 과목(전체/국어/수학/영어/탐구) 칩 → 강사 카드 그리드(2/3/4열) → CtaBand. 카드([TeacherCard](components/teachers/TeacherCard.tsx)): **사진 중심 미니멀**(팀 카드 베스트프랙티스 — 적을수록 좋다) — 3:4 인물([TeacherPhoto](components/TeacherPhoto.tsx)) · 과목 · 이름 · 경력 1줄만. **hover: 사진 살짝 줌 + 하단 "프로필 보기" 스트립**(얼굴 위 정보 과적 금지). 상세 이력은 클릭→상세 페이지. 상세 `/teachers/[id]`(async params, `generateStaticParams`/`generateMetadata`, `notFound`): **상단 헤더**(사진 + 과목 태그 + 이름 + 경력) + **풀폭 정의형 섹션**(라벨 골드 | 값, 행 헤어라인). 모바일은 세로 스택·중앙정렬, 데스크톱은 사진 좌측 + 라벨|값 2열. 데이터 [lib/data/teachers.ts](lib/data/teachers.ts)(`divisions`/`subjectGroup`).
 - **상담·문의(/contact)**: 서브 히어로 → 2열(폼 | 연락처·운영시간·약도) → 좁은 폭 1열. 폼 입력은 `border-border`·포커스 링·에러는 `text-error`+`aria-invalid`.
 
 ---

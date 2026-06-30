@@ -45,7 +45,7 @@ export default function TeacherCard({ teacher }: { teacher: Teacher }) {
         <p className="text-xs font-semibold text-muted-foreground">
           {teacher.subject}
         </p>
-        <h3 className="mt-1.5 font-serif text-h3 font-bold text-foreground">
+        <h3 className="mt-1.5 text-h3 font-bold text-foreground">
           {teacher.name}
         </h3>
         <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">

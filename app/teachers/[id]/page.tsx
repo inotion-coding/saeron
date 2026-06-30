@@ -33,7 +33,7 @@ export default async function TeacherDetailPage({ params }: Params) {
 
   return (
     <Section tone="paper">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-3xl">
         <Link
           href="/teachers"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -50,36 +50,41 @@ export default async function TeacherDetailPage({ params }: Params) {
           강사 목록
         </Link>
 
-        <Reveal
-          as="div"
-          className="mt-8 grid gap-8 sm:grid-cols-[minmax(0,17rem)_1fr] sm:gap-10"
-        >
-          <div>
-            <TeacherPhoto
-              teacher={teacher}
-              sizes="(max-width: 640px) 90vw, 272px"
-              className="rounded-[var(--radius-sm)] border border-border"
-            />
+        <Reveal className="mt-8">
+          {/* 헤더: 사진 + 정체성 */}
+          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:gap-9 sm:text-left">
+            <div className="w-40 shrink-0 sm:w-44">
+              <TeacherPhoto
+                teacher={teacher}
+                sizes="(max-width: 640px) 160px, 176px"
+                className="rounded-[var(--radius-sm)] border border-border"
+              />
+            </div>
+            <div>
+              <span className="inline-flex rounded-[var(--radius-sm)] border border-border px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                {teacher.subject}
+              </span>
+              <h1 className="mt-3 text-h1 font-bold text-foreground">
+                {teacher.name}
+              </h1>
+              <p className="mt-2 text-lead text-muted-foreground">
+                {teacher.career}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <span className="inline-flex rounded-[var(--radius-sm)] border border-border px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-              {teacher.subject}
-            </span>
-            <h1 className="mt-3 font-serif text-display font-bold text-foreground">
-              {teacher.name}
-            </h1>
-            <p className="mt-2 text-lead text-muted-foreground">
-              {teacher.career}
-            </p>
-
-            <dl className="mt-8 space-y-6">
+          {/* 이력 섹션: 라벨 | 값 (모바일 스택) */}
+          {sections.length > 0 && (
+            <dl className="mt-10 border-t border-border">
               {sections.map((s) => (
-                <div key={s.label} className="border-t border-border pt-5">
-                  <dt className="text-sm font-bold uppercase tracking-[0.06em] text-point">
+                <div
+                  key={s.label}
+                  className="grid gap-1.5 border-b border-border py-5 sm:grid-cols-[7rem_1fr] sm:gap-8 sm:py-6"
+                >
+                  <dt className="text-sm font-bold tracking-[0.02em] text-point">
                     {s.label}
                   </dt>
-                  <dd className="mt-2">
+                  <dd>
                     <ul className="space-y-1 text-base leading-relaxed text-foreground/90">
                       {s.items!.map((it, i) => (
                         <li key={i}>{it}</li>
@@ -89,10 +94,10 @@ export default async function TeacherDetailPage({ params }: Params) {
                 </div>
               ))}
             </dl>
-          </div>
+          )}
         </Reveal>
 
-        <div className="mt-12 flex border-t border-border pt-8">
+        <div className="mt-10">
           <Button href="/teachers" variant="secondary" withArrow>
             강사 목록으로
           </Button>

@@ -15,7 +15,7 @@ export default function Footer() {
       <Container className="py-12">
         {/* 상단: 브랜드(좌) + SNS(우) */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
             <Logo source={logoFooter} className="h-20 w-auto shrink-0" />
             <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
               {site.description}

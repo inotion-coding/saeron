@@ -38,8 +38,6 @@
   --font-sans: "Pretendard", "Pretendard Variable", ui-sans-serif, system-ui,
     -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
     sans-serif;
-  /* 명조(serif) — 강사 소개 등 권위/신뢰 톤의 제목에 한정 사용 */
-  --font-serif: "Noto Serif KR", "Nanum Myeongjo", ui-serif, Georgia, serif;
 
   --text-display: clamp(2.1rem, 1.6rem + 2.6vw, 3.6rem);
   --text-display--line-height: 1.12;

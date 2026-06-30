@@ -17,7 +17,7 @@ export default function TeachersPage() {
             <span className="h-px w-7 bg-point" aria-hidden="true" />
             TEACHERS
           </span>
-          <h1 className="mt-4 font-serif text-h1 font-bold text-foreground">
+          <h1 className="mt-4 text-h1 font-bold text-foreground">
             강사 소개
           </h1>
           <p className="measure mx-auto mt-4 text-lead text-muted-foreground">
