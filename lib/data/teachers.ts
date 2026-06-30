@@ -125,7 +125,7 @@ export const teachers: Teacher[] = [
     subjectGroup: "수학",
     subject: "고등 수학 전과정",
     resolve: "강의실에서 받는 과외 같은 수학으로, 성적을 바꾸겠습니다.",
-    education: ["경희대학교 졸업"],
+    education: ["없음"],
     experience: [
       "현 강남 대치 일비 수학학원 원장",
       "현 광교 새론학원 수학 강사",
