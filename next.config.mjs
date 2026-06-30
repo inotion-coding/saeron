@@ -16,7 +16,12 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig = {
   output: "export",
   basePath: isProd ? REPO_BASE : "",
-  images: { unoptimized: true },
+  // basePath는 이미지 src에 자동 적용되지 않음 → 커스텀 로더로 직접 접두(아래 env 사용)
+  env: { NEXT_PUBLIC_BASE_PATH: isProd ? REPO_BASE : "" },
+  images: {
+    loader: "custom",
+    loaderFile: "./lib/imageLoader.js",
+  },
   trailingSlash: true,
 };
 
