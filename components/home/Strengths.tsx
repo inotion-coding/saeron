@@ -18,11 +18,11 @@ export default function Strengths() {
         />
       </Reveal>
 
-      <ul className="mt-12 grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-5">
+      <ul className="mt-16 grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-6">
         {strengths.map((item, i) => (
           <Reveal as="li" key={item.id} delay={i * 90}>
-            <div className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-border bg-background p-7 shadow-card transition-[transform,box-shadow] duration-200 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:shadow-hover">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-accent/10 text-accent transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+            <div className="flex h-full flex-col rounded-[var(--radius-sm)] border border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] bg-accent/10 text-accent">
                 <Icon name={item.icon} />
               </span>
               <h3 className="mt-5 text-h3 font-bold text-foreground">

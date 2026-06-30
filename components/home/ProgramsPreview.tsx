@@ -28,7 +28,7 @@ export default function ProgramsPreview() {
         </div>
       </Reveal>
 
-      <ul className="mt-12 grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-5">
+      <ul className="mt-16 grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-6">
         {featured.map((program, i) => (
           <Reveal as="li" key={program.id} delay={i * 90} className="flex">
             <ProgramCard program={program} />

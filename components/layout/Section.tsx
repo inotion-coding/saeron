@@ -19,7 +19,7 @@ export default function Section({
   return (
     <section
       data-tone={tone}
-      className={`py-[clamp(3rem,2rem+4vw,6rem)] ${className}`}
+      className={`py-[clamp(4.5rem,3rem+6vw,9rem)] ${className}`}
     >
       <Container className={containerClassName}>{children}</Container>
     </section>

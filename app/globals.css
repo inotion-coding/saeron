@@ -14,9 +14,12 @@
   --color-primary-foreground: #ffffff;
 
   --color-brand-blue: #304890;         /* 로고 "S" 블루 — 그라데이션 */
-  --color-accent: #1f7e92;             /* 딥 틸 — eyebrow·링크·텍스트 강조(대비 확보) */
+  --color-accent: #1f7e92;             /* 딥 틸 — 링크·텍스트 강조·인터랙션(브랜드) */
   --color-accent-bright: #58aecb;      /* 로고 "R" 틸 — 라인·점·그라데이션(장식) */
   --color-accent-foreground: #ffffff;
+
+  --color-point: #b08a3c;              /* 골드 포인트 — eyebrow 라인 등 소량 강조(light) */
+  --color-point-bright: #e3b461;       /* 골드 — 딥(어두운) 배경 위 포인트 */
 
   /* ---- Neutral (cool) ---------------------------------------------------- */
   --color-background: #ffffff;
@@ -55,11 +58,11 @@
   --text-lead: clamp(1.05rem, 1rem + 0.45vw, 1.3rem);
   --text-lead--line-height: 1.6;
 
-  /* ---- Radius ------------------------------------------------------------ */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* ---- Radius (각지고 절제된 에디토리얼 — 샤프) -------------------------- */
+  --radius-sm: 3px; /* 카드·배지 */
+  --radius-md: 5px; /* 버튼·인풋 */
+  --radius-lg: 6px; /* 지표 스트립 등 중형 */
+  --radius-xl: 8px; /* CTA 패널 */
 
   /* ---- Soft layered shadows ---------------------------------------------- */
   --shadow-card: 0 1px 2px rgba(20, 33, 58, 0.04),
@@ -166,7 +169,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-point); /* 골드 포인트 */
 }
 
 @utility measure {

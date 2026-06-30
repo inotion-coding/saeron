@@ -42,13 +42,13 @@ export default function Header() {
                 href={item.href}
                 className={`group relative py-1 text-sm font-semibold transition-colors ${
                   active
-                    ? "text-foreground"
+                    ? "text-point"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {item.label}
                 <span
-                  className={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-accent transition-all duration-200 ease-[var(--ease-out-soft)] ${
+                  className={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-point transition-all duration-200 ease-[var(--ease-out-soft)] ${
                     active ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                   aria-hidden="true"
@@ -102,8 +102,8 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className={`rounded-[var(--radius-sm)] px-3 py-3 text-base font-semibold ${
                 isActive(item.href)
-                  ? "bg-surface text-foreground"
-                  : "text-muted-foreground hover:bg-surface hover:text-foreground"
+                  ? "bg-surface text-point"
+                  : "text-foreground hover:bg-surface"
               }`}
             >
               {item.label}

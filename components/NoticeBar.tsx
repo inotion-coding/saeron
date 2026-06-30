@@ -18,11 +18,11 @@ export default function NoticeBar() {
 
   return (
     <section data-tone="paper" className="border-b border-border" aria-label="공지">
-      <Container className="py-[clamp(2rem,1.2rem+3vw,3.5rem)]">
+      <Container className="py-[clamp(2.5rem,1.5rem+3vw,4rem)]">
         {/* 상단: 배지 + 닫기 */}
         <div className="mb-4 flex items-center justify-between">
-          <span className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.08em] text-accent">
-            <span className="h-px w-6 bg-accent" aria-hidden="true" />
+          <span className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.08em] text-point">
+            <span className="h-px w-7 bg-point" aria-hidden="true" />
             공지사항
           </span>
           <button

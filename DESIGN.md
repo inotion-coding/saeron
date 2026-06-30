@@ -12,8 +12,8 @@
 팔레트는 **로고([public/1.png](public/1.png)) 색상에서 도출**: 네이비 `#304890` + 틸 `#60a8c0`.
 
 1. **여백이 곧 품격** — 넉넉한 섹션 리듬과 행간으로 정보가 숨 쉬게 한다.
-2. **강한 타이포 위계** — 큰 디스플레이 제목 + 틸 eyebrow 라벨 + 차분한 본문으로 시선을 유도.
-3. **절제된 색** — 쿨 네이비 잉크 + 쿨 페이퍼 중립색을 기본으로, 틸 액센트는 "포인트"로만 소량. (골드 미사용)
+2. **강한 타이포 위계** — 큰 디스플레이 제목 + 골드 eyebrow 라벨 + 차분한 본문으로 시선을 유도.
+3. **2-액센트 시스템** — 쿨 네이비 잉크 + 쿨 페이퍼 중립색이 기본. **골드**(`point`)는 eyebrow(라인+텍스트)·공지 라벨·CTA·**상단바 내비의 언더라인/active** 등 *포인트*로만(상시 적용 금지), **틸**(`accent`)은 본문 링크·카드 호버 테두리·구분선. 둘 다 절제.
 4. **은은한 깊이** — 진한 그림자 대신 소프트 레이어드 섀도우 + 헤어라인 보더로 고급감.
 5. **스크롤 무드 전환** — 스크롤에 따라 배경 톤이 paper→mist→deep로 부드럽게 전환(§9)되어 고급스러운 흐름을 만든다.
 6. **의도된 모션** — hover 리프트·언더라인·화살표 이동·진입 페이드업 등 미세한 인터랙션. 과하지 않게, `prefers-reduced-motion` 존중.
@@ -37,9 +37,11 @@
 | `--color-primary-hover` | `#1b294f` | primary hover | `hover:bg-primary-hover` |
 | `--color-primary-foreground` | `#ffffff` | primary 위 텍스트 | `text-primary-foreground` |
 | `--color-brand-blue` | `#304890` | 로고 블루 — 그라데이션/데코 | `bg-brand-blue` |
-| `--color-accent` | `#1f7e92` | 딥 틸 — eyebrow·링크·텍스트 강조(대비 확보) | `text-accent` `bg-accent` |
+| `--color-accent` | `#1f7e92` | 딥 틸 — 링크·텍스트 강조·인터랙션(브랜드) | `text-accent` `bg-accent` |
 | `--color-accent-bright` | `#58aecb` | 로고 틸 — 라인·점·그라데이션(장식) | `bg-accent-bright` |
 | `--color-accent-foreground` | `#ffffff` | accent 위 텍스트 | `text-accent-foreground` |
+| `--color-point` | `#b08a3c` | **골드 포인트** — eyebrow 라인·소량 강조(light) | `text-point` `bg-point` |
+| `--color-point-bright` | `#e3b461` | 골드 — 딥(어두운) 배경 위 포인트 | `text-point-bright` `bg-point-bright` |
 | `--color-background` | `#ffffff` | 표면(카드 등) | `bg-background` |
 | `--color-surface` | `#f3f7fb` | 쿨 라이트 표면 | `bg-surface` |
 | `--color-surface-2` | `#e8eff7` | 더 깊은 표면 | `bg-surface-2` |
@@ -52,6 +54,10 @@
 
 - **불투명도 변형**은 `/` 모디파이어로: `bg-accent/10`, `text-white/75`, `border-white/10` 등.
 - **색상 조정 절차**: §2.1 값만 교체 → Tailwind 테마·전 컴포넌트 자동 반영. 컴포넌트 수정 불필요.
+- **골드(point) 사용처**: eyebrow(라인+텍스트, `.eyebrow`), 공지(`공지사항`) 라벨, 딥 CTA eyebrow, 상단바 내비의 **언더라인 + active 항목**. (내비 기본 텍스트는 일반 색, 상시 금색 금지) 딥 배경 위에서는 `point-bright`. 본문 링크·카드 호버 테두리·구분선은 틸(`accent`).
+
+### 2.x 간격 (여유로운 리듬)
+- 섹션 수직 패딩: `py-[clamp(4.5rem,3rem+6vw,9rem)]` (히어로/CTA는 더 큼). 섹션 헤더→콘텐츠 `mt-16`, 카드 그리드 `gap-6`. 페이지 전반을 넉넉하게 띄워 고급감을 준다.
 
 ### 2.2 타이포그래피
 
@@ -73,7 +79,7 @@
 ### 2.3 간격 · 라운드 · 섀도우 · 모션
 
 - **간격**: Tailwind 기본 4px 스케일. 섹션 수직 패딩은 유동 `py-[clamp(...)]` (§3).
-- **라운드**: `--radius-sm 8` / `--radius-md 12` / `--radius-lg 20` / `--radius-xl 28`(px). 사용: `rounded-[var(--radius-lg)]`.
+- **라운드(샤프·에디토리얼)**: `--radius-sm 3`(카드·배지) / `--radius-md 5`(버튼·인풋) / `--radius-lg 6`(지표 스트립 등) / `--radius-xl 8`(CTA 패널)(px). 전반적으로 각지게 유지.
 - **섀도우(소프트 레이어드)**:
   - `shadow-card` — 카드 기본 깊이
   - `shadow-hover` — hover 시 떠오름
@@ -82,7 +88,7 @@
 
 ### 2.4 커스텀 유틸리티 (`@utility`)
 
-- `eyebrow` — 골드 대문자 소형 라벨(섹션 도입부). 보통 앞에 `<span class="h-px w-6 bg-accent">` 라인을 동반.
+- `eyebrow` — **골드** 대문자 소형 라벨(섹션 도입부). 텍스트·라인 모두 `point`. 앞에 `<span class="h-px w-7 bg-point">` 라인을 동반.
 - `measure` — 본문 가독 폭 제한(60ch).
 
 ---
@@ -108,16 +114,22 @@
 | `PageBackdrop` | [layout/PageBackdrop.tsx](components/layout/PageBackdrop.tsx) | fixed 풀뷰포트 배경, `--page-bg` 보간(§9) |
 | `ScrollTheme` | [ScrollTheme.tsx](components/ScrollTheme.tsx) | 중앙 교차 섹션 `data-tone`→`<html>` 반영(IntersectionObserver, §9) |
 | `Reveal` | [ui/Reveal.tsx](components/ui/Reveal.tsx) | 진입 페이드업(once), `delay` 스태거, reduced-motion 시 즉시 표시 |
-| `Header` | [layout/Header.tsx](components/layout/Header.tsx) | 풀폭, 로고, 데스크톱 언더라인 내비, 모바일 햄버거, active 표시 |
+| `Header` | [layout/Header.tsx](components/layout/Header.tsx) | 풀폭, 로고, 내비(기본 일반색 / active·언더라인 골드), 모바일 햄버거 |
 | `Footer` | [layout/Footer.tsx](components/layout/Footer.tsx) | 로고, 바로가기, **사업자 정보**(site.ts), 카피라이트 |
 | `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 헤더 아래 공지 배너, **최신 1건 정적 노출**(슬라이드 없음), 닫기 |
-| `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 대상 배지·제목·요약·태그·화살표, hover 리프트. 홈/`/programs` 공용 |
+| `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
-| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone mist. 아이콘 카드 그리드(유동), hover 리프트, Reveal 스태거 |
+| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone mist. 각진 아이콘 카드 그리드(유동), hover 골드 테두리, Reveal 스태거 |
 | `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | tone paper. 헤더 + 추천 ProgramCard 그리드 + 전체보기 |
 | `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone deep. 딥 네이비 위 글래스 패널, inverse 버튼, 상담 유도 |
 
-**상태 규약**: 모든 인터랙티브 요소는 hover/focus-visible/disabled를 정의한다. 클릭형 카드는 `group` + 화살표 `group-hover:translate-x-0.5`, 카드 컨테이너는 `hover:-translate-y-1 hover:shadow-hover`.
+**카드 디자인 규약 (각진 에디토리얼)**:
+- **모서리**: 카드는 `rounded-[var(--radius-sm)]`(3px)로 **각지게**. 과한 둥근 모서리 금지(전문성 저하).
+- **호버**: 위로 뜨는 모션(`-translate-y`) 사용 금지. 대신 **골드 포인트 얇은 테두리**(`border-border` → `hover:border-point`, `transition-colors`). 정적 `shadow-card`로만 은은한 깊이.
+- **콘텐츠 최소화**: 카드당 핵심 정보만(라벨·제목·한 줄 요약·진입 화살표). 태그 나열·장문 설명 지양.
+- 화살표 등 미세 이동(`group-hover:translate-x-0.5`)은 허용.
+
+**기타 상태 규약**: 모든 인터랙티브 요소는 hover/focus-visible/disabled 정의. 버튼은 CTA 특성상 미세 리프트 허용(카드는 금지).
 
 ---
 

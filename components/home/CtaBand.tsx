@@ -10,19 +10,19 @@ import { cta } from "@/lib/data/home";
  */
 export default function CtaBand() {
   return (
-    <section data-tone="deep" className="py-[clamp(4rem,3rem+5vw,7rem)]">
+    <section data-tone="deep" className="py-[clamp(5.5rem,4rem+6vw,9rem)]">
       <Container>
         <Reveal>
-          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-white/10 bg-white/5 px-6 py-[clamp(3rem,2rem+4vw,5rem)] text-center backdrop-blur-sm sm:px-12">
+          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-white/10 bg-white/5 px-6 py-[clamp(3.5rem,2.5rem+4vw,6rem)] text-center backdrop-blur-sm sm:px-12">
             {/* 데코 */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-accent-bright/20 blur-3xl" />
+              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-point-bright/20 blur-3xl" />
               <div className="absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand-blue/30 blur-3xl" />
             </div>
 
             <div className="relative mx-auto max-w-2xl">
-              <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.08em] text-accent-bright">
-                <span className="h-px w-6 bg-accent-bright" aria-hidden="true" />
+              <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.08em] text-point-bright">
+                <span className="h-px w-7 bg-point-bright" aria-hidden="true" />
                 {cta.eyebrow}
               </span>
 

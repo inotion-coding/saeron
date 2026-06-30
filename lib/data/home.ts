@@ -6,8 +6,7 @@
 export const hero = {
   eyebrow: "입시·종합 새론학원",
   title: "한 명의 가능성을\n끝까지 책임지는 학원",
-  description:
-    "데이터로 설계하고 사람으로 관리합니다. 학생 개개인의 목표에 맞춘 커리큘럼과 밀착 케어로, 결과로 증명하는 교육을 약속합니다.",
+  description: "데이터로 설계하고 사람으로 관리하는, 결과로 증명하는 밀착 교육.",
   primary: { label: "상담 신청하기", href: "/contact" },
   secondary: { label: "프로그램 살펴보기", href: "/programs" },
 };
@@ -32,25 +31,25 @@ export const strengths: Strength[] = [
   {
     id: "curriculum",
     title: "데이터 기반 학습 설계",
-    desc: "진단 평가와 학습 이력을 분석해 학생별 취약점에 맞춘 커리큘럼을 설계합니다.",
+    desc: "학생별 취약점에 맞춘 커리큘럼.",
     icon: "compass",
   },
   {
     id: "care",
     title: "1:1 밀착 학습 관리",
-    desc: "담임 멘토가 출결·과제·성취를 일상적으로 점검하며 학습 습관을 잡아줍니다.",
+    desc: "담임 멘토의 일상 학습 점검.",
     icon: "users",
   },
   {
     id: "teachers",
     title: "검증된 전임 강사진",
-    desc: "과목별 전임 강사가 수업부터 보충까지 책임지는 일관된 학습 경험을 제공합니다.",
+    desc: "과목별 전임의 책임 지도.",
     icon: "badge",
   },
   {
     id: "report",
     title: "정기 학부모 리포트",
-    desc: "성적 추이와 학습 태도를 정기 리포트로 투명하게 공유해 함께 관리합니다.",
+    desc: "성적·태도의 투명한 공유.",
     icon: "report",
   },
 ];
