@@ -4,14 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/data/site";
-import Container from "./Container";
-import Button from "@/components/ui/Button";
 
 /**
  * 상단바 (1단계) — DESIGN.md §4
- * 데스크톱: 가로 메뉴 / 좁은 폭: 햄버거 토글 패널
- * sticky 고정, 현재 경로 active 표시.
+ * 풀폭 레이아웃: 로고는 화면 왼쪽 끝, 메뉴는 오른쪽 끝에 고정.
+ * 데스크톱: 가로 메뉴 / 좁은 폭: 햄버거 토글 패널, 현재 경로 active 표시.
  */
+const PAD = "px-4 sm:px-6 lg:px-8";
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -21,8 +21,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between gap-4">
-        {/* 로고 */}
+      <div className={`flex h-16 items-center justify-between gap-4 ${PAD}`}>
+        {/* 로고 — 항상 왼쪽 끝 */}
         <Link
           href="/"
           className="text-lg font-extrabold tracking-tight text-primary"
@@ -31,7 +31,7 @@ export default function Header() {
           {site.name}
         </Link>
 
-        {/* 데스크톱 내비게이션 */}
+        {/* 데스크톱 내비게이션 — 오른쪽 끝 */}
         <nav className="hidden items-center gap-1 md:flex">
           {site.nav.map((item) => (
             <Link
@@ -47,12 +47,6 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-
-        <div className="hidden md:block">
-          <Button href="/contact" size="md">
-            상담 신청
-          </Button>
-        </div>
 
         {/* 모바일 햄버거 */}
         <button
@@ -81,7 +75,7 @@ export default function Header() {
             />
           </span>
         </button>
-      </Container>
+      </div>
 
       {/* 모바일 패널 */}
       <div
@@ -90,7 +84,7 @@ export default function Header() {
           open ? "max-h-96" : "max-h-0 border-t-0"
         }`}
       >
-        <Container className="flex flex-col gap-1 py-3">
+        <nav className={`flex flex-col gap-1 py-3 ${PAD}`}>
           {site.nav.map((item) => (
             <Link
               key={item.href}
@@ -105,10 +99,7 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <Button href="/contact" className="mt-2 w-full">
-            상담 신청
-          </Button>
-        </Container>
+        </nav>
       </div>
     </header>
   );

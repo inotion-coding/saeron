@@ -33,9 +33,15 @@ export const notices: Notice[] = [
   },
 ];
 
+/** 노출 순서대로 정렬된 공지 목록 (고정 우선, 그다음 최신순) */
+export function getSortedNotices(): Notice[] {
+  return [...notices].sort((a, b) => {
+    if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+    return b.date.localeCompare(a.date);
+  });
+}
+
 /** 가장 위에 노출할 공지(고정 우선, 없으면 최신순 첫 항목) */
 export function getLatestNotice(): Notice | undefined {
-  const pinned = notices.find((n) => n.pinned);
-  if (pinned) return pinned;
-  return [...notices].sort((a, b) => b.date.localeCompare(a.date))[0];
+  return getSortedNotices()[0];
 }
