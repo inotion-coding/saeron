@@ -1,17 +1,49 @@
 /**
- * 강사진 데이터 (더미) — /teachers 디렉토리·상세에서 사용.
- * 1차 필터: 부(중등부/고등부), 2차 필터: 과목(전체/국어/수학/영어/탐구).
- * 사진은 3:4 인물(균일 무채색 톤). photo 미지정 시 플레이스홀더.
- * TODO(content): 실제 강사 정보/사진으로 교체.
+ * 강사진 데이터 — /teachers 목록·상세에서 사용.
+ *
+ * ╔══════════════════════════════════════════════════════════════════╗
+ * ║  ✏️  강사 정보는 아래 `teachers` 배열만 고치면 됩니다.              ║
+ * ║      타입·함수 영역(주석으로 표시)은 건드리지 마세요.              ║
+ * ║      잘못된 값을 넣으면 에디터가 빨간 줄로 알려줍니다.             ║
+ * ╚══════════════════════════════════════════════════════════════════╝
+ *
+ * ── 편집 규칙 ──────────────────────────────────────────────────────
+ * 1) 강사 한 명 = 중괄호 한 덩어리 `{ ... },`  → 끝의 쉼표(,)는 꼭 유지.
+ * 2) 글자 값은 큰따옴표로 감쌀 것.  예) name: "홍길동"
+ * 3) id 는 영문 소문자+하이픈, 강사마다 겹치지 않게. (상세 주소가 됨: /teachers/<id>)
+ * 4) divisions(소속 부)는 "middle"(중등부) / "high"(고등부).
+ *    한쪽만: ["high"]   /   둘 다: ["middle", "high"]
+ * 5) subjectGroup(필터 분류)은 "국어" | "수학" | "영어" | "탐구" 중 하나.
+ * 6) 끝에 ? 가 붙는 항목(photo·education·experience·achievements·books)은
+ *    내용이 없으면 그 줄을 통째로 지워도 됩니다.
+ * 7) 사진: public/teachers/ 에 이미지를 넣고  photo: "/teachers/파일명.jpg"
+ *    줄을 지우면 기본 실루엣이 표시됩니다.
+ *
+ * ── 새 강사 추가: 아래 템플릿을 복사해 배열에 붙여넣고 값만 교체 ──────
+ *    {
+ *      id: "hong-gildong",
+ *      name: "홍길동",
+ *      photo: "/teachers/hong-gildong.jpg",
+ *      divisions: ["high"],
+ *      subjectGroup: "수학",
+ *      subject: "수능 수학",
+ *      career: "○○ 출강 · 10년차",
+ *      education: ["○○대학교 ○○학과"],
+ *      experience: ["현 새론학원 ○○ 전임"],
+ *      achievements: ["○○ 다수 배출"],
+ *      books: ["『○○』 집필"],
+ *    },
+ * ──────────────────────────────────────────────────────────────────
  */
 
+// ─── 타입 정의 (수정하지 마세요) ──────────────────────────────────
 export type Division = "middle" | "high";
 export type SubjectGroup = "국어" | "수학" | "영어" | "탐구";
 
 export type Teacher = {
   id: string;
   name: string;
-  photo?: string; // 3:4 인물 사진 경로
+  photo?: string; // 3:4 인물 사진 경로 (public 기준, 예: "/teachers/name.jpg")
   divisions: Division[]; // 소속 부 (복수 가능)
   subjectGroup: SubjectGroup; // 필터용 과목군
   subject: string; // 표시용 담당 과목 (예: "수능 국어")
@@ -22,6 +54,7 @@ export type Teacher = {
   books?: string[]; // 저서
 };
 
+// 필터 라벨 (보통 그대로 두세요) ───────────────────────────────────
 export const DIVISIONS: { value: Division; label: string }[] = [
   { value: "middle", label: "중등부" },
   { value: "high", label: "고등부" },
@@ -29,110 +62,12 @@ export const DIVISIONS: { value: Division; label: string }[] = [
 
 export const SUBJECT_GROUPS: SubjectGroup[] = ["국어", "수학", "영어", "탐구"];
 
-export const teachers: Teacher[] = [
-  {
-    id: "kim-dohyun",
-    name: "김도현",
-    divisions: ["high"],
-    subjectGroup: "국어",
-    subject: "수능 국어",
-    career: "메가스터디 출강 · 15년차",
-    education: ["고려대학교 국어국문학과"],
-    experience: ["전 메가스터디 국어 강사", "현 새론학원 고등 국어 전임"],
-    achievements: ["수능 국어 1등급 다수 배출"],
-    books: ["『국어 독서 전략』 집필"],
-  },
-  {
-    id: "lee-seojun",
-    name: "이서준",
-    divisions: ["high"],
-    subjectGroup: "수학",
-    subject: "미적분 · 수능 수학",
-    career: "서울대 수학 · 12년차",
-    education: ["서울대학교 수리과학부"],
-    experience: ["현 새론학원 고등 수학 전임"],
-    achievements: ["2025 수능 수학 만점자 11명", "정시 의대 합격 지도"],
-    books: ["『미적분 핵심 유형』 저"],
-  },
-  {
-    id: "park-jiwoo",
-    name: "박지우",
-    divisions: ["high"],
-    subjectGroup: "영어",
-    subject: "영어 독해",
-    career: "EBS 연계 · 10년차",
-    education: ["연세대학교 영어영문학과"],
-    experience: ["현 새론학원 고등 영어 전임"],
-    achievements: ["수능 영어 1등급 향상 사례 다수"],
-  },
-  {
-    id: "choi-yerin",
-    name: "최예린",
-    divisions: ["high"],
-    subjectGroup: "탐구",
-    subject: "생활과 윤리 · 사회문화",
-    career: "사회탐구 전임 · 9년차",
-    education: ["서울대학교 윤리교육과"],
-    experience: ["현 새론학원 사회탐구 전임"],
-    achievements: ["사탐 1등급 다수 배출"],
-  },
-  {
-    id: "jung-woosung",
-    name: "정우성",
-    divisions: ["high", "middle"],
-    subjectGroup: "수학",
-    subject: "수능 수학 · 중등 심화",
-    career: "대치 출강 · 14년차",
-    education: ["KAIST 수리과학과"],
-    experience: ["전 대치 수학 강사", "현 새론학원 수학 전임"],
-    achievements: ["중·고 상위권 도약 지도"],
-  },
-  {
-    id: "han-soyeon",
-    name: "한소연",
-    divisions: ["middle"],
-    subjectGroup: "국어",
-    subject: "중등 국어 · 독서",
-    career: "중등 국어 전임 · 8년차",
-    education: ["이화여자대학교 국어교육과"],
-    experience: ["현 새론학원 중등 국어 전임"],
-    achievements: ["중등 내신 만점 다수"],
-  },
-  {
-    id: "oh-minjae",
-    name: "오민재",
-    divisions: ["middle"],
-    subjectGroup: "수학",
-    subject: "중등 수학",
-    career: "중등 수학 전임 · 11년차",
-    education: ["한양대학교 수학과"],
-    experience: ["현 새론학원 중등 수학 전임"],
-    achievements: ["고교 선행 우수 지도"],
-  },
-  {
-    id: "yoon-jihoon",
-    name: "윤지훈",
-    divisions: ["middle"],
-    subjectGroup: "영어",
-    subject: "중등 영어",
-    career: "중등 영어 전임 · 7년차",
-    education: ["성균관대학교 영어교육과"],
-    experience: ["현 새론학원 중등 영어 전임"],
-    achievements: ["중등 내신·서술형 대비"],
-  },
-  {
-    id: "kang-haneul",
-    name: "강하늘",
-    divisions: ["middle"],
-    subjectGroup: "탐구",
-    subject: "중등 과학",
-    career: "중등 과학 전임 · 6년차",
-    education: ["서울시립대학교 환경공학과"],
-    experience: ["현 새론학원 중등 과학 전임"],
-    achievements: ["과학 내신 향상 지도"],
-  },
-];
+// ════════════════════════════ ✏️ 여기부터 ════════════════════════════
+// 강사 정보를 여기에 추가하세요. (현재 비어 있음)
+export const teachers: Teacher[] = [];
+// ════════════════════════════ ✋ 여기까지 ════════════════════════════
 
+// ─── 조회 함수 (수정하지 마세요) ──────────────────────────────────
 export function getTeachers(): Teacher[] {
   return teachers;
 }
