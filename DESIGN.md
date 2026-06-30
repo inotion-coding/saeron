@@ -121,7 +121,7 @@
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
 | `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone deep(다크). onDark 헤더 + 각진 흰 아이콘 카드(유동), hover 골드 2px 테두리, Reveal 스태거 |
 | `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | tone deep(다크). onDark 헤더 + 흰 ProgramCard 대비 + inverse 전체보기 |
-| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone paper. 라이트 패널 + 골드 eyebrow + 네이비 버튼, 상담 유도 |
+| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone paper. 박스 없는 열린 중앙 정렬 + 골드 eyebrow + CTA 버튼 쌍(primary+secondary) |
 
 **카드 디자인 규약 (각진 에디토리얼)**:
 - **모서리**: 카드는 `rounded-[var(--radius-sm)]`(3px)로 **각지게**. 과한 둥근 모서리 금지(전문성 저하).
@@ -130,6 +130,8 @@
 - 화살표 등 미세 이동(`group-hover:translate-x-0.5`)은 허용.
 
 **기타 상태 규약**: 모든 인터랙티브 요소는 hover/focus-visible/disabled 정의. 버튼은 CTA 특성상 미세 리프트 허용(카드는 금지).
+
+**CTA 버튼 쌍 (통일 규약)**: 페이지의 주요 CTA(히어로·상담 CTA 등)는 **`primary`(`withArrow`) + `secondary`** 2개 조합, 둘 다 `size="lg"`로 통일한다. 보조 버튼에 `ghost` 등 다른 변형 혼용 금지.
 
 ---
 
@@ -143,7 +145,7 @@
 [ Hero (tone paper) — eyebrow · 디스플레이 제목 · 리드 · CTA · 신뢰 지표 4종(골드 선 구분) ]
 [ Strengths (tone deep) — WHY 새론, 딥 네이비 + 흰 카드, onDark 헤더 ]
 [ ProgramsPreview (tone deep) — 딥 네이비 유지, 흰 카드 대비, onDark 헤더 ]
-[ CtaBand (tone paper) — 라이트 패널, 차분한 마무리, 무료 상담 유도 ]
+[ CtaBand (tone paper) — 박스 없는 열린 마무리, CTA 버튼 쌍(primary+secondary) ]
 [ Footer — 사업자 정보 ]
 ```
 

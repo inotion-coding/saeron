@@ -29,7 +29,7 @@ export default function CtaBand() {
               <Button href={cta.primary.href} size="lg" withArrow>
                 {cta.primary.label}
               </Button>
-              <Button href={cta.secondary.href} variant="ghost" size="lg">
+              <Button href={cta.secondary.href} variant="secondary" size="lg">
                 {cta.secondary.label}
               </Button>
             </div>

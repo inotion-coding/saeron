@@ -42,11 +42,11 @@ export const site = {
 
   /** 상단바·푸터 공통 내비게이션 */
   nav: [
-    { href: "/#about", label: "학원 소개" },
-    { href: "/programs", label: "프로그램" },
-    { href: "/schedule", label: "수업 시간표" },
+    { href: "/notices", label: "공지" },
     { href: "/teachers", label: "강사 소개" },
-    { href: "/contact", label: "상담·문의" },
+    { href: "/programs", label: "프로그램" },
+    { href: "/schedule", label: "수업시간표" },
+    { href: "/contact", label: "상담 문의" },
   ] satisfies NavItem[],
 
   /** SNS 링크 — 푸터 아이콘 (TODO(content): 실제 URL로 교체) */
