@@ -7,17 +7,19 @@
 
 ## 1. 디자인 원칙 & 비주얼 방향
 
-### 콘셉트: "신뢰감 있는 모던 에디토리얼"
+### 콘셉트: "신뢰감 있는 모던 에디토리얼" (쿨 네이비 + 틸)
 입시·종합 학원의 핵심 가치(**신뢰 · 전문성 · 결과**)를 절제된 고급스러움으로 표현한다.
+팔레트는 **로고([public/1.png](public/1.png)) 색상에서 도출**: 네이비 `#304890` + 틸 `#60a8c0`.
 
 1. **여백이 곧 품격** — 넉넉한 섹션 리듬과 행간으로 정보가 숨 쉬게 한다.
-2. **강한 타이포 위계** — 큰 디스플레이 제목 + 골드 eyebrow 라벨 + 차분한 본문으로 시선을 유도.
-3. **절제된 색** — 딥 네이비 잉크 + 웜 페이퍼 중립색을 기본으로, 골드 액센트는 "포인트"로만 소량.
+2. **강한 타이포 위계** — 큰 디스플레이 제목 + 틸 eyebrow 라벨 + 차분한 본문으로 시선을 유도.
+3. **절제된 색** — 쿨 네이비 잉크 + 쿨 페이퍼 중립색을 기본으로, 틸 액센트는 "포인트"로만 소량. (골드 미사용)
 4. **은은한 깊이** — 진한 그림자 대신 소프트 레이어드 섀도우 + 헤어라인 보더로 고급감.
-5. **의도된 모션** — hover 리프트·언더라인·화살표 이동 등 미세한 인터랙션. 과하지 않게, `prefers-reduced-motion` 존중.
-6. **결과 지향 동선** — 모든 주요 섹션이 상담(전환)으로 이어진다.
+5. **스크롤 무드 전환** — 스크롤에 따라 배경 톤이 paper→mist→deep로 부드럽게 전환(§9)되어 고급스러운 흐름을 만든다.
+6. **의도된 모션** — hover 리프트·언더라인·화살표 이동·진입 페이드업 등 미세한 인터랙션. 과하지 않게, `prefers-reduced-motion` 존중.
+7. **결과 지향 동선** — 모든 주요 섹션이 상담(전환)으로 이어진다.
 
-> ⚠️ **색상은 프로비저널(provisional)**: 현재 팔레트는 최종 브랜드 컬러 확정 전 임시값이다. 확정 시 §2의 토큰 값만 교체하면 전 페이지에 반영된다.
+> 색상은 로고 기반으로 확정했으나 여전히 토큰으로 추상화되어 있어, 조정 시 §2의 토큰 값만 교체하면 전 페이지에 반영된다.
 
 ---
 
@@ -27,24 +29,29 @@
 
 ### 2.1 색상 (semantic)
 
-| 토큰 | 값(provisional) | 의미 / 사용처 | Tailwind 유틸 |
+출처: 로고(네이비 `#304890` / 틸 `#60a8c0`). 접근성을 위해 텍스트용 액센트는 더 진한 틸을 사용한다.
+
+| 토큰 | 값 | 의미 / 사용처 | Tailwind 유틸 |
 |------|------|------|------|
-| `--color-primary` | `#1e2a44` | 딥 네이비 잉크 — CTA·강조·로고·브랜드 | `bg-primary` `text-primary` |
-| `--color-primary-hover` | `#16203a` | primary hover | `hover:bg-primary-hover` |
+| `--color-primary` | `#24356b` | 딥 로열 네이비 — CTA·강조·로고 | `bg-primary` `text-primary` |
+| `--color-primary-hover` | `#1b294f` | primary hover | `hover:bg-primary-hover` |
 | `--color-primary-foreground` | `#ffffff` | primary 위 텍스트 | `text-primary-foreground` |
-| `--color-accent` | `#b4884b` | 절제된 골드 — eyebrow·포인트 라인·배지 | `text-accent` `bg-accent` |
+| `--color-brand-blue` | `#304890` | 로고 블루 — 그라데이션/데코 | `bg-brand-blue` |
+| `--color-accent` | `#1f7e92` | 딥 틸 — eyebrow·링크·텍스트 강조(대비 확보) | `text-accent` `bg-accent` |
+| `--color-accent-bright` | `#58aecb` | 로고 틸 — 라인·점·그라데이션(장식) | `bg-accent-bright` |
 | `--color-accent-foreground` | `#ffffff` | accent 위 텍스트 | `text-accent-foreground` |
-| `--color-secondary` | `#2e3c5d` | 보조 네이비(드물게) | `bg-secondary` |
-| `--color-background` | `#ffffff` | 페이지 배경 | `bg-background` |
-| `--color-surface` | `#f7f6f3` | 웜 페이퍼 — 교차 섹션 배경 | `bg-surface` |
-| `--color-surface-2` | `#efece5` | 더 깊은 페이퍼 — 공지 리본 등 | `bg-surface-2` |
-| `--color-border` | `#e6e3dc` | 웜 헤어라인 | `border-border` |
-| `--color-foreground` | `#1a2233` | 본문 잉크 | `text-foreground` |
-| `--color-muted-foreground` | `#5c6678` | 보조 텍스트 | `text-muted-foreground` |
+| `--color-background` | `#ffffff` | 표면(카드 등) | `bg-background` |
+| `--color-surface` | `#f3f7fb` | 쿨 라이트 표면 | `bg-surface` |
+| `--color-surface-2` | `#e8eff7` | 더 깊은 표면 | `bg-surface-2` |
+| `--color-border` | `#dde6f0` | 쿨 헤어라인 | `border-border` |
+| `--color-foreground` | `#16213a` | 쿨 잉크 네이비(본문) | `text-foreground` |
+| `--color-muted-foreground` | `#586a86` | 보조 텍스트 | `text-muted-foreground` |
 | `--color-success/warning/error` | — | 상태색(폼 검증 등) | `text-error` 등 |
 
-- **불투명도 변형**은 `/` 모디파이어로: `bg-primary/8`, `text-primary-foreground/75`, `border-accent/20` 등.
-- **색상 확정 절차**: §2.1 값만 교체 → Tailwind 테마·전 컴포넌트 자동 반영. 컴포넌트 수정 불필요.
+> 페이지 **배경**은 정적 토큰이 아니라 스크롤 톤(`--page-bg`)이 담당한다(§9).
+
+- **불투명도 변형**은 `/` 모디파이어로: `bg-accent/10`, `text-white/75`, `border-white/10` 등.
+- **색상 조정 절차**: §2.1 값만 교체 → Tailwind 테마·전 컴포넌트 자동 반영. 컴포넌트 수정 불필요.
 
 ### 2.2 타이포그래피
 
@@ -83,7 +90,7 @@
 ## 3. 레이아웃 시스템
 
 - **컨테이너**: `--container-page = 75rem(1200px)`. 래퍼 컴포넌트 [Container](components/layout/Container.tsx) — `max-w + px-4 sm:px-6 lg:px-8`.
-- **섹션 리듬**: [Section](components/layout/Section.tsx) — 수직 패딩 `py-[clamp(3rem,2rem+4vw,6rem)]`, `variant="muted"`로 `bg-surface` 교차.
+- **섹션 리듬**: [Section](components/layout/Section.tsx) — 수직 패딩 `py-[clamp(3rem,2rem+4vw,6rem)]`. 배경은 투명(스크롤 톤이 담당), `tone` prop으로 색 전환에 참여(§9).
 - **헤더**: 풀폭(컨테이너 미적용) — 로고는 항상 화면 왼쪽 끝, 메뉴는 오른쪽 끝. sticky + backdrop blur.
 - **그리드**: 카드류는 유동 `grid-cols-[repeat(auto-fit,minmax(Nrem,1fr))]` (고정 열 점프 금지, §7).
 
@@ -96,15 +103,19 @@
 | `Button` | [ui/Button.tsx](components/ui/Button.tsx) | `primary` / `secondary` / `ghost` / `inverse`(어두운 배경용), size `md`/`lg`, `withArrow`. href→Link. hover 리프트, 화살표 이동, 포커스 링, 터치 44px+ |
 | `Badge` | [ui/Badge.tsx](components/ui/Badge.tsx) | `neutral` / `accent` / `primary`. 과목·대상·태그 |
 | `SectionHeading` | [ui/SectionHeading.tsx](components/ui/SectionHeading.tsx) | eyebrow + 제목 + 설명, `align` left/center |
-| `Container` / `Section` | [layout/](components/layout/) | 최대폭 래퍼 / 섹션 리듬 |
-| `Header` | [layout/Header.tsx](components/layout/Header.tsx) | 풀폭, 로고 마크+워드마크, 데스크톱 언더라인 내비, 모바일 햄버거, active 표시 |
+| `Container` / `Section` | [layout/](components/layout/) | 최대폭 래퍼 / 섹션 리듬(투명 배경 + `tone`) |
+| `Logo` | [layout/Logo.tsx](components/layout/Logo.tsx) | `site.logo.src` 이미지 또는 텍스트 마크 폴백. Header/Footer 공용 |
+| `PageBackdrop` | [layout/PageBackdrop.tsx](components/layout/PageBackdrop.tsx) | fixed 풀뷰포트 배경, `--page-bg` 보간(§9) |
+| `ScrollTheme` | [ScrollTheme.tsx](components/ScrollTheme.tsx) | 중앙 교차 섹션 `data-tone`→`<html>` 반영(IntersectionObserver, §9) |
+| `Reveal` | [ui/Reveal.tsx](components/ui/Reveal.tsx) | 진입 페이드업(once), `delay` 스태거, reduced-motion 시 즉시 표시 |
+| `Header` | [layout/Header.tsx](components/layout/Header.tsx) | 풀폭, 로고, 데스크톱 언더라인 내비, 모바일 햄버거, active 표시 |
 | `Footer` | [layout/Footer.tsx](components/layout/Footer.tsx) | 로고, 바로가기, **사업자 정보**(site.ts), 카피라이트 |
-| `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 헤더 아래 **슬림 공지 리본**, 자동 롤링 슬라이드, 점 인디케이터, 닫기, reduced-motion |
+| `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 헤더 아래 공지 배너, **최신 1건 정적 노출**(슬라이드 없음), 닫기 |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 대상 배지·제목·요약·태그·화살표, hover 리프트. 홈/`/programs` 공용 |
-| `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표 스트립, 절제된 데코 그라데이션 |
-| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | 아이콘 카드 그리드(유동), hover 리프트 + 아이콘 반전 |
-| `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | 헤더 + 추천 ProgramCard 그리드 + 전체보기 |
-| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | primary 풀밴드, 데코 블롭, inverse 버튼, 상담 유도 |
+| `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
+| `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone mist. 아이콘 카드 그리드(유동), hover 리프트, Reveal 스태거 |
+| `ProgramsPreview` | [home/ProgramsPreview.tsx](components/home/ProgramsPreview.tsx) | tone paper. 헤더 + 추천 ProgramCard 그리드 + 전체보기 |
+| `CtaBand` | [home/CtaBand.tsx](components/home/CtaBand.tsx) | tone deep. 딥 네이비 위 글래스 패널, inverse 버튼, 상담 유도 |
 
 **상태 규약**: 모든 인터랙티브 요소는 hover/focus-visible/disabled를 정의한다. 클릭형 카드는 `group` + 화살표 `group-hover:translate-x-0.5`, 카드 컨테이너는 `hover:-translate-y-1 hover:shadow-hover`.
 
@@ -116,11 +127,11 @@
 
 ```
 [ Header (sticky, 풀폭) ]
-[ NoticeBar — 슬림 공지 리본 (자동 롤링) ]
-[ Hero — eyebrow · 디스플레이 제목 · 리드 · CTA(상담/프로그램) · 신뢰 지표 4종 ]
-[ Strengths(muted) — WHY 새론, 강점 4 카드 ]
-[ ProgramsPreview — 추천 프로그램 3 + 전체보기 ]
-[ CtaBand — 네이비 밴드, 무료 상담 유도 ]
+[ NoticeBar (tone paper) — 최신 공지 1건 ]
+[ Hero (tone paper) — eyebrow · 디스플레이 제목 · 리드 · CTA · 신뢰 지표 4종 ]
+[ Strengths (tone mist) — WHY 새론, 강점 4 카드 ]
+[ ProgramsPreview (tone paper) — 추천 프로그램 3 + 전체보기 ]
+[ CtaBand (tone deep) — 딥 네이비 전환 + 글래스 패널, 무료 상담 유도 ]
 [ Footer — 사업자 정보 ]
 ```
 
@@ -160,7 +171,7 @@
 
 ### 컴포넌트별
 - **헤더**: 데스크톱 가로 언더라인 메뉴 → `md` 미만 햄버거 슬라이드 패널.
-- **공지 리본**: 슬림 1행, 날짜·점 인디케이터는 `sm` 이상만 노출.
+- **공지 배너**: 최신 1건, 제목 2줄 클램프(유동 크기).
 - **히어로 지표**: 2열 → `md` 4열.
 - **카드 그리드(강점/프로그램)**: `auto-fit/minmax`로 1→다열 연속.
 - **CTA/2열 레이아웃**: 넓은 폭 가로 → 좁은 폭 세로 적층.
@@ -172,11 +183,40 @@
 - **색 대비**: 본문 텍스트 WCAG AA(4.5:1) 이상. 색상 확정 시 재검증.
 - **포커스**: `:focus-visible` 전역 링(globals.css). `outline:none`만 두지 않음.
 - **시맨틱**: `header/nav/main/section/footer`, 제목 레벨 순서 준수(페이지당 h1 1회 권장).
-- **모션**: `prefers-reduced-motion: reduce` 시 전역 트랜지션/애니메이션·자동 슬라이드 비활성.
+- **모션**: `prefers-reduced-motion: reduce` 시 전역 트랜지션/애니메이션·스크롤 색 전환·Reveal 비활성(즉시 표시).
 - **이미지/아이콘**: 의미 이미지 `alt`, 장식 아이콘 `aria-hidden`.
 - **폼**: 모든 입력 `label` 연결, 에러 텍스트 + `aria-invalid`.
 - **터치 타깃**: 최소 44×44px (`h-11`).
-- **캐러셀**: 비활성 슬라이드 `tabIndex=-1` + `aria-hidden`, `aria-live="polite"`.
+- **딥 톤 위 대비**: `deep` 톤 섹션의 텍스트는 흰색/`accent-bright`로 WCAG AA 확보.
+
+---
+
+## 9. 스크롤 색상 전환 & 진입 모션
+
+### 스크롤 색상 전환 (scroll-driven section theming)
+스크롤에 따라 페이지 배경 톤이 **자연스럽고 고급스럽게** 전환된다. (레퍼런스: Apple 제품 페이지·Stripe·Linear)
+
+**동작 구조**
+1. 각 섹션에 `data-tone`(`paper` | `mist` | `deep`) 부여. (`Section`은 `tone` prop, 커스텀 섹션은 직접 속성)
+2. [ScrollTheme](components/ScrollTheme.tsx): `IntersectionObserver`(`rootMargin: "-50% 0 -50% 0"`)로 **뷰포트 세로 중앙선**을 지나는 섹션을 감지 → 그 tone을 `<html data-tone>`에 반영.
+3. [PageBackdrop](components/layout/PageBackdrop.tsx): `fixed` 풀뷰포트 레이어가 `--page-bg`를 **700ms** 이징(`--ease-out-soft`)으로 보간.
+
+**톤 값** (globals.css `:root[data-tone="…"]`)
+| tone | `--page-bg` | 용도 |
+|------|------|------|
+| `paper` | `#fbfcfe` | 기본(공지·히어로·프로그램) |
+| `mist` | `#eef4fa` | 연한 블루 틴트(강점) |
+| `deep` | `#1a2944` | 딥 네이비(상담 CTA) |
+
+**규칙**
+- 섹션 배경은 **투명**, 카드/표면만 불투명(`bg-background`)으로 띄운다.
+- `deep` 톤 섹션의 콘텐츠는 흰색 텍스트 + `accent-bright`. 글래스 패널(`bg-white/5 border-white/10`)로 띄움.
+- 새 섹션을 추가하면 흐름이 끊기지 않게 인접 톤을 고려해 `data-tone` 지정.
+
+### 진입 모션 (Reveal)
+- [Reveal](components/ui/Reveal.tsx): 뷰포트 진입 시 한 번 페이드업(`opacity`+`translateY(18px)`, 700ms). `delay`로 카드 스태거.
+- `prefers-reduced-motion: reduce` 또는 IntersectionObserver 미지원 시 **즉시 표시**.
+- 적용: 히어로 텍스트·지표, 강점/프로그램 카드(스태거), CTA.
 
 ---
 

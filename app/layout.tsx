@@ -3,6 +3,8 @@ import "./globals.css";
 import { site } from "@/lib/data/site";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import PageBackdrop from "@/components/layout/PageBackdrop";
+import ScrollTheme from "@/components/ScrollTheme";
 
 export const metadata: Metadata = {
   title: {
@@ -27,6 +29,8 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-dvh flex-col">
+        <PageBackdrop />
+        <ScrollTheme />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

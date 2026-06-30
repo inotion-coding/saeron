@@ -17,7 +17,7 @@ export default function NoticeBar() {
   if (!notice || hidden) return null;
 
   return (
-    <section className="border-b border-border bg-surface" aria-label="공지">
+    <section data-tone="paper" className="border-b border-border" aria-label="공지">
       <Container className="py-[clamp(2rem,1.2rem+3vw,3.5rem)]">
         {/* 상단: 배지 + 닫기 */}
         <div className="mb-4 flex items-center justify-between">

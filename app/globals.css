@@ -3,28 +3,28 @@
 /* =============================================================================
  * 새론학원 디자인 시스템 — 토큰 (DESIGN.md §2)
  *
- * 콘셉트: "신뢰감 있는 모던 에디토리얼"
+ * 콘셉트: "신뢰감 있는 모던 에디토리얼" (쿨 네이비 + 틸)
+ * 팔레트는 로고(public/1.png) 색상에서 도출: 네이비 #304890 + 틸 #60a8c0.
  * 색상은 의미(semantic) 토큰으로만 사용한다. 컴포넌트에서 hex 직접 사용 금지.
- * 현재 값은 "프리미엄 프로비저널 팔레트" — 최종 브랜드 컬러 확정 시 이 블록만 교체.
  * ========================================================================== */
 @theme {
-  /* ---- Brand ------------------------------------------------------------- */
-  --color-primary: #1e2a44;            /* 딥 네이비 잉크 — 신뢰/전문성 (provisional) */
-  --color-primary-hover: #16203a;
+  /* ---- Brand (로고 기반) -------------------------------------------------- */
+  --color-primary: #24356b;            /* 딥 로열 네이비 — CTA·강조·로고 */
+  --color-primary-hover: #1b294f;
   --color-primary-foreground: #ffffff;
 
-  --color-accent: #b4884b;             /* 절제된 골드 — 프레스티지 포인트 (provisional) */
+  --color-brand-blue: #304890;         /* 로고 "S" 블루 — 그라데이션 */
+  --color-accent: #1f7e92;             /* 딥 틸 — eyebrow·링크·텍스트 강조(대비 확보) */
+  --color-accent-bright: #58aecb;      /* 로고 "R" 틸 — 라인·점·그라데이션(장식) */
   --color-accent-foreground: #ffffff;
 
-  --color-secondary: #2e3c5d;          /* 보조 네이비 (provisional) */
-
-  /* ---- Neutral (warm) ---------------------------------------------------- */
+  /* ---- Neutral (cool) ---------------------------------------------------- */
   --color-background: #ffffff;
-  --color-surface: #f7f6f3;            /* 웜 페이퍼 — 섹션 교차 배경 */
-  --color-surface-2: #efece5;          /* 한 단계 더 깊은 페이퍼 */
-  --color-border: #e6e3dc;             /* 웜 헤어라인 */
-  --color-foreground: #1a2233;         /* 본문 잉크 */
-  --color-muted-foreground: #5c6678;   /* 보조 텍스트 */
+  --color-surface: #f3f7fb;            /* 쿨 라이트 표면 */
+  --color-surface-2: #e8eff7;
+  --color-border: #dde6f0;             /* 쿨 헤어라인 */
+  --color-foreground: #16213a;         /* 쿨 잉크 네이비 */
+  --color-muted-foreground: #586a86;
 
   /* ---- Status ------------------------------------------------------------ */
   --color-success: #15803d;
@@ -36,7 +36,6 @@
     -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
     sans-serif;
 
-  /* 유동 타입 스케일 (clamp: 최소 ~ 최대를 폭에 따라 연속 보간) */
   --text-display: clamp(2.5rem, 1.7rem + 3.6vw, 4.25rem);
   --text-display--line-height: 1.08;
   --text-display--letter-spacing: -0.02em;
@@ -62,18 +61,54 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  /* ---- Soft layered shadows (premium depth) ------------------------------ */
+  /* ---- Soft layered shadows ---------------------------------------------- */
   --shadow-card: 0 1px 2px rgba(20, 33, 58, 0.04),
     0 10px 28px -14px rgba(20, 33, 58, 0.14);
   --shadow-hover: 0 2px 6px rgba(20, 33, 58, 0.06),
     0 22px 48px -20px rgba(20, 33, 58, 0.22);
-  --shadow-ring: 0 0 0 1px rgba(20, 33, 58, 0.06);
 
-  /* ---- Layout ------------------------------------------------------------ */
-  --container-page: 75rem; /* 1200px */
-
-  /* ---- Motion ------------------------------------------------------------ */
+  /* ---- Layout / Motion --------------------------------------------------- */
+  --container-page: 75rem;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =============================================================================
+ * 스크롤 색상 전환 (scroll-driven section theming) — DESIGN.md §9
+ *  - ScrollTheme 가 화면 중앙의 섹션 data-tone 을 루트(html)로 올린다.
+ *  - PageBackdrop(.page-backdrop)이 --page-bg 를 부드럽게 보간한다.
+ * ========================================================================== */
+:root {
+  --page-bg: #fbfcfe;
+}
+:root[data-tone="paper"] {
+  --page-bg: #fbfcfe;
+} /* 쿨 near-white */
+:root[data-tone="mist"] {
+  --page-bg: #eef4fa;
+} /* 연한 블루 틴트 */
+:root[data-tone="deep"] {
+  --page-bg: #1a2944;
+} /* 딥 네이비 */
+
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-color: var(--page-bg);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* 진입 모션 (Reveal) — DESIGN.md §9 */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms var(--ease-out-soft),
+    transform 700ms var(--ease-out-soft);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* =============================================================================
@@ -81,10 +116,11 @@
  * ========================================================================== */
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-background);
 }
 
 body {
-  background-color: var(--color-background);
+  background-color: transparent; /* PageBackdrop 가 배경을 담당 */
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv01";
@@ -93,13 +129,12 @@ body {
 }
 
 ::selection {
-  background-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
   color: var(--color-foreground);
 }
 
-/* 키보드 포커스 가시성 (DESIGN.md §6) */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 3px;
 }
@@ -107,6 +142,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
   *,
   *::before,
@@ -117,10 +156,8 @@ body {
 }
 
 /* =============================================================================
- * Utilities (프로젝트 공용)
+ * Utilities
  * ========================================================================== */
-
-/* 섹션 도입부 작은 라벨 위의 골드 헤어라인 */
 @utility eyebrow {
   display: inline-flex;
   align-items: center;
@@ -132,7 +169,6 @@ body {
   color: var(--color-accent);
 }
 
-/* 본문 가독 폭 제한 */
 @utility measure {
   max-width: 60ch;
 }
