@@ -6,6 +6,23 @@
 
 export type NavItem = { href: string; label: string };
 
+/**
+ * 로고 이미지 설정.
+ * - src=null 이면 텍스트 마크(폴백)로 표시된다.
+ * - 로고를 넣으려면: 이미지 파일을 `public/` 에 두고(예: public/logo.svg)
+ *   src 를 "/logo.svg" 로 지정한 뒤 width/height 를 실제 비율에 맞게 조정.
+ *   (Header/Footer 의 <Logo /> 가 자동으로 이미지로 전환된다.)
+ */
+export const logo: {
+  src: string | null;
+  width: number;
+  height: number;
+} = {
+  src: "/logo.png", // 가로형 로고 (원본 public/1.png 의 투명 여백을 잘라낸 버전)
+  width: 750, // 실제 픽셀 (표시 높이는 Logo 컴포넌트에서 h-9 로 축소)
+  height: 181,
+};
+
 export const site = {
   name: "새론학원",
   description:

@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/data/site";
+import Logo from "./Logo";
 
 /**
- * 상단바 (1단계) — DESIGN.md §4
- * 풀폭 레이아웃: 로고는 화면 왼쪽 끝, 메뉴는 오른쪽 끝에 고정.
- * 데스크톱: 가로 메뉴 / 좁은 폭: 햄버거 토글 패널, 현재 경로 active 표시.
+ * 상단바 — DESIGN.md §4
+ * 풀폭 레이아웃: 로고는 화면 왼쪽 끝, 메뉴는 오른쪽 끝.
+ * 데스크톱 가로 메뉴(밑줄 인터랙션) / 좁은 폭 햄버거. sticky + backdrop blur.
  */
 const PAD = "px-4 sm:px-6 lg:px-8";
 
@@ -20,32 +21,41 @@ export default function Header() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className={`flex h-16 items-center justify-between gap-4 ${PAD}`}>
         {/* 로고 — 항상 왼쪽 끝 */}
         <Link
           href="/"
-          className="text-lg font-extrabold tracking-tight text-primary"
           onClick={() => setOpen(false)}
+          aria-label={`${site.name} 홈`}
         >
-          {site.name}
+          <Logo />
         </Link>
 
         {/* 데스크톱 내비게이션 — 오른쪽 끝 */}
-        <nav className="hidden items-center gap-1 md:flex">
-          {site.nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium transition-colors hover:bg-surface ${
-                isActive(item.href)
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-7 md:flex">
+          {site.nav.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group relative py-1 text-sm font-semibold transition-colors ${
+                  active
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {item.label}
+                <span
+                  className={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-accent transition-all duration-200 ease-[var(--ease-out-soft)] ${
+                    active ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                  aria-hidden="true"
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         {/* 모바일 햄버거 */}
@@ -80,7 +90,7 @@ export default function Header() {
       {/* 모바일 패널 */}
       <div
         id="mobile-nav"
-        className={`overflow-hidden border-t border-border bg-background transition-[max-height] duration-300 md:hidden ${
+        className={`overflow-hidden border-t border-border bg-background transition-[max-height] duration-300 ease-[var(--ease-out-soft)] md:hidden ${
           open ? "max-h-96" : "max-h-0 border-t-0"
         }`}
       >
@@ -90,10 +100,10 @@ export default function Header() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className={`rounded-[var(--radius-sm)] px-3 py-3 text-base font-medium ${
+              className={`rounded-[var(--radius-sm)] px-3 py-3 text-base font-semibold ${
                 isActive(item.href)
-                  ? "bg-surface text-primary"
-                  : "text-foreground hover:bg-surface"
+                  ? "bg-surface text-foreground"
+                  : "text-muted-foreground hover:bg-surface hover:text-foreground"
               }`}
             >
               {item.label}

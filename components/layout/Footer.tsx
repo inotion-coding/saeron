@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/data/site";
 import Container from "./Container";
+import Logo from "./Logo";
 
 /**
  * 하단바 (1단계) — 사업자 정보 + 간단 메뉴 (DESIGN.md §4)
@@ -16,8 +17,8 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           {/* 학원 정보 */}
           <div className="max-w-md">
-            <p className="text-lg font-extrabold text-primary">{site.name}</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <Logo />
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {site.description}
             </p>
           </div>

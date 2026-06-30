@@ -1,19 +1,23 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "inverse";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold " +
-  "transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 " +
+  "group inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold " +
+  "transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out-soft)] " +
+  "focus-visible:outline-2 focus-visible:outline-offset-2 " +
   "disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+  primary:
+    "bg-primary text-primary-foreground shadow-card hover:bg-primary-hover hover:shadow-hover hover:-translate-y-0.5",
   secondary:
-    "bg-surface text-foreground border border-border hover:bg-background",
-  ghost: "bg-transparent text-primary hover:bg-surface",
+    "bg-background text-foreground border border-border hover:border-foreground/30 hover:-translate-y-0.5",
+  ghost: "bg-transparent text-foreground hover:bg-surface",
+  inverse:
+    "bg-background text-foreground hover:bg-surface hover:-translate-y-0.5 shadow-card",
 };
 
 const sizes: Record<Size, string> = {
@@ -26,6 +30,8 @@ type CommonProps = {
   variant?: Variant;
   size?: Size;
   className?: string;
+  /** 끝에 화살표 아이콘 표시 */
+  withArrow?: boolean;
 };
 
 type ButtonProps = CommonProps &
@@ -33,13 +39,11 @@ type ButtonProps = CommonProps &
     href?: undefined;
   };
 
-type LinkProps = CommonProps & {
-  href: string;
-};
+type LinkProps = CommonProps & { href: string };
 
 /**
  * 공용 버튼 (DESIGN.md §4). href가 있으면 Next Link, 없으면 <button>.
- * 최소 터치 타깃 44px 이상 (h-11 = 44px).
+ * 최소 터치 타깃 44px(h-11). hover 시 살짝 떠오르는 마이크로 인터랙션.
  */
 export default function Button(props: ButtonProps | LinkProps) {
   const {
@@ -47,22 +51,52 @@ export default function Button(props: ButtonProps | LinkProps) {
     variant = "primary",
     size = "md",
     className = "",
+    withArrow = false,
   } = props;
   const cls = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+  const content = (
+    <>
+      {children}
+      {withArrow && <Arrow />}
+    </>
+  );
 
   if ("href" in props && props.href) {
     return (
       <Link href={props.href} className={cls}>
-        {children}
+        {content}
       </Link>
     );
   }
 
-  const { href: _href, ...buttonProps } = props as ButtonProps;
+  const { href: _href, withArrow: _wa, ...buttonProps } = props as ButtonProps;
   void _href;
+  void _wa;
   return (
     <button className={cls} {...buttonProps}>
-      {children}
+      {content}
     </button>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      className="transition-transform duration-200 ease-[var(--ease-out-soft)] group-hover:translate-x-0.5"
+    >
+      <path
+        d="M3 8h9M8.5 4l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
