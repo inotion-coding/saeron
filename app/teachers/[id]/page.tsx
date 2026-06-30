@@ -5,7 +5,9 @@ import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
+import ScheduleRowList from "@/components/schedule/ScheduleRowList";
 import { teachers, getTeacherById } from "@/lib/data/teachers";
+import { getScheduleByTeacherId } from "@/lib/data/schedule";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -30,6 +32,8 @@ export default async function TeacherDetailPage({ params }: Params) {
     { label: "합격 · 수상 실적", items: teacher.achievements },
     { label: "저서", items: teacher.books },
   ].filter((s) => s.items && s.items.length > 0);
+
+  const schedule = getScheduleByTeacherId(teacher.id);
 
   return (
     <Section tone="paper">
@@ -96,6 +100,33 @@ export default async function TeacherDetailPage({ params }: Params) {
             </dl>
           )}
         </Reveal>
+
+        {/* 2026 수업 시간표 (해당 강사) */}
+        {schedule && schedule.rows.length > 0 && (
+          <Reveal className="mt-12 border-t border-border pt-8">
+            <h2 className="flex items-center gap-2.5 text-h3 font-bold text-foreground">
+              <span
+                className="h-5 w-1 rounded-full bg-point"
+                aria-hidden="true"
+              />
+              2026 수업 시간표
+            </h2>
+            {schedule.note && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                {schedule.note}
+              </p>
+            )}
+            <ScheduleRowList rows={schedule.rows} />
+            <p className="mt-4 text-right">
+              <Link
+                href="/schedule"
+                className="text-sm font-semibold text-muted-foreground underline-offset-2 transition-colors hover:text-point hover:underline"
+              >
+                전체 시간표 보기 →
+              </Link>
+            </p>
+          </Reveal>
+        )}
 
         <div className="mt-10">
           <Button href="/teachers" variant="secondary" withArrow>

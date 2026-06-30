@@ -33,9 +33,9 @@
 │   ├── notices/              # 공지 목록 page.tsx + [id]/page.tsx 상세 (구현)
 │   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (구현)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
+│   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
 │   ├── about/                # 학원 소개 (미구현)
-│   ├── programs/             # 프로그램 (미구현)
-│   └── schedule/             # 수업 시간표 (미구현)
+│   └── programs/             # 프로그램 (미구현)
 ├── components/
 │   ├── layout/
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
@@ -44,12 +44,17 @@
 │   │   └── Footer.tsx        # 하단바 (사업자 정보)
 │   ├── ui/
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
+│   ├── schedule/
+│   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (client)
+│   │   └── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
 │   └── NoticeBar.tsx         # 메인 공지 영역
-│   # TeacherCard, ProgramCard, ScheduleTable, ContactForm 등은 해당 단계에서 추가
+│   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
 ├── lib/
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
-│       └── notices.ts        # 공지 더미
+│       ├── notices.ts        # 공지 더미
+│       ├── teachers.ts       # 강사 데이터(부·과목·각오·이력)
+│       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
 ├── public/                   # 이미지·정적 자산
 ├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
 ├── CLAUDE.md / PROCESS.md / DESIGN.md
