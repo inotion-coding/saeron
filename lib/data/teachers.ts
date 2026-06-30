@@ -13,7 +13,7 @@
  * 3) id 는 영문 소문자+하이픈, 강사마다 겹치지 않게. (상세 주소가 됨: /teachers/<id>)
  * 4) divisions(소속 부)는 "middle"(중등부) / "high"(고등부).
  *    한쪽만: ["high"]   /   둘 다: ["middle", "high"]
- * 5) subjectGroup(필터 분류)은 "국어" | "수학" | "영어" | "탐구" 중 하나.
+ * 5) subjectGroup(필터 분류)은 "국어" | "수학" | "영어" | "사회" | "과학" 중 하나.
  * 6) 끝에 ? 가 붙는 항목(photo·education·experience·achievements·books)은
  *    내용이 없으면 그 줄을 통째로 지워도 됩니다.
  * 7) 사진: public/teachers/ 에 이미지를 넣고  photo: "/teachers/파일명.jpg"
@@ -38,7 +38,7 @@
 
 // ─── 타입 정의 (수정하지 마세요) ──────────────────────────────────
 export type Division = "middle" | "high";
-export type SubjectGroup = "국어" | "수학" | "영어" | "탐구";
+export type SubjectGroup = "국어" | "수학" | "영어" | "사회" | "과학";
 
 export type Teacher = {
   id: string;
@@ -60,7 +60,13 @@ export const DIVISIONS: { value: Division; label: string }[] = [
   { value: "high", label: "고등부" },
 ];
 
-export const SUBJECT_GROUPS: SubjectGroup[] = ["국어", "수학", "영어", "탐구"];
+export const SUBJECT_GROUPS: SubjectGroup[] = [
+  "국어",
+  "수학",
+  "영어",
+  "사회",
+  "과학",
+];
 
 // ════════════════════════════ ✏️ 여기부터 ════════════════════════════
 export const teachers: Teacher[] = [
@@ -147,7 +153,7 @@ export const teachers: Teacher[] = [
     name: "한준호",
     photo: "/teachers/han-junho.jpg",
     divisions: ["high"],
-    subjectGroup: "탐구",
+    subjectGroup: "사회",
     subject: "통합사회 / 현대사회와 윤리 / 경제 / 생활과 윤리",
     resolve: "시험에 나오는 것만 콕콕! 고효율 테마학습",
     education: ["연세대학교 졸업"],
@@ -185,7 +191,7 @@ export const teachers: Teacher[] = [
     id: "kim-yunsik",
     name: "김윤식",
     divisions: ["high"],
-    subjectGroup: "탐구",
+    subjectGroup: "과학",
     subject: "통합과학 / 생명과학",
     resolve: "단순 암기를 벗어나 올바른 추론 능력을 길러, 확실한 1등급을 만듭니다.",
     education: ["KAIST 이학 석사 학위 취득"],

@@ -47,7 +47,7 @@ function FilterTab({
 
 /**
  * 강사 필터 디렉토리 (client) — DESIGN.md §6 (강사)
- * 1차 필터: 부(중등부/고등부) · 2차 필터: 과목(전체/국어/수학/영어/탐구).
+ * 1차 필터: 부(중등부/고등부) · 2차 필터: 과목(전체/국어/수학/영어/사회/과학).
  */
 export default function TeacherDirectory() {
   const all = getTeachers();

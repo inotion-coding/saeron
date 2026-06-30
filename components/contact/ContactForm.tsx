@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
 
-const SUBJECTS = ["국어", "수학", "영어", "탐구", "기타"];
+const SUBJECTS = ["국어", "수학", "영어", "사회", "과학", "기타"];
 
 type Errors = { name?: string; phone?: string; agree?: string };
 
