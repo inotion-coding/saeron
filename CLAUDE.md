@@ -64,6 +64,15 @@
 ```
 > 1단계(메인 골격) 구현 완료. Tailwind는 v4(CSS `@theme` 기반)로 설정되어 `tailwind.config.ts` 대신 `app/globals.css`에서 토큰을 정의한다. 이후 파일은 PROCESS.md 단계대로 추가되며, 추가 시 위 구조를 갱신한다.
 
+### 🚀 배포 (Deployment)
+
+- **방식**: 정적 사이트(`next build` → `output:'export'` → `out/`). 서버 불필요.
+- **호스팅**: 깃허브 페이지(공개 저장소 `inotion-coding/saeron`). `main` push 시 `.github/workflows/deploy.yml`이 자동 빌드·배포.
+- **활성화**: 저장소 Settings → Pages → Source = **GitHub Actions**.
+- **basePath**: 프로젝트 사이트라 `next.config.mjs`에서 빌드 시에만 `/saeron` 적용(임시 주소 `inotion-coding.github.io/saeron/` 정상화). dev는 루트 유지. **커스텀 도메인을 루트로 연결하면 `REPO_BASE`를 `""`로 비울 것.**
+- **로컬 확인**: 편집 `npm run dev`(루트), 완성본 미리보기 `npm run preview`(`out/` 정적 서빙).
+- 콘텐츠는 `lib/data/*`에서 코드로 관리(관리자/CMS 없음).
+
 ### 📌 File Structure 갱신 규칙 (MANDATORY)
 
 **CRITICAL: 작업 중 디렉토리/파일 구조가 변경되면 즉시 이 섹션에 반영할 것**
@@ -345,7 +354,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ---
 
-**Last Updated**: 2026-06-30
+**Last Updated**: 2026-06-30 (정적 export + 깃허브 페이지 배포 / 강사·시간표 구현)
 **Version**: 0.1.0
 **Maintainer**: 새론학원 (inotion-coding)
 
