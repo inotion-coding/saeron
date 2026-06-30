@@ -124,6 +124,8 @@
 | `TeacherPhoto` | [TeacherPhoto.tsx](components/TeacherPhoto.tsx) | 강사 3:4 인물(이미지/실루엣 플레이스홀더) |
 | `TeacherCard` | [teachers/TeacherCard.tsx](components/teachers/TeacherCard.tsx) | 강사 카드(미니멀: 사진·과목·이름·경력1줄, hover 줌+"프로필 보기") |
 | `TeacherDirectory` | [teachers/TeacherDirectory.tsx](components/teachers/TeacherDirectory.tsx) | client. 2단계 필터(부·과목) + 강사 그리드 |
+| `SocialLinks` | [SocialLinks.tsx](components/SocialLinks.tsx) | 네이버 블로그·인스타 브랜드 타일(푸터·상담 공용) |
+| `ContactForm` | [contact/ContactForm.tsx](components/contact/ContactForm.tsx) | client. 상담 폼·검증·접수 메시지(전송 추후) |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
 | `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone deep(다크). onDark 헤더 + 각진 흰 아이콘 카드(유동), hover 골드 2px 테두리, Reveal 스태거 |
@@ -177,7 +179,7 @@
 - **프로그램(/programs)**: 서브 히어로 → 대상/학년 그룹별 `ProgramCard` 그리드 → CtaBand.
 - **시간표(/schedule)**: 서브 히어로 → 시간표 테이블(넓은 폭 가로 테이블 / 좁은 폭 가로 스크롤·요일 카드) → 안내.
 - **강사 소개(/teachers)**: 로펌 프로필형(신뢰·권위, 무채색+골드). 중앙 서브 히어로 → **필터 디렉토리**([TeacherDirectory](components/teachers/TeacherDirectory.tsx), client): 1차 부(중등부/고등부)·2차 과목(전체/국어/수학/영어/탐구) 칩 → 강사 카드 그리드(2/3/4열) → CtaBand. 카드([TeacherCard](components/teachers/TeacherCard.tsx)): **사진 중심 미니멀**(팀 카드 베스트프랙티스 — 적을수록 좋다) — 3:4 인물([TeacherPhoto](components/TeacherPhoto.tsx)) · 과목 · 이름 · 경력 1줄만. **hover: 사진 살짝 줌 + 하단 "프로필 보기" 스트립**(얼굴 위 정보 과적 금지). 상세 이력은 클릭→상세 페이지. 상세 `/teachers/[id]`(async params, `generateStaticParams`/`generateMetadata`, `notFound`): **상단 헤더**(사진 + 과목 태그 + 이름 + 경력) + **풀폭 정의형 섹션**(라벨 골드 | 값, 행 헤어라인). 모바일은 세로 스택·중앙정렬, 데스크톱은 사진 좌측 + 라벨|값 2열. 데이터 [lib/data/teachers.ts](lib/data/teachers.ts)(`divisions`/`subjectGroup`).
-- **상담·문의(/contact)**: 서브 히어로 → 2열(폼 | 연락처·운영시간·약도) → 좁은 폭 1열. 폼 입력은 `border-border`·포커스 링·에러는 `text-error`+`aria-invalid`.
+- **상담·문의(/contact)**: 서브 히어로 → 2열(폼 | 연락·오시는길·SNS), 좁은 폭 1열. CTA 밴드 없음(페이지 자체가 전환점). 폼([ContactForm](components/contact/ContactForm.tsx), client): 이름·연락처·구분·관심과목·문의내용·개인정보 동의, 클라 검증(`text-error`+`aria-invalid`), **전송은 추후 연동(현재 접수 메시지만)**. 사이드: 전화 2회선·원장 직통(tel) / 운영시간 / 주소 + **지도 iframe**(Google `output=embed`, 키 불필요) / [SocialLinks](components/SocialLinks.tsx).
 
 ---
 
