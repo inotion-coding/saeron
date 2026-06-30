@@ -116,7 +116,11 @@
 | `Reveal` | [ui/Reveal.tsx](components/ui/Reveal.tsx) | 진입 페이드업(once), `delay` 스태거, reduced-motion 시 즉시 표시 |
 | `Header` | [layout/Header.tsx](components/layout/Header.tsx) | 풀폭, 로고, 내비(기본 일반색 / active·언더라인 골드), 모바일 햄버거 |
 | `Footer` | [layout/Footer.tsx](components/layout/Footer.tsx) | 로고, 바로가기, **사업자 정보**(site.ts), 카피라이트 |
-| `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 헤더 아래 공지 배너, **최신 1건 정적 노출**(슬라이드 없음), 닫기 |
+| `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 메인 공지 배너, **featured 자동 슬라이드**(점 인디케이터만·대표사진 우측 페이드·일시정지·reduced-motion), 클릭→상세 |
+| `PosterFrame` | [PosterFrame.tsx](components/PosterFrame.tsx) | A4 210:297 프레임. 이미지 또는 플레이스홀더(공용) |
+| `NoticePoster` | [NoticePoster.tsx](components/NoticePoster.tsx) | 공지 대표 썸네일(=images[0]) — PosterFrame 래퍼 |
+| `NoticeGallery` | [NoticeGallery.tsx](components/NoticeGallery.tsx) | 포스터 갤러리 1/2/3+ 배치(3+: 서브 2개 가로 꽉+스크롤) |
+| `NoticeArticle` | [NoticeArticle.tsx](components/NoticeArticle.tsx) | 공지 상세 본문(제목·날짜·갤러리·본문). 상세/주요공지 공용 |
 | `ProgramCard` | [ProgramCard.tsx](components/ProgramCard.tsx) | 각진 박스. 대상 라벨·과정명·한 줄 요약·화살표(태그 미표시), hover 골드 테두리. 홈/`/programs` 공용 |
 | `Hero` | [home/Hero.tsx](components/home/Hero.tsx) | tone paper. eyebrow+디스플레이 제목+리드+CTA 2종 + 신뢰 지표, 브랜드 데코, Reveal |
 | `Strengths` | [home/Strengths.tsx](components/home/Strengths.tsx) | tone deep(다크). onDark 헤더 + 각진 흰 아이콘 카드(유동), hover 골드 2px 테두리, Reveal 스태거 |
@@ -164,6 +168,8 @@
 5. **간격/타이포/색**: 본 문서 토큰·유틸만 사용.
 
 페이지별 적용 메모:
+- **공지(/notices)**: 포스터(A4 210:297) 중심. 중앙 서브 히어로 → **포스터 카드 그리드(5개/페이지, 페이지 번호 페이지네이션 `?page=N`)** → 하단 **"주요 공지"**: featured 3~5개의 **상세 모습(NoticeArticle)을 페이지에 그대로 펼쳐** `divide-y` 경계선으로 구분(클릭 진입이 아니라 "들어간 모습"을 표시). 메인 배너([NoticeBar](components/NoticeBar.tsx))는 featured 자동 슬라이드 — **점 인디케이터만**(닫기·화살표 없음), 대표사진이 우측에 페이드로 살짝 노출, 클릭→상세. 포스터는 [NoticePoster](components/NoticePoster.tsx)(이미지 없으면 플레이스홀더). 상세 `/notices/[id]`(async params, `generateStaticParams`/`generateMetadata`, 없으면 `notFound()`): [NoticeArticle](components/NoticeArticle.tsx)(제목·날짜 + 포스터 갤러리 + 본문, 상세/주요공지 공용). CTA 없음. 데이터·`getFeaturedNotices`/`getNoticeById`는 [lib/data/notices.ts](lib/data/notices.ts).
+  - **포스터 갤러리**([NoticeGallery](components/NoticeGallery.tsx)) 규칙 — 대표=`images[0]`: **1장** 1장만 / **2장** 위아래 동일 배치 / **3장+** 대표를 크게 위, 서브는 **2개가 대표 가로폭을 꽉 채우는 크기**로 가로 배치(3개 이상이면 옆으로 스크롤). 개별 프레임은 [PosterFrame](components/PosterFrame.tsx)(A4 210:297, 이미지 없으면 플레이스홀더). 이미지는 `notice.images: string[]`.
 - **학원 소개(/about)**: 서브 히어로 → 교육 철학(리드+측면 포인트) → 강점 상세(Strengths 재사용/확장) → 연혁/시설 → CtaBand.
 - **프로그램(/programs)**: 서브 히어로 → 대상/학년 그룹별 `ProgramCard` 그리드 → CtaBand.
 - **시간표(/schedule)**: 서브 히어로 → 시간표 테이블(넓은 폭 가로 테이블 / 좁은 폭 가로 스크롤·요일 카드) → 안내.
@@ -228,9 +234,9 @@
 - 새 섹션을 추가하면 흐름이 끊기지 않게 인접 톤을 고려해 `data-tone` 지정.
 
 ### 진입 모션 (Reveal)
-- [Reveal](components/ui/Reveal.tsx): 뷰포트 진입 시 한 번 페이드업(`opacity`+`translateY(18px)`, 700ms). `delay`로 카드 스태거.
-- `prefers-reduced-motion: reduce` 또는 IntersectionObserver 미지원 시 **즉시 표시**.
-- 적용: 히어로 텍스트·지표, 강점/프로그램 카드(스태거), CTA.
+- [Reveal](components/ui/Reveal.tsx): 뷰포트 **중앙 영역에 들어올 때마다** 페이드업(`opacity`+`translateY(18px)`, 700ms)으로 등장하고, 벗어나면 다시 숨겨 **위·아래 반복 스크롤 시 매번 재생**(IntersectionObserver `rootMargin: -12%`, observer 유지). `delay`로 카드 스태거.
+- `prefers-reduced-motion: reduce` 또는 IntersectionObserver 미지원 시 **즉시 표시(정적)**.
+- 적용: 히어로 텍스트·지표, 강점/프로그램 카드(스태거), CTA 등 모든 Reveal 요소 일관.
 
 ---
 

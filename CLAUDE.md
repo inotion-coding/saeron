@@ -29,12 +29,13 @@
 ├── app/                      # Next.js App Router
 │   ├── layout.tsx            # 루트 레이아웃 (Header/Footer, 폰트, 메타데이터)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
-│   ├── page.tsx              # 메인 (1단계: 공지 + 임시 본문)
-│   ├── about/                # 학원 소개 (2단계, 미구현)
-│   ├── teachers/             # 강사 소개 (6단계, 미구현)
-│   ├── programs/             # 프로그램 (3단계, 미구현)
-│   ├── schedule/             # 수업 시간표 (4단계, 미구현)
-│   └── contact/              # 상담·문의 (5단계, 미구현)
+│   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
+│   ├── notices/              # 공지 목록 page.tsx + [id]/page.tsx 상세 (구현)
+│   ├── about/                # 학원 소개 (미구현)
+│   ├── teachers/             # 강사 소개 (미구현)
+│   ├── programs/             # 프로그램 (미구현)
+│   ├── schedule/             # 수업 시간표 (미구현)
+│   └── contact/              # 상담·문의 (미구현)
 ├── components/
 │   ├── layout/
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼

@@ -4,7 +4,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * 진입 모션 (DESIGN.md §9)
- * 뷰포트에 들어오면 한 번 페이드업. prefers-reduced-motion 시 즉시 표시.
+ * 뷰포트(중앙 영역)에 들어올 때마다 페이드업으로 등장하고, 벗어나면 다시 숨겨
+ * 위·아래로 반복 스크롤해도 매번 자연스럽게 재생된다.
+ * prefers-reduced-motion 또는 IntersectionObserver 미지원 시 항상 표시(정적).
  * delay(ms)로 스태거 가능. as 로 렌더 태그 변경(기본 div).
  */
 export default function Reveal({
@@ -35,12 +37,10 @@ export default function Reveal({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
+        // 중앙 영역에 들어오면 보이고, 벗어나면 숨김 → 재진입 시 재생
+        setVisible(entries[0].isIntersecting);
       },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0, rootMargin: "-12% 0px -12% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();

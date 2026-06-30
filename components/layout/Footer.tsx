@@ -15,9 +15,9 @@ export default function Footer() {
       <Container className="py-12">
         {/* 상단: 브랜드(좌) + SNS(우) */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div className="max-w-md">
-            <Logo source={logoFooter} className="h-20 w-auto" />
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <Logo source={logoFooter} className="h-20 w-auto shrink-0" />
+            <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
               {site.description}
             </p>
           </div>
@@ -30,9 +30,17 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] border border-border text-muted-foreground transition-colors hover:border-point hover:text-point"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-white shadow-card transition-transform duration-200 ease-[var(--ease-out-soft)] hover:-translate-y-0.5"
+                  style={
+                    s.icon === "instagram"
+                      ? {
+                          background:
+                            "linear-gradient(45deg, #feda75 5%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 95%)",
+                        }
+                      : { background: "#03c75a" }
+                  }
                 >
-                  <SocialIcon name={s.icon} />
+                  <SocialGlyph name={s.icon} />
                 </a>
               </li>
             ))}
@@ -94,32 +102,31 @@ export default function Footer() {
   );
 }
 
-function SocialIcon({ name }: { name: SocialLink["icon"] }) {
-  const common = {
-    width: 20,
-    height: 20,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.7,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
+function SocialGlyph({ name }: { name: SocialLink["icon"] }) {
   if (name === "instagram") {
+    // 인스타그램 글리프 (흰색)
     return (
-      <svg {...common}>
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none" />
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+        <circle cx="12" cy="12" r="4.3" />
+        <circle cx="17.4" cy="6.6" r="1.2" fill="currentColor" stroke="none" />
       </svg>
     );
   }
-  // blog (네이버 블로그 — 문서형 아이콘)
+  // 네이버 블로그 — 초록 타일 위 흰색 "blog"
   return (
-    <svg {...common}>
-      <rect x="4" y="3" width="16" height="18" rx="2" />
-      <path d="M8 8h8M8 12h8M8 16h5" />
-    </svg>
+    <span className="text-[11px] font-extrabold leading-none tracking-tight">
+      blog
+    </span>
   );
 }

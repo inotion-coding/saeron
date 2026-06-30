@@ -38,7 +38,7 @@ export const logoFooter: LogoConfig = {
 export const site = {
   name: "새론학원",
   description:
-    "입시·종합 새론학원 — 학생 한 명 한 명의 성장을 함께하는 교육 파트너입니다.",
+    "입시·종합 광교 새론학원 — 날마다 새로운 생각과 도전으로 신세계를 창조하라!",
 
   /** 상단바·푸터 공통 내비게이션 */
   nav: [
@@ -49,10 +49,18 @@ export const site = {
     { href: "/contact", label: "상담 문의" },
   ] satisfies NavItem[],
 
-  /** SNS 링크 — 푸터 아이콘 (TODO(content): 실제 URL로 교체) */
+  /** SNS 링크 — 푸터 아이콘 */
   social: [
-    { label: "네이버 블로그", href: "https://blog.naver.com/", icon: "blog" },
-    { label: "인스타그램", href: "https://www.instagram.com/", icon: "instagram" },
+    {
+      label: "네이버 블로그",
+      href: "https://blog.naver.com/saeron_edu",
+      icon: "blog",
+    },
+    {
+      label: "인스타그램",
+      href: "https://www.instagram.com/saeron_education",
+      icon: "instagram",
+    },
   ] satisfies SocialLink[],
 
   /** 대표 연락 정보 */
