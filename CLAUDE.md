@@ -37,7 +37,7 @@
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
 │   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
 │   ├── about/                # 학원 소개 (미구현)
-│   └── programs/             # 프로그램 (미구현)
+│   └── programs/             # 프로그램 (상세 블록 page.tsx, 구현)
 ├── components/
 │   ├── layout/
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
@@ -49,6 +49,8 @@
 │   ├── schedule/
 │   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (client)
 │   │   └── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
+│   ├── programs/
+│   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
 │   ├── NoticeBar.tsx         # 메인 공지 영역
 │   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션(client, 정적 export 호환)
 │   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
