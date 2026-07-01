@@ -8,11 +8,11 @@ const SUBJECTS = ["국어", "수학", "영어", "사회", "과학", "기타"];
 type Errors = { name?: string; phone?: string; agree?: string };
 
 const fieldBase =
-  "w-full rounded-[var(--radius-md)] border bg-background px-3.5 text-sm text-foreground transition-colors placeholder:text-muted-foreground";
+  "w-full rounded-[var(--radius-md)] border border-transparent bg-surface px-3.5 text-sm text-foreground transition-colors placeholder:text-muted-foreground";
 
 function inputCls(error?: string) {
   return `${fieldBase} h-11 ${
-    error ? "border-error" : "border-border hover:border-foreground/30"
+    error ? "border-error" : "hover:border-point/40"
   }`;
 }
 
@@ -198,7 +198,7 @@ export default function ContactForm() {
           name="message"
           rows={4}
           placeholder="학년·현재 성적·상담 희망 시간 등을 적어 주시면 더 정확히 안내해 드립니다."
-          className={`${fieldBase} resize-y border-border py-2.5 hover:border-foreground/30`}
+          className={`${fieldBase} resize-y py-2.5 hover:border-point/40`}
         />
       </Field>
 
