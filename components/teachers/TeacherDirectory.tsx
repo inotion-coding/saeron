@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import TeacherCard from "./TeacherCard";
 import Reveal from "@/components/ui/Reveal";
 import {
@@ -49,10 +49,37 @@ function FilterTab({
  * 강사 필터 디렉토리 (client) — DESIGN.md §6 (강사)
  * 1차 필터: 부(중등부/고등부) · 2차 필터: 과목(전체/국어/수학/영어/사회/과학).
  */
+const FILTER_STORAGE_KEY = "teachers-filter";
+
 export default function TeacherDirectory() {
   const all = getTeachers();
   const [division, setDivision] = useState<Division>("middle");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
+
+  // 상세페이지에 다녀오거나 뒤로가기로 목록에 돌아와도 직전 필터(부·과목) 복원
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(FILTER_STORAGE_KEY);
+      if (!saved) return;
+      const { division: d, subject: s } = JSON.parse(saved);
+      if (d === "middle" || d === "high") setDivision(d);
+      if (s === "전체" || SUBJECT_GROUPS.includes(s)) setSubject(s);
+    } catch {
+      /* 저장값이 없거나 형식이 깨진 경우 기본값 유지 */
+    }
+  }, []);
+
+  // 필터 변경 시 기억(같은 탭 세션 동안 유지)
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        FILTER_STORAGE_KEY,
+        JSON.stringify({ division, subject })
+      );
+    } catch {
+      /* 저장 불가 환경은 무시 */
+    }
+  }, [division, subject]);
 
   const filtered = useMemo(
     () =>
