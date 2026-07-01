@@ -42,6 +42,19 @@ export const metadata: Metadata = {
   keywords: KEYWORDS,
   alternates: { canonical: "/" },
   applicationName: site.name,
+  // 파비콘을 "크기별로 다른 이미지"로 지정:
+  // - 작은 사이즈(16·32) → 브라우저 탭엔 배경 없는 누끼 아이콘
+  // - 큰 사이즈(48·192) → 구글 검색결과엔 프로필 로고(배경 있는 원형)
+  // ※ 브라우저/구글이 크기별로 아이콘을 고르는 습성을 이용(표준 보장 아님, 현재 통용 방식)
+  icons: {
+    icon: [
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-google-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon-google-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icon-apple-180.png", sizes: "180x180", type: "image/png" }],
+  },
   robots: {
     index: true,
     follow: true,
