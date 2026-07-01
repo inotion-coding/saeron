@@ -88,6 +88,23 @@ function Select({
   );
 }
 
+/** 관심 과목 복수 선택 칩 (checkbox 기반, 선택 시 금색) */
+function SubjectChip({ value }: { value: string }) {
+  return (
+    <label className="cursor-pointer">
+      <input
+        type="checkbox"
+        name="subjects"
+        value={value}
+        className="peer sr-only"
+      />
+      <span className="inline-flex select-none items-center rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-point/50 peer-checked:border-point peer-checked:bg-point/10 peer-checked:font-semibold peer-checked:text-point peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
+        {value}
+      </span>
+    </label>
+  );
+}
+
 /**
  * 상담 신청 폼 (client) — DESIGN.md §6 (상담)
  * 카드 컨테이너는 페이지에서 제공. 검증 실패 시 필드별 에러.
@@ -173,23 +190,27 @@ export default function ContactForm() {
         />
       </Field>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="division" label="구분">
-          <Select
-            id="division"
-            name="division"
-            defaultValue="중등부"
-            options={["중등부", "고등부"]}
-          />
-        </Field>
-        <Field id="subject" label="관심 과목">
-          <Select
-            id="subject"
-            name="subject"
-            defaultValue={SUBJECTS[0]}
-            options={SUBJECTS}
-          />
-        </Field>
+      <Field id="division" label="구분">
+        <Select
+          id="division"
+          name="division"
+          defaultValue="중등부"
+          options={["중등부", "고등부"]}
+        />
+      </Field>
+
+      <div>
+        <p className="text-sm font-semibold text-foreground">
+          관심 과목
+          <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+            복수 선택 가능
+          </span>
+        </p>
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          {SUBJECTS.map((s) => (
+            <SubjectChip key={s} value={s} />
+          ))}
+        </div>
       </div>
 
       <Field id="message" label="문의 내용">
