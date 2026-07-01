@@ -67,13 +67,15 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: "광교 새론학원",
     description: site.description,
-    images: [{ url: "/logo.png", width: 750, height: 181, alt: site.name }],
+    images: [
+      { url: "/og-image.png", width: 1200, height: 630, alt: "광교 새론학원" },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "광교 새론학원",
     description: site.description,
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
   verification: {
     ...(VERIFY.google ? { google: VERIFY.google } : {}),
