@@ -235,11 +235,17 @@ export const teachers: Teacher[] = [
   {
     id: "choi-yongsu",
     name: "최용수",
+    photo: "/teachers/choi-yongsu.jpg",
     divisions: ["middle", "high"],
     subjectGroup: "국어",
     subject: "중-고등 국어 전과정",
-    resolve: "", // TODO(content): 강사 각오 1줄
-    // TODO(content): education(학력) / experience(경력) 확보 시 추가
+    resolve: "흔들리지 않는 국어 실력 만들어 주겠습니다.",
+    education: ["국민대학교 교육대학원 국어교육학과 수료"],
+    experience: [
+      "전 이투스북 검토위원",
+      "전 구주이배 중등부 강사",
+      "현 새론학원 국어 강사",
+    ],
   },
   {
     id: "lee-cheonsu",
