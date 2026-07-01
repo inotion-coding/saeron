@@ -232,6 +232,24 @@ export const teachers: Teacher[] = [
       "현 (주)백발백중 모의고사 변형문제 출제위원",
     ],
   },
+  {
+    id: "choi-yongsu",
+    name: "최용수",
+    divisions: ["middle", "high"],
+    subjectGroup: "국어",
+    subject: "중-고등 국어 전과정",
+    resolve: "", // TODO(content): 강사 각오 1줄
+    // TODO(content): education(학력) / experience(경력) 확보 시 추가
+  },
+  {
+    id: "lee-cheonsu",
+    name: "이천수",
+    divisions: ["high"],
+    subjectGroup: "과학", // 추정: 담당 과목(통합과학/화학) 기준 — 확인 필요
+    subject: "통합과학 / 화학",
+    resolve: "", // TODO(content): 강사 각오 1줄
+    // TODO(content): education(학력) / experience(경력) 확보 시 추가
+  },
 ];
 // ════════════════════════════ ✋ 여기까지 ════════════════════════════
 
