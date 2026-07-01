@@ -85,9 +85,6 @@ function TeacherBlock({ t, rows }: { t: TeacherSchedule; rows: ScheduleRow[] }) 
         ) : (
           <span className="text-h3 font-bold text-foreground">{t.name}</span>
         )}
-        <span className="text-sm font-semibold text-accent">
-          {t.subjectGroup}
-        </span>
         {t.note && (
           <span className="text-sm text-muted-foreground">· {t.note}</span>
         )}
@@ -157,10 +154,17 @@ export default function ScheduleView() {
             <div key={g.subjectGroup} className="mt-14 first:mt-0">
               {subject === "전체" && (
                 <Reveal className="mb-7 flex items-center gap-3">
+                  <span
+                    className="h-4 w-1 rounded-full bg-point"
+                    aria-hidden="true"
+                  />
                   <h2 className="text-h3 font-bold text-foreground">
                     {g.subjectGroup}
                   </h2>
-                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                  <span
+                    className="h-px flex-1 bg-linear-to-r from-point/45 to-transparent"
+                    aria-hidden="true"
+                  />
                 </Reveal>
               )}
               <div>
@@ -169,7 +173,7 @@ export default function ScheduleView() {
                     as="div"
                     key={t.name}
                     delay={(i % 4) * 70}
-                    className="border-t border-border pt-7 first:border-t-0 first:pt-0 [&:not(:first-child)]:mt-7"
+                    className="border-t border-point/20 pt-7 first:border-t-0 first:pt-0 [&:not(:first-child)]:mt-7"
                   >
                     <TeacherBlock t={t} rows={rows} />
                   </Reveal>
@@ -181,7 +185,7 @@ export default function ScheduleView() {
       )}
 
       {/* 공통 안내 — 선으로 구분(박스 없음) */}
-      <Reveal className="mx-auto mt-16 max-w-3xl border-t border-border pt-8">
+      <Reveal className="mx-auto mt-16 max-w-3xl border-t border-point/30 pt-8">
         <p className="text-sm font-bold text-point">공통 안내</p>
         <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
           {COMMON_NOTICES.map((n, i) => (

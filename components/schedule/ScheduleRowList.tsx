@@ -1,38 +1,20 @@
 import type { ScheduleRow } from "@/lib/data/schedule";
 
-/** 시계 아이콘 */
-function ClockIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-      className="mt-0.5 shrink-0 text-accent"
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7.5V12l3 2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 /**
  * 시간표 행 목록 (프레젠테이션) — /schedule와 강사 상세 하단에서 공용.
- * 대상 배지 + 반/과목 + 내용 + 개강 / 시간 / 비고를 한 행 카드로 정리(반응형).
+ * 핵심(대상·반/과목·시간)만 또렷하게, 부가정보(내용·개강·비고)는 가볍게.
+ * 구분선은 은은한 금색 헤어라인, 대상은 금색 라인 배지로 고급화.
  */
 export default function ScheduleRowList({ rows }: { rows: ScheduleRow[] }) {
   return (
-    <ul className="mt-1">
+    <ul className="mt-2">
       {rows.map((r, i) => (
         <li
           key={i}
-          className="border-t border-border/70 py-3 first:border-t-0"
+          className="border-t border-point/15 py-3.5 first:border-t-0"
         >
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="shrink-0 text-xs font-bold tracking-[0.02em] text-accent">
+          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+            <span className="shrink-0 rounded-full border border-point/45 px-2 py-0.5 text-xs font-bold tracking-[0.02em] text-point">
               {r.target}
             </span>
             {r.course && (
@@ -47,12 +29,11 @@ export default function ScheduleRowList({ rows }: { rows: ScheduleRow[] }) {
               </span>
             )}
           </div>
-          <p className="mt-1.5 flex items-start gap-1.5 text-sm leading-relaxed text-foreground/90">
-            <ClockIcon />
-            <span className="break-keep">{r.time}</span>
+          <p className="mt-1.5 text-sm font-medium leading-relaxed text-foreground/90 break-keep">
+            {r.time}
           </p>
           {r.note && (
-            <p className="mt-1 text-xs font-medium text-accent">※ {r.note}</p>
+            <p className="mt-1 text-xs font-medium text-point">※ {r.note}</p>
           )}
         </li>
       ))}
