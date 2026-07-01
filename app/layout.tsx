@@ -16,7 +16,7 @@ const SITE_URL = "https://saeronedu.com";
  * TODO(seo): 등록 후 발급받은 코드로 교체.
  */
 const VERIFY = {
-  google: "", // 예) "abcd1234..." (구글 서치콘솔 HTML 태그 content)
+  google: "6Nbo6WdqRBE8mKLuY1n3w4dzpsFJ2NmqHcws6ucm1s8", // 구글 서치콘솔 소유확인
   naver: "", // 예) "abcd1234..." (네이버 서치어드바이저 HTML 태그 content)
 };
 
