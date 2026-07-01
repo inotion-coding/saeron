@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import Reveal from "@/components/ui/Reveal";
-import SocialLinks from "@/components/SocialLinks";
 import ContactForm from "@/components/contact/ContactForm";
 import { site } from "@/lib/data/site";
 
@@ -120,11 +119,6 @@ export default function ContactPage() {
                   className="block aspect-[4/3] w-full"
                 />
               </div>
-            </div>
-
-            <div className="pt-6">
-              <InfoLabel>SNS</InfoLabel>
-              <SocialLinks className="mt-3" />
             </div>
           </div>
         </Reveal>

@@ -69,7 +69,7 @@ export const site = {
     phone2: "031-257-0033",
     directorPhone: "010-3270-2523", // 원장 직통
     address: "경기도 수원시 영통구 센트럴타운로 94, 2층(이의동, 앤에스코어빌딩)",
-    hours: "추후 안내", // TODO(content): 운영시간 확정 시 교체
+    hours: "10:00 ~ 22:00",
   },
 
   /** 사업자 정보 — 하단바(Footer) 표기용 */

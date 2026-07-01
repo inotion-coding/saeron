@@ -70,9 +70,22 @@ export default function Button(props: ButtonProps | LinkProps) {
     );
   }
 
-  const { href: _href, withArrow: _wa, ...buttonProps } = props as ButtonProps;
+  // 공용/스타일 관련 prop은 DOM에 흘리지 않는다(className 등이 cls를 덮어쓰는 버그 방지)
+  const {
+    href: _href,
+    withArrow: _wa,
+    variant: _variant,
+    size: _size,
+    className: _className,
+    children: _children,
+    ...buttonProps
+  } = props as ButtonProps;
   void _href;
   void _wa;
+  void _variant;
+  void _size;
+  void _className;
+  void _children;
   return (
     <button className={cls} {...buttonProps}>
       {content}
