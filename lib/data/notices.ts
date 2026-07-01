@@ -15,15 +15,28 @@ export type Notice = {
 };
 
 export const notices: Notice[] = [
-  // TODO(content): 실제 공지를 여기에 추가한다. (임시 더미 공지는 전부 삭제됨)
-  // 예시 형식:
+  {
+    id: "2026-suwon-summer",
+    title: "2026 새론학원 수원외고 여름방학 특강 안내",
+    date: "2026-07-01",
+    featured: true,
+    // 표시 순서: 1(대표) → 4 → 3 → 2
+    images: [
+      "/notices/2026-suwon-summer/1.jpg",
+      "/notices/2026-suwon-summer/4.jpg",
+      "/notices/2026-suwon-summer/3.jpg",
+      "/notices/2026-suwon-summer/2.jpg",
+    ],
+    content: "",
+  },
+  // 새 공지 추가 형식(참고):
   // {
   //   id: "고유-id",              // URL 경로가 됨 (영문/숫자/하이픈)
   //   title: "공지 제목",
   //   date: "2026-07-01",          // YYYY-MM-DD
   //   featured: true,              // 메인 배너 슬라이드에 노출하려면 true
   //   images: ["/notices/파일명.jpg"], // 포스터 이미지(첫 번째가 대표사진)
-  //   content: "본문 내용",
+  //   content: "본문 내용",         // 없으면 "" (본문 문단 숨김)
   // },
 ];
 
