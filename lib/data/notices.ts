@@ -41,6 +41,18 @@ export const notices: Notice[] = [
     ],
     content: "",
   },
+  {
+    id: "2026-middle3-summer",
+    title: "2026 새론학원 중학교 3학년 여름방학 특강 안내",
+    date: "2026-07-01",
+    featured: true,
+    // 표시 순서: 1(대표) → 2
+    images: [
+      "/notices/2026-middle3-summer/1.jpg",
+      "/notices/2026-middle3-summer/2.jpg",
+    ],
+    content: "",
+  },
   // 새 공지 추가 형식(참고):
   // {
   //   id: "고유-id",              // URL 경로가 됨 (영문/숫자/하이픈)
