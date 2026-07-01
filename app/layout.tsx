@@ -17,7 +17,7 @@ const SITE_URL = "https://saeronedu.com";
  */
 const VERIFY = {
   google: "6Nbo6WdqRBE8mKLuY1n3w4dzpsFJ2NmqHcws6ucm1s8", // 구글 서치콘솔 소유확인
-  naver: "", // 예) "abcd1234..." (네이버 서치어드바이저 HTML 태그 content)
+  naver: "79635fffc70170963ec17599ec141733602618b9", // 네이버 서치어드바이저 소유확인
 };
 
 /** 메인 검색 노출용 핵심 키워드(지역·업종 중심) */
