@@ -10,8 +10,14 @@ import { notices, getNoticeById } from "@/lib/data/notices";
 type Params = { params: Promise<{ id: string }> };
 
 export function generateStaticParams() {
-  return notices.map((n) => ({ id: n.id }));
+  const params = notices.map((n) => ({ id: n.id }));
+  // 정적 export는 동적 경로에 최소 1개 파라미터를 요구한다.
+  // 공지가 0개여도 빌드가 실패하지 않도록 플레이스홀더 반환(해당 경로는 notFound 처리).
+  return params.length > 0 ? params : [{ id: "_none" }];
 }
+
+// 위에서 생성한 경로만 유효(그 외 요청은 404) — export 모드 안정화
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;

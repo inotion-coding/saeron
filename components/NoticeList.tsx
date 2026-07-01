@@ -18,6 +18,15 @@ export default function NoticeList({ notices }: { notices: Notice[] }) {
   const page = Math.min(current, totalPages);
   const items = notices.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
+  // 등록된 공지가 없을 때: 빈 그리드 대신 안내 문구 표시
+  if (notices.length === 0) {
+    return (
+      <p className="mt-14 text-center text-muted-foreground">
+        등록된 공지가 없습니다.
+      </p>
+    );
+  }
+
   return (
     <>
       <ul className="mt-14 grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:grid-cols-5">
