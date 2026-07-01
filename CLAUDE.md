@@ -27,7 +27,9 @@
 ```
 .
 ├── app/                      # Next.js App Router
-│   ├── layout.tsx            # 루트 레이아웃 (Header/Footer, 폰트, 메타데이터)
+│   ├── layout.tsx            # 루트 레이아웃 (Header/Footer, 폰트, SEO 메타데이터·OG·JSON-LD)
+│   ├── robots.ts             # robots.txt 자동 생성 (검색로봇 허용+사이트맵 안내)
+│   ├── sitemap.ts            # sitemap.xml 자동 생성 (고정+공지/강사 상세 페이지 목록)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
 │   ├── notices/              # 공지 목록 page.tsx + [id]/page.tsx 상세 (구현)
