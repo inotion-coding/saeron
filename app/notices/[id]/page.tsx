@@ -16,9 +16,6 @@ export function generateStaticParams() {
   return params.length > 0 ? params : [{ id: "_none" }];
 }
 
-// 위에서 생성한 경로만 유효(그 외 요청은 404) — export 모드 안정화
-export const dynamicParams = false;
-
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
   const notice = getNoticeById(id);
