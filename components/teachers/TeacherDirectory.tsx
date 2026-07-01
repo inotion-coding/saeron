@@ -55,22 +55,27 @@ export default function TeacherDirectory() {
   const all = getTeachers();
   const [division, setDivision] = useState<Division>("middle");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
+  const [restored, setRestored] = useState(false);
 
   // 상세페이지에 다녀오거나 뒤로가기로 목록에 돌아와도 직전 필터(부·과목) 복원
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(FILTER_STORAGE_KEY);
-      if (!saved) return;
-      const { division: d, subject: s } = JSON.parse(saved);
-      if (d === "middle" || d === "high") setDivision(d);
-      if (s === "전체" || SUBJECT_GROUPS.includes(s)) setSubject(s);
+      if (saved) {
+        const { division: d, subject: s } = JSON.parse(saved);
+        if (d === "middle" || d === "high") setDivision(d);
+        if (s === "전체" || SUBJECT_GROUPS.includes(s)) setSubject(s);
+      }
     } catch {
       /* 저장값이 없거나 형식이 깨진 경우 기본값 유지 */
+    } finally {
+      setRestored(true);
     }
   }, []);
 
-  // 필터 변경 시 기억(같은 탭 세션 동안 유지)
+  // 필터 변경 시 기억 — 복원이 끝난 뒤부터만(마운트 기본값이 저장을 덮어쓰는 것 방지)
   useEffect(() => {
+    if (!restored) return;
     try {
       sessionStorage.setItem(
         FILTER_STORAGE_KEY,
@@ -79,7 +84,7 @@ export default function TeacherDirectory() {
     } catch {
       /* 저장 불가 환경은 무시 */
     }
-  }, [division, subject]);
+  }, [restored, division, subject]);
 
   const filtered = useMemo(
     () =>
