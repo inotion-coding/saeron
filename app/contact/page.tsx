@@ -72,7 +72,7 @@ export default function ContactPage() {
                 <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <a
                     href={`tel:${business.phone}`}
-                    className="text-lg font-bold text-foreground transition-colors hover:text-point"
+                    className="text-base font-medium text-foreground transition-colors hover:text-point"
                   >
                     {business.phone}
                   </a>
@@ -81,7 +81,7 @@ export default function ContactPage() {
                   </span>
                   <a
                     href={`tel:${business.phone2}`}
-                    className="text-lg font-bold text-foreground transition-colors hover:text-point"
+                    className="text-base font-medium text-foreground transition-colors hover:text-point"
                   >
                     {business.phone2}
                   </a>
@@ -100,14 +100,14 @@ export default function ContactPage() {
 
             <div className="py-6">
               <InfoLabel>운영시간</InfoLabel>
-              <p className="mt-3 text-sm text-muted-foreground">
+              <p className="mt-3 text-base font-medium text-foreground">
                 {contact.hours}
               </p>
             </div>
 
             <div className="py-6">
               <InfoLabel>오시는 길</InfoLabel>
-              <p className="mt-3 text-sm leading-relaxed text-foreground">
+              <p className="mt-3 text-base font-medium leading-relaxed text-foreground">
                 {business.address}
               </p>
               <div className="mt-4 overflow-hidden rounded-[var(--radius-md)] border border-point/20">
