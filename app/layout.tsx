@@ -35,7 +35,7 @@ const KEYWORDS = [
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${site.name} | 광교·영통 입시 종합학원`,
+    default: "광교 새론학원",
     template: `%s | ${site.name}`,
   },
   description: site.description,
@@ -65,13 +65,13 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: SITE_URL,
     siteName: site.name,
-    title: `${site.name} | 광교·영통 입시 종합학원`,
+    title: "광교 새론학원",
     description: site.description,
     images: [{ url: "/logo.png", width: 750, height: 181, alt: site.name }],
   },
   twitter: {
     card: "summary",
-    title: `${site.name} | 광교·영통 입시 종합학원`,
+    title: "광교 새론학원",
     description: site.description,
     images: ["/logo.png"],
   },
