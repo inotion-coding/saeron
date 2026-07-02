@@ -7,6 +7,7 @@ import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
 import { fetchPublicTeacherBySlug } from "@/lib/content/teachers";
 import type { Teacher } from "@/lib/data/teachers";
+import { getScheduleByTeacherSlug } from "@/lib/data/schedule";
 
 /**
  * 강사 상세(client) — slug로 Supabase에서 실시간 조회.
@@ -86,6 +87,8 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
     { label: "저서", items: teacher.books },
   ].filter((s) => s.items && s.items.length > 0);
 
+  const classes = getScheduleByTeacherSlug(teacher.id); // 수업 시간표(코드 데이터)
+
   return (
     <div className="mx-auto max-w-3xl">
       {backLink}
@@ -113,8 +116,8 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
           </div>
         </div>
 
-        {/* 이력 섹션 */}
-        {sections.length > 0 && (
+        {/* 이력 섹션 (+ 수업 시간표) */}
+        {(sections.length > 0 || classes.length > 0) && (
           <dl className="mt-10 border-t border-border">
             {sections.map((s) => (
               <div
@@ -133,6 +136,43 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
                 </dd>
               </div>
             ))}
+
+            {/* 수업 시간표 — 이력과 동일 규격. 수업명 아래 시간, 얇은 선으로 구분 */}
+            {classes.length > 0 && (
+              <div className="grid gap-1.5 border-b border-border py-5 sm:grid-cols-[7rem_1fr] sm:gap-8 sm:py-6">
+                <dt className="text-sm font-bold tracking-[0.02em] text-point">
+                  수업 시간표
+                </dt>
+                <dd>
+                  <div className="divide-y divide-border">
+                    {classes.map((c, i) => (
+                      <div key={i} className="py-2.5 first:pt-0 last:pb-0">
+                        <p className="text-base font-bold text-foreground">
+                          {c.course}
+                          {c.target && (
+                            <span className="ml-1.5 text-sm font-normal text-muted-foreground">
+                              {c.target}
+                            </span>
+                          )}
+                        </p>
+                        <ul className="mt-1 space-y-0.5 text-sm leading-relaxed">
+                          {c.times.map((t, j) => (
+                            <li key={j}>
+                              <span className="font-semibold text-foreground/90">
+                                {t.days}
+                              </span>{" "}
+                              <span className="text-muted-foreground">
+                                {t.time}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </dd>
+              </div>
+            )}
           </dl>
         )}
       </Reveal>

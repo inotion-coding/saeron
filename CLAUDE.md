@@ -36,7 +36,7 @@
 │   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
 │   ├── teachers/             # 강사 목록 + [id]/page.tsx 상세 (개별 주소 유지, 내용은 client 실시간 조회→수정 즉시반영)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
-│   ├── schedule/             # 수업 시간표 page.tsx (준비 중 placeholder — UI·구성 재작성 예정)
+│   ├── schedule/             # 수업 시간표 page.tsx (3열 표: 강사·수업·시간, 코드 데이터)
 │   ├── about/                # 학원 소개 (미구현)
 │   └── programs/             # 프로그램 page.tsx (부별 탭 + 과정 카드, 코드 데이터)
 ├── components/
@@ -50,6 +50,8 @@
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
 │   ├── programs/
 │   │   └── ProgramList.tsx   # 프로그램 — 부별 탭(예비중등부·중등부·고등부)+과정 카드+상담CTA (client)
+│   ├── schedule/
+│   │   └── ScheduleView.tsx  # 시간표 탭 — 1차 부·2차 과목 필터 + 3열 표(강사|수업|시간), 골드 구분선·가로스크롤 (client)
 │   ├── admin/
 │   │   ├── LoginForm.tsx     # 로그인 폼(과목+이름+비번 → Supabase, client)
 │   │   ├── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급별 메뉴, client)
@@ -68,7 +70,8 @@
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
-│       └── teachers.ts       # 강사 타입·필터라벨(콘텐츠는 Supabase)
+│       ├── teachers.ts       # 강사 타입·필터라벨(콘텐츠는 Supabase)
+│       └── schedule.ts       # 수업 시간표(코드 데이터) — 강사·수업·시간, /schedule·강사상세 공용
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
 ├── supabase/                 # 관리자 백엔드 — schema.sql/login.sql/accounts.sql/inquiries.sql + functions/admin-users. (시간표 테이블은 유지, 데이터만 비움: schedule-clear.sql. 재구성 예정)
