@@ -195,3 +195,5 @@ Supabase 기본 `auth.users`(로그인 계정) + 우리 정보 테이블 `public
 - 2026-07-02: 공지 관리(`/admin/notices`, NoticesAdmin) 구현 — notices CRUD + Storage(notice-images) 포스터 업로드(level≤2). 대시보드에 메뉴 추가.
 - 2026-07-02: 공지 공개 연결 완료 — 홈 배너(NoticeBar)·/notices(NoticeList)가 Supabase 클라 조회로 즉시 반영. 상세는 **포스터 크게보기 라이트박스**(개별 주소 제거: `/notices/[id]` 삭제, sitemap 반영). `lib/content/notices.ts` 조회 모듈, `lib/data/notices.ts`는 타입만. 기존 공지 3건은 관리자에서 재등록 예정.
 - 2026-07-02: 강사 관리(`/admin/teachers`, TeachersAdmin) + 기존 12명 이전 완료. 공개 `/teachers` 목록·상세를 Supabase로 연결(**개별 주소 유지** — `lib/content/teachers.ts` 서버/빌드 조회, generateStaticParams·sitemap도 Supabase). dev는 요청마다 최신, 정적 export는 **빌드 시점** 반영(재배포 필요). ⚠️ **배포 전 GitHub Actions 빌드에 NEXT_PUBLIC_SUPABASE_URL/ANON_KEY 주입 필요**(빌드 때 강사 페이지가 Supabase를 읽으므로).
+- 2026-07-02: 시간표 관리(`/admin/schedule`, ScheduleAdmin) — 강사묶음+수업행+공통안내 CRUD + 기존 데이터 가져오기. (공개 `/schedule` 연결은 후속)
+- 2026-07-02: 계정 관리(Phase B) — `supabase/accounts.sql`(login_directory.user_id 연결·삭제연쇄) + Edge Function `admin-users`(create/delete/setPassword, 호출자 1·2급 검증·2급은 3급만) + `/admin/accounts`(AccountsAdmin). **배포 필요: accounts.sql 실행 + Edge Function 배포(verify_jwt off 권장, 코드가 자체 인증).**

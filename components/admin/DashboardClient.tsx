@@ -160,12 +160,20 @@ export default function DashboardClient() {
             desc="강사 추가·수정·삭제, 사진·학력·이력 편집"
           />
         )}
-        <AdminMenuCard
-          href="/admin/dashboard"
-          title="시간표 관리"
-          desc="준비 중 — 다음 단계에서 추가"
-          disabled
-        />
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
+            href="/admin/schedule"
+            title="시간표 관리"
+            desc="수업 시간표 추가·수정·삭제, 공통 안내 편집"
+          />
+        )}
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
+            href="/admin/accounts"
+            title="계정 관리"
+            desc="강사 계정 생성·삭제·임시 비밀번호 설정"
+          />
+        )}
       </div>
     </div>
   );
