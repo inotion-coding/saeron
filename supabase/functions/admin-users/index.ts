@@ -1,3 +1,4 @@
+// @ts-nocheck  ← 이 파일은 Deno(Supabase Edge Function) 전용. VS Code의 Node 기준 검사를 끔(배포엔 영향 없음).
 // 계정 관리 Edge Function — 1·2급만 호출 가능. 서버에서 service_role 키로 처리.
 // 배포: Supabase 대시보드 → Edge Functions → admin-users (아래 코드 붙여넣고 Deploy)
 //  - SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY 는 Edge Functions에 자동 주입됨.

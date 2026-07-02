@@ -13,7 +13,7 @@ const LEVEL_LABEL: Record<number, string> = {
   3: "선생님",
 };
 
-type TeacherOpt = { id: string; name: string };
+type TeacherOpt = { id: string; name: string; subject_group?: string };
 type Account = {
   user_id: string;
   name: string;
@@ -62,7 +62,7 @@ export default function AccountsAdmin() {
     const [ld, profs, tchs] = await Promise.all([
       supabase.from("login_directory").select("email, subject, name, user_id"),
       supabase.from("profiles").select("id, level, name, teacher_id"),
-      supabase.from("teachers").select("id, name").order("sort_order"),
+      supabase.from("teachers").select("id, name, subject_group").order("sort_order"),
     ]);
     const profList = (profs.data as { id: string; level: number; teacher_id: string | null }[]) ?? [];
     const tchList = (tchs.data as TeacherOpt[]) ?? [];
@@ -156,6 +156,58 @@ export default function AccountsAdmin() {
     }
   }
 
+  /** 강사 전원 계정 일괄 생성 (비번 saeronedu, 3급, 프로필 연결). 이미 있으면 건너뜀. */
+  async function bulkCreateTeachers() {
+    if (
+      !window.confirm(
+        `강사 ${teachers.length}명의 로그인 계정을 만들까요?\n비밀번호는 모두 "saeronedu"로 설정됩니다.`,
+      )
+    )
+      return;
+    setError("");
+    setNotice("");
+    setBusy(true);
+    let created = 0;
+    let skipped = 0;
+    let failed = 0;
+    try {
+      for (const t of teachers) {
+        const { data, error: e } = await supabase.functions.invoke("admin-users", {
+          body: {
+            action: "create",
+            subject: t.subject_group ?? "관리자",
+            name: t.name,
+            password: "saeronedu",
+            level: 3,
+            teacher_id: t.id,
+          },
+        });
+        if (e) {
+          failed += 1;
+          continue;
+        }
+        if (data?.ok) created += 1;
+        else if (String(data?.error ?? "").includes("이미")) skipped += 1;
+        else failed += 1;
+      }
+      await load();
+      setNotice(
+        `완료 — 생성 ${created}명, 건너뜀(이미 있음) ${skipped}명${
+          failed ? `, 실패 ${failed}명` : ""
+        }. (비번: saeronedu)`,
+      );
+      if (created === 0 && failed > 0) {
+        setError(
+          "계정을 만들지 못했습니다. accounts.sql 실행 + Edge Function(admin-users) 배포를 확인하세요.",
+        );
+      }
+    } catch {
+      setError("요청에 실패했습니다. (Edge Function 배포 여부 확인)");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function removeAccount(a: Account) {
     if (!window.confirm(`"${a.name}" 계정을 삭제할까요?`)) return;
     setError("");
@@ -234,9 +286,18 @@ export default function AccountsAdmin() {
           <h1 className="mt-2 text-h2 font-bold text-foreground">계정 관리</h1>
         </div>
         {!showForm && (
-          <Button variant="primary" onClick={() => setShowForm(true)}>
-            새 계정
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="secondary"
+              onClick={bulkCreateTeachers}
+              disabled={busy}
+            >
+              강사 전원 계정 생성
+            </Button>
+            <Button variant="primary" onClick={() => setShowForm(true)}>
+              새 계정
+            </Button>
+          </div>
         )}
       </div>
 
