@@ -63,34 +63,38 @@ export default function ProgramList() {
         ))}
       </div>
 
-      {/* 해당 부의 과정 카드 */}
-      <div className="mx-auto mt-12 max-w-2xl space-y-5">
+      {/* 해당 부의 과정 — 박스 없이 골드 헤어라인으로 구분 */}
+      <div className="mx-auto mt-14 max-w-2xl">
         {items.map((p, i) => (
           <Reveal
             as="div"
             key={p.id}
             delay={(i % 3) * 90}
-            className="rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-card sm:p-8"
+            className="border-t border-point/20 py-11 first:border-t-0 first:pt-0"
           >
-            <span className="inline-flex rounded-full border border-point/45 px-2.5 py-0.5 text-xs font-bold tracking-[0.02em] text-point">
+            {/* 대상 (골드 eyebrow) */}
+            <p className="text-sm font-bold uppercase tracking-[0.06em] text-point">
               {p.target}
-            </span>
-            <h2 className="mt-3 text-h3 font-bold text-foreground">{p.name}</h2>
-            <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+            </p>
+            {/* 과정명 (크고 굵게) */}
+            <h2 className="mt-2 text-h2 font-extrabold tracking-[-0.01em] text-foreground">
+              {p.name}
+            </h2>
+            {/* 소개 */}
+            <p className="mt-3 text-lead leading-relaxed text-muted-foreground">
               {p.summary}
             </p>
-            <ul className="mt-5 space-y-2">
+            {/* 특징 */}
+            <ul className="mt-6 space-y-3">
               {p.points.map((pt, j) => (
                 <li
                   key={j}
-                  className="flex gap-2.5 text-sm leading-relaxed text-foreground/90"
+                  className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-foreground/90"
                 >
                   <span
-                    className="mt-0.5 shrink-0 font-bold text-point"
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-point"
                     aria-hidden="true"
-                  >
-                    ·
-                  </span>
+                  />
                   <span className="break-keep">{pt}</span>
                 </li>
               ))}
@@ -99,15 +103,15 @@ export default function ProgramList() {
         ))}
       </div>
 
-      {/* 하단 상담 CTA */}
-      <Reveal className="mx-auto mt-14 max-w-2xl rounded-[var(--radius-lg)] border border-border bg-surface px-6 py-8 text-center">
-        <p className="text-base font-semibold text-foreground">
+      {/* 하단 상담 CTA — 박스 없이 골드 라인 구분 */}
+      <Reveal className="mx-auto mt-4 max-w-2xl border-t border-point/30 pt-11 text-center">
+        <p className="text-h3 font-bold text-foreground">
           우리 아이에게 맞는 과정이 궁금하신가요?
         </p>
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           현재 학년·성적에 맞춰 학습 방향을 상담해 드립니다.
         </p>
-        <div className="mt-5 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <Button href="/contact" variant="primary" withArrow>
             상담 신청
           </Button>
