@@ -113,6 +113,21 @@ export const scheduleEntries: ScheduleEntry[] = [
 ];
 // ════════════════════════════ ✋ 여기까지 ════════════════════════════
 
+/** 요일 표시: 하루면 전체 이름("토"→"토요일"), 여러 요일이면 그대로("월·수·금") */
+const DAY_FULL: Record<string, string> = {
+  월: "월요일",
+  화: "화요일",
+  수: "수요일",
+  목: "목요일",
+  금: "금요일",
+  토: "토요일",
+  일: "일요일",
+};
+export function formatScheduleDays(days: string): string {
+  const d = days.trim();
+  return DAY_FULL[d] ?? days;
+}
+
 /** 필터(부·과목)에 맞는 시간표 */
 export function getSchedule(
   division: Division,

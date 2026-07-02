@@ -9,7 +9,7 @@ import {
   type Division,
   type SubjectGroup,
 } from "@/lib/data/teachers";
-import { getSchedule } from "@/lib/data/schedule";
+import { getSchedule, formatScheduleDays } from "@/lib/data/schedule";
 
 type SubjectFilter = SubjectGroup | "전체";
 
@@ -192,7 +192,7 @@ export default function ScheduleView() {
                           className="flex items-baseline justify-between gap-6 py-2 text-sm"
                         >
                           <span className="font-semibold tracking-[0.02em] text-foreground">
-                            {t.days}
+                            {formatScheduleDays(t.days)}
                           </span>
                           <span className="tabular-nums tracking-[0.04em] text-muted-foreground">
                             {t.time}

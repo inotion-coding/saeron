@@ -7,7 +7,10 @@ import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
 import { fetchPublicTeacherBySlug } from "@/lib/content/teachers";
 import type { Teacher } from "@/lib/data/teachers";
-import { getScheduleByTeacherSlug } from "@/lib/data/schedule";
+import {
+  getScheduleByTeacherSlug,
+  formatScheduleDays,
+} from "@/lib/data/schedule";
 
 /**
  * 강사 상세(client) — slug로 Supabase에서 실시간 조회.
@@ -159,7 +162,7 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
                           {c.times.map((t, j) => (
                             <li key={j}>
                               <span className="font-semibold text-foreground/90">
-                                {t.days}
+                                {formatScheduleDays(t.days)}
                               </span>{" "}
                               <span className="text-muted-foreground">
                                 {t.time}
