@@ -89,6 +89,8 @@ export default function NoticesAdmin() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+  const [origImages, setOrigImages] = useState<string[]>([]); // 편집 시작 시점의 저장된 이미지
+  const [sessionUploads, setSessionUploads] = useState<string[]>([]); // 이번 편집에서 새로 올린 이미지
 
   const loadNotices = useCallback(async () => {
     const { data } = await supabase
@@ -142,6 +144,7 @@ export default function NoticesAdmin() {
         added.push(path);
       }
       setDraft({ ...draft, images: [...draft.images, ...added] });
+      setSessionUploads((prev) => [...prev, ...added]);
     } catch {
       setError("이미지 업로드에 실패했습니다. 다시 시도해 주세요.");
     } finally {
@@ -166,6 +169,8 @@ export default function NoticesAdmin() {
   /** 목록에서 공지 클릭 → 편집/보기 진입 */
   function openDraft(n: Notice) {
     setError("");
+    setOrigImages(n.images ?? []);
+    setSessionUploads([]);
     setDraft({
       id: n.id,
       slug: n.slug,
@@ -175,6 +180,25 @@ export default function NoticesAdmin() {
       images: n.images ?? [],
       is_featured: n.is_featured,
     });
+  }
+
+  /** 새 공지 시작 */
+  function startNew() {
+    setError("");
+    setOrigImages([]);
+    setSessionUploads([]);
+    setDraft(emptyDraft());
+  }
+
+  /** 저장 없이 나가기 — 이번에 올렸지만 저장 안 된 파일은 Storage에서 제거(고아 방지) */
+  async function cancelEdit() {
+    const toDelete = sessionUploads.filter((p) => !origImages.includes(p));
+    if (toDelete.length) {
+      await supabase.storage.from(BUCKET).remove(toDelete);
+    }
+    setSessionUploads([]);
+    setOrigImages([]);
+    setDraft(null);
   }
 
   async function save() {
@@ -206,6 +230,16 @@ export default function NoticesAdmin() {
           .insert({ ...payload, slug });
         if (e) throw e;
       }
+      // 저장 후 정리: 원본/이번 업로드 중 최종 목록에 없는 파일은 Storage에서 삭제(고아 방지)
+      const finalSet = new Set(draft.images);
+      const orphans = Array.from(
+        new Set([...origImages, ...sessionUploads]),
+      ).filter((p) => !finalSet.has(p));
+      if (orphans.length) {
+        await supabase.storage.from(BUCKET).remove(orphans);
+      }
+      setOrigImages([]);
+      setSessionUploads([]);
       setDraft(null);
       await loadNotices();
     } catch {
@@ -259,7 +293,7 @@ export default function NoticesAdmin() {
       <div>
         <button
           type="button"
-          onClick={() => setDraft(null)}
+          onClick={cancelEdit}
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           ← 공지 목록
@@ -444,7 +478,7 @@ export default function NoticesAdmin() {
             <Button variant="primary" onClick={save} disabled={busy}>
               {busy ? "저장 중…" : "저장"}
             </Button>
-            <Button variant="ghost" onClick={() => setDraft(null)} disabled={busy}>
+            <Button variant="ghost" onClick={cancelEdit} disabled={busy}>
               취소
             </Button>
           </div>
@@ -466,7 +500,7 @@ export default function NoticesAdmin() {
           </Link>
           <h1 className="mt-2 text-h2 font-bold text-foreground">공지 관리</h1>
         </div>
-        <Button variant="primary" onClick={() => setDraft(emptyDraft())}>
+        <Button variant="primary" onClick={startNew}>
           새 공지
         </Button>
       </div>
