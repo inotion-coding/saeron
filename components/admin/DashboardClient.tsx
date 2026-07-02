@@ -77,21 +77,42 @@ export default function DashboardClient() {
   }) {
     if (disabled) {
       return (
-        <div className="cursor-not-allowed rounded-[var(--radius-lg)] border border-border bg-surface p-5 opacity-60">
-          <h2 className="text-h3 font-bold text-foreground">{title}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+        <div className="flex cursor-not-allowed items-center gap-4 rounded-[var(--radius-lg)] border border-border bg-surface px-5 py-4 opacity-60">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-h3 font-bold text-foreground">{title}</h2>
+            <p className="mt-0.5 text-sm text-muted-foreground">{desc}</p>
+          </div>
+          <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
+            준비 중
+          </span>
         </div>
       );
     }
     return (
       <Link
         href={href}
-        className="group rounded-[var(--radius-lg)] border-2 border-border bg-background p-5 shadow-card transition-colors hover:border-point"
+        className="group flex items-center gap-4 rounded-[var(--radius-lg)] border-2 border-border bg-background px-5 py-4 shadow-card transition-colors hover:border-point"
       >
-        <h2 className="text-h3 font-bold text-foreground group-hover:text-point">
-          {title}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-h3 font-bold text-foreground group-hover:text-point">
+            {title}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">{desc}</p>
+        </div>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="shrink-0 text-muted-foreground/50 transition-colors group-hover:text-point"
+        >
+          <path d="M9 18l6-6-6-6" />
+        </svg>
       </Link>
     );
   }
@@ -123,8 +144,8 @@ export default function DashboardClient() {
         </Button>
       </div>
 
-      {/* 관리 메뉴 (등급별) */}
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+      {/* 관리 메뉴 (등급별) — 한 줄에 하나씩 */}
+      <div className="mt-10 space-y-3">
         {profile && profile.level <= 2 && (
           <AdminMenuCard
             href="/admin/notices"

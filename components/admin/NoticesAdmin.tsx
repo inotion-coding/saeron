@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -50,6 +50,32 @@ function emptyDraft(): Draft {
   };
 }
 
+/** 라벨 + 입력 래퍼 (필수/보조설명) */
+function Field({
+  label,
+  required,
+  hint,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-foreground">
+        {label}
+        {required && <span className="ml-0.5 text-point">*</span>}
+        {hint && (
+          <span className="ml-1.5 font-normal text-muted-foreground">{hint}</span>
+        )}
+      </label>
+      <div className="mt-1.5">{children}</div>
+    </div>
+  );
+}
+
 
 /**
  * 공지 관리 (level ≤ 2) — 목록 / 추가 / 수정 / 삭제 + 포스터 업로드.
@@ -62,6 +88,7 @@ export default function NoticesAdmin() {
   const [draft, setDraft] = useState<Draft | null>(null); // null=목록, 값=편집
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [dragOver, setDragOver] = useState(false);
 
   const loadNotices = useCallback(async () => {
     const { data } = await supabase
@@ -125,6 +152,29 @@ export default function NoticesAdmin() {
   function removeImage(idx: number) {
     if (!draft) return;
     setDraft({ ...draft, images: draft.images.filter((_, i) => i !== idx) });
+  }
+
+  /** 선택 이미지를 맨 앞(대표)으로 이동 */
+  function setCover(idx: number) {
+    if (!draft || idx === 0) return;
+    const imgs = [...draft.images];
+    const [pick] = imgs.splice(idx, 1);
+    imgs.unshift(pick);
+    setDraft({ ...draft, images: imgs });
+  }
+
+  /** 목록에서 공지 클릭 → 편집/보기 진입 */
+  function openDraft(n: Notice) {
+    setError("");
+    setDraft({
+      id: n.id,
+      slug: n.slug,
+      title: n.title,
+      content: n.content ?? "",
+      notice_date: n.notice_date,
+      images: n.images ?? [],
+      is_featured: n.is_featured,
+    });
   }
 
   async function save() {
@@ -207,104 +257,190 @@ export default function NoticesAdmin() {
   if (draft) {
     return (
       <div>
-        <h1 className="text-h2 font-bold text-foreground">
+        <button
+          type="button"
+          onClick={() => setDraft(null)}
+          className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          ← 공지 목록
+        </button>
+        <h1 className="mt-2 text-h2 font-bold text-foreground">
           {draft.id ? "공지 수정" : "새 공지"}
         </h1>
 
-        <div className="mt-8 space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-foreground">제목</label>
-            <input
-              className={`${fieldBase} mt-1.5`}
-              value={draft.title}
-              onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-              placeholder="공지 제목"
-            />
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-[200px_1fr] sm:items-center">
-            <div>
-              <label className="block text-sm font-semibold text-foreground">날짜</label>
+        <div className="mt-7 rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-card sm:p-8">
+          <div className="space-y-6">
+            {/* 제목 */}
+            <Field label="제목" required>
               <input
-                type="date"
-                className={`${fieldBase} mt-1.5`}
-                value={draft.notice_date}
-                onChange={(e) => setDraft({ ...draft, notice_date: e.target.value })}
+                className={`${fieldBase} h-12 text-base`}
+                value={draft.title}
+                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                placeholder="공지 제목을 입력하세요"
               />
-            </div>
-            <label className="mt-1.5 inline-flex cursor-pointer items-center gap-2 sm:mt-7">
-              <input
-                type="checkbox"
-                checked={draft.is_featured}
-                onChange={(e) => setDraft({ ...draft, is_featured: e.target.checked })}
-                className="h-4 w-4 accent-[var(--color-point)]"
-              />
-              <span className="text-sm text-foreground">메인 배너에 노출</span>
-            </label>
-          </div>
+            </Field>
 
-          <div>
-            <label className="block text-sm font-semibold text-foreground">
-              본문 <span className="font-normal text-muted-foreground">(선택)</span>
-            </label>
-            <textarea
-              className={`${fieldBase} mt-1.5 min-h-28 resize-y`}
-              value={draft.content}
-              onChange={(e) => setDraft({ ...draft, content: e.target.value })}
-              placeholder="본문 내용 (없으면 비워두세요)"
-            />
-          </div>
-
-          {/* 포스터 이미지 */}
-          <div>
-            <label className="block text-sm font-semibold text-foreground">
-              포스터 이미지 <span className="font-normal text-muted-foreground">(첫 번째가 대표)</span>
-            </label>
-            {draft.images.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-3">
-                {draft.images.map((path, i) => (
-                  <div
-                    key={path}
-                    className="relative h-28 w-24 overflow-hidden rounded-[var(--radius-sm)] border border-border"
+            {/* 날짜 + 노출 토글 */}
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Field label="날짜">
+                <input
+                  type="date"
+                  className={`${fieldBase} h-11`}
+                  value={draft.notice_date}
+                  onChange={(e) =>
+                    setDraft({ ...draft, notice_date: e.target.value })
+                  }
+                />
+              </Field>
+              <Field label="메인 배너 노출">
+                <div className="flex h-11 items-center gap-3">
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={draft.is_featured}
+                    onClick={() =>
+                      setDraft({ ...draft, is_featured: !draft.is_featured })
+                    }
+                    className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+                      draft.is_featured ? "bg-point" : "bg-border"
+                    }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={publicUrl(path)}
-                      alt=""
-                      className="absolute inset-0 h-full w-full object-cover"
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                        draft.is_featured ? "translate-x-6" : "translate-x-1"
+                      }`}
                     />
-                    {i === 0 && (
-                      <span className="absolute left-1 top-1 rounded bg-point px-1.5 py-0.5 text-[10px] font-bold text-white">
-                        대표
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs text-white hover:bg-black/80"
-                      aria-label="이미지 삭제"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-[var(--radius-md)] border border-border bg-surface px-3.5 py-2 text-sm font-semibold text-foreground hover:border-point/50">
-              이미지 추가
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={(e) => onUpload(e.target.files)}
+                  </button>
+                  <span className="text-sm text-muted-foreground">
+                    {draft.is_featured ? "홈 배너에 노출됨" : "노출 안 함"}
+                  </span>
+                </div>
+              </Field>
+            </div>
+
+            {/* 본문 */}
+            <Field label="본문" hint="(선택)">
+              <textarea
+                className={`${fieldBase} min-h-28 py-2.5 leading-relaxed resize-y`}
+                value={draft.content}
+                onChange={(e) => setDraft({ ...draft, content: e.target.value })}
+                placeholder="본문 내용 (없으면 비워두세요)"
               />
-            </label>
+            </Field>
+
+            {/* 포스터 이미지 */}
+            <div>
+              <label className="block text-sm font-semibold text-foreground">
+                포스터 이미지
+              </label>
+              <p className="mt-1 text-xs text-muted-foreground">
+                첫 번째 이미지가 대표(썸네일·배너)로 쓰입니다. 이미지에 마우스를 올려 대표
+                지정·삭제할 수 있어요.
+              </p>
+
+              {draft.images.length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4">
+                  {draft.images.map((path, i) => (
+                    <div
+                      key={path}
+                      className="group relative aspect-[3/4] overflow-hidden rounded-[var(--radius-sm)] border border-border bg-surface"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={publicUrl(path)}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                      {i === 0 ? (
+                        <span className="absolute left-1.5 top-1.5 rounded bg-point px-1.5 py-0.5 text-[10px] font-bold text-white shadow">
+                          대표
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setCover(i)}
+                          className="absolute left-1.5 top-1.5 rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100"
+                        >
+                          대표로
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        aria-label="이미지 삭제"
+                        className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/55 text-sm text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 드롭존(클릭 또는 드래그&드롭 업로드) */}
+              <label
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  if (!busy) setDragOver(true);
+                }}
+                onDragEnter={(e) => {
+                  e.preventDefault();
+                  if (!busy) setDragOver(true);
+                }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDragOver(false);
+                  if (!busy) onUpload(e.dataTransfer.files);
+                }}
+                className={`mt-3 flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[var(--radius-md)] border-2 border-dashed px-4 py-8 text-center transition-colors ${
+                  dragOver
+                    ? "border-point bg-point/5"
+                    : "border-border bg-surface/40 hover:border-point/50 hover:bg-surface"
+                }`}
+              >
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={dragOver ? "text-point" : "text-muted-foreground"}
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <path d="M17 8l-5-5-5 5" />
+                  <path d="M12 3v12" />
+                </svg>
+                <span className="text-sm font-semibold text-foreground">
+                  {busy
+                    ? "업로드 중…"
+                    : dragOver
+                      ? "여기에 놓으세요"
+                      : "클릭 또는 드래그하여 포스터 이미지 추가"}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  여러 장 가능 · JPG·PNG
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  disabled={busy}
+                  onChange={(e) => onUpload(e.target.files)}
+                />
+              </label>
+            </div>
           </div>
 
-          {error && <p className="text-sm text-error">{error}</p>}
+          {error && <p className="mt-6 text-sm text-error">{error}</p>}
 
-          <div className="flex gap-3 pt-2">
+          {/* 액션 */}
+          <div className="mt-8 flex items-center gap-3 border-t border-border pt-6">
             <Button variant="primary" onClick={save} disabled={busy}>
               {busy ? "저장 중…" : "저장"}
             </Button>
@@ -342,57 +478,66 @@ export default function NoticesAdmin() {
           등록된 공지가 없습니다. "새 공지"로 추가하세요.
         </p>
       ) : (
-        <ul className="mt-8 divide-y divide-border border-y border-border">
+        <ul className="mt-8 divide-y divide-border overflow-hidden rounded-[var(--radius-lg)] border border-border">
           {notices.map((n) => (
-            <li key={n.id} className="flex items-center gap-4 py-4">
-              <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-border bg-surface">
-                {n.images?.[0] && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={publicUrl(n.images[0])}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="truncate font-semibold text-foreground">{n.title}</p>
-                  {n.is_featured && (
-                    <span className="shrink-0 rounded-full border border-point/40 px-2 py-0.5 text-[11px] font-bold text-point">
-                      메인
-                    </span>
+            <li
+              key={n.id}
+              className="group flex items-center gap-3 pr-3 transition-colors hover:bg-surface"
+            >
+              {/* 행 클릭 → 편집/보기 진입 */}
+              <button
+                type="button"
+                onClick={() => openDraft(n)}
+                className="flex min-w-0 flex-1 items-center gap-4 py-3.5 pl-4 text-left"
+              >
+                <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-border bg-surface">
+                  {n.images?.[0] && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={publicUrl(n.images[0])}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
                   )}
                 </div>
-                <p className="mt-0.5 text-xs text-muted-foreground">{n.notice_date}</p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setDraft({
-                      id: n.id,
-                      slug: n.slug,
-                      title: n.title,
-                      content: n.content ?? "",
-                      notice_date: n.notice_date,
-                      images: n.images ?? [],
-                      is_featured: n.is_featured,
-                    })
-                  }
-                  className="rounded-[var(--radius-md)] border border-border px-3 py-1.5 text-sm font-semibold text-foreground hover:border-point/50"
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-semibold text-foreground transition-colors group-hover:text-point">
+                      {n.title}
+                    </p>
+                    {n.is_featured && (
+                      <span className="shrink-0 rounded-full border border-point/40 px-2 py-0.5 text-[11px] font-bold text-point">
+                        메인
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {n.notice_date}
+                  </p>
+                </div>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  className="shrink-0 text-muted-foreground/50 transition-colors group-hover:text-point"
                 >
-                  수정
-                </button>
-                <button
-                  type="button"
-                  onClick={() => remove(n)}
-                  disabled={busy}
-                  className="rounded-[var(--radius-md)] border border-border px-3 py-1.5 text-sm font-semibold text-error hover:border-error"
-                >
-                  삭제
-                </button>
-              </div>
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => remove(n)}
+                disabled={busy}
+                className="shrink-0 rounded-[var(--radius-md)] border border-border px-3 py-1.5 text-sm font-semibold text-error transition-colors hover:border-error"
+              >
+                삭제
+              </button>
             </li>
           ))}
         </ul>
