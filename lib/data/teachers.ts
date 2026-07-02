@@ -125,7 +125,6 @@ export const teachers: Teacher[] = [
     subjectGroup: "수학",
     subject: "고등 수학 전과정",
     resolve: "강의실에서 받는 과외 같은 수학으로, 성적을 바꾸겠습니다.",
-    education: ["없음"],
     experience: [
       "현 강남 대치 일비 수학학원 원장",
       "현 광교 새론학원 수학 강사",
@@ -253,8 +252,8 @@ export const teachers: Teacher[] = [
     divisions: ["high"],
     subjectGroup: "과학", // 추정: 담당 과목(통합과학/화학) 기준 — 확인 필요
     subject: "통합과학 / 화학",
-    resolve: "", // TODO(content): 강사 각오 1줄
-    // TODO(content): education(학력) / experience(경력) 확보 시 추가
+    resolve: "", // 미입력 (공란)
+    // education(학력) / experience(경력): 미입력 — 확보 시 추가
   },
 ];
 // ════════════════════════════ ✋ 여기까지 ════════════════════════════

@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { site } from "@/lib/data/site";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import PageBackdrop from "@/components/layout/PageBackdrop";
-import ScrollTheme from "@/components/ScrollTheme";
+import SiteChrome from "@/components/layout/SiteChrome";
 
 /** 서비스 정식 주소(커스텀 도메인). 검색엔진이 절대경로를 만들 기준값. */
 const SITE_URL = "https://saeronedu.com";
@@ -126,11 +123,7 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-dvh flex-col">
-        <PageBackdrop />
-        <ScrollTheme />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

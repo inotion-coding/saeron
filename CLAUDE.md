@@ -27,11 +27,12 @@
 ```
 .
 ├── app/                      # Next.js App Router
-│   ├── layout.tsx            # 루트 레이아웃 (Header/Footer, 폰트, SEO 메타데이터·OG·JSON-LD)
+│   ├── layout.tsx            # 루트 레이아웃 (SiteChrome, 폰트, SEO 메타데이터·OG·JSON-LD)
 │   ├── robots.ts             # robots.txt 자동 생성 (검색로봇 허용+사이트맵 안내)
 │   ├── sitemap.ts            # sitemap.xml 자동 생성 (고정+공지/강사 상세 페이지 목록)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
+│   ├── admin/                # 관리자 영역(SiteChrome로 사이트 껍데기 제외) — page.tsx(접속 경고 게이트) / login(로그인 폼) / dashboard(로그인 후 보호 영역)
 │   ├── notices/              # 공지 목록 page.tsx + [id]/page.tsx 상세 (구현)
 │   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (구현)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
@@ -43,7 +44,8 @@
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
 │   │   ├── Section.tsx       # 섹션 수직 리듬
 │   │   ├── Header.tsx        # 상단바 (내비·모바일 햄버거)
-│   │   └── Footer.tsx        # 하단바 (사업자 정보)
+│   │   ├── SiteChrome.tsx    # /admin은 헤더·푸터·배경 없이 렌더(조건부 껍데기, client)
+│   │   └── Footer.tsx        # 하단바 (사업자 정보 + 관리자 페이지 접속 링크)
 │   ├── ui/
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
 │   ├── schedule/
@@ -51,10 +53,14 @@
 │   │   └── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
 │   ├── programs/
 │   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
+│   ├── admin/
+│   │   ├── LoginForm.tsx     # 로그인 폼(과목+이름+비번 → Supabase, client)
+│   │   └── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급 표시, client)
 │   ├── NoticeBar.tsx         # 메인 공지 영역
 │   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션(client, 정적 export 호환)
 │   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
 ├── lib/
+│   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 더미
@@ -62,8 +68,10 @@
 │       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
+├── supabase/                 # 관리자 백엔드 — schema.sql(테이블·RLS·스토리지) + login.sql(과목·이름 로그인 매핑/함수). (후속) seed.sql·functions/
+├── .env.local                # Supabase 키(NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY) — git 무시
 ├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
-├── CLAUDE.md / PROCESS.md / DESIGN.md
+├── CLAUDE.md / PROCESS.md / DESIGN.md / DATABASE.md  # DATABASE.md=관리자 DB·권한 설계도
 └── .gitignore
 ```
 > 1단계(메인 골격) 구현 완료. Tailwind는 v4(CSS `@theme` 기반)로 설정되어 `tailwind.config.ts` 대신 `app/globals.css`에서 토큰을 정의한다. 이후 파일은 PROCESS.md 단계대로 추가되며, 추가 시 위 구조를 갱신한다.

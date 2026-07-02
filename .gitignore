@@ -17,6 +17,7 @@ out/
 .next/
 next-env.d.ts
 .vercel
+*.tsbuildinfo
 
 # Backups (CLAUDE.md 백업 규칙)
 _bak/

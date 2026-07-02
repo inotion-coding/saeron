@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { site, logoFooter } from "@/lib/data/site";
 import Container from "./Container";
 import Logo from "./Logo";
@@ -73,9 +74,17 @@ export default function Footer() {
           </div>
         </dl>
 
-        <p className="mt-6 text-xs text-muted-foreground">
-          © {year} {business.companyName}. All rights reserved.
-        </p>
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-muted-foreground">
+            © {year} {business.companyName}. All rights reserved.
+          </p>
+          <Link
+            href="/admin"
+            className="text-xs text-muted-foreground/70 underline-offset-2 transition-colors hover:text-point hover:underline"
+          >
+            관리자 페이지 접속
+          </Link>
+        </div>
       </Container>
     </footer>
   );
