@@ -51,6 +51,38 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+const DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"];
+const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
+const MINUTES = ["00", "10", "20", "30", "40", "50"];
+
+/** 시/분 선택 (24시간제, 분 10분 단위) */
+function TimeSel({
+  value,
+  onChange,
+  options,
+  ph,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  ph: string;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`${fieldBase} h-9 w-[3.4rem] cursor-pointer appearance-none px-1 text-center`}
+    >
+      <option value="">{ph}</option>
+      {options.map((o) => (
+        <option key={o} value={o}>
+          {o}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 function emptyDraft(order: number): Draft {
   return {
     teacher_id: null,
@@ -186,6 +218,38 @@ export default function ScheduleAdmin() {
     });
   }
 
+  /** 요일 버튼 토글 → 가운뎃점 문자열(주간 순서 유지) */
+  function toggleDay(i: number, day: string) {
+    if (!draft) return;
+    const cur = draft.times[i].days
+      .split("·")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const has = cur.includes(day);
+    const next = DAY_LIST.filter((d) =>
+      d === day ? !has : cur.includes(d),
+    );
+    patchTime(i, { days: next.join("·") });
+  }
+
+  /** "HH:MM~HH:MM" 파싱 */
+  function parseTime(time: string) {
+    const [s = "", e = ""] = time.split("~");
+    const [sh = "", sm = ""] = s.split(":");
+    const [eh = "", em = ""] = e.split(":");
+    return { sh, sm, eh, em };
+  }
+  function setTimePart(
+    i: number,
+    part: "sh" | "sm" | "eh" | "em",
+    val: string,
+  ) {
+    if (!draft) return;
+    const p = parseTime(draft.times[i].time);
+    p[part] = val;
+    patchTime(i, { time: `${p.sh}:${p.sm}~${p.eh}:${p.em}` });
+  }
+
   async function save() {
     if (!draft) return;
     if (!draft.teacher_name.trim()) {
@@ -201,7 +265,7 @@ export default function ScheduleAdmin() {
     try {
       const times = draft.times
         .map((t) => ({ days: t.days.trim(), time: t.time.trim() }))
-        .filter((t) => t.days || t.time);
+        .filter((t) => t.days && /^\d{2}:\d{2}~\d{2}:\d{2}$/.test(t.time));
       const payload = {
         teacher_id: draft.teacher_id,
         teacher_name: draft.teacher_name.trim(),
@@ -413,38 +477,87 @@ export default function ScheduleAdmin() {
               </button>
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
-              요일은 가운뎃점(월·수·금), 하루면 그대로(토), 시간은 12시간제 앞자리 0(예: 07:00~10:00)
+              요일 버튼을 눌러 선택(월·수·금처럼 자동), 시간은 24시간제·10분 단위로 시작~끝 선택
             </p>
-            <div className="mt-3 space-y-2">
-              {draft.times.map((t, i) => (
-                <div key={i} className="flex gap-2">
-                  <input
-                    className={`${fieldBase} h-10 w-2/5`}
-                    value={t.days}
-                    onChange={(e) => patchTime(i, { days: e.target.value })}
-                    placeholder="월·수·금 / 토"
-                  />
-                  <input
-                    className={`${fieldBase} h-10 flex-1`}
-                    value={t.time}
-                    onChange={(e) => patchTime(i, { time: e.target.value })}
-                    placeholder="07:00~10:00"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDraft({
-                        ...draft,
-                        times: draft.times.filter((_, j) => j !== i),
-                      })
-                    }
-                    aria-label="시간 삭제"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border text-muted-foreground hover:border-error hover:text-error"
+            <div className="mt-3 space-y-3">
+              {draft.times.map((t, i) => {
+                const selDays = t.days.split("·").map((s) => s.trim());
+                const p = parseTime(t.time);
+                return (
+                  <div
+                    key={i}
+                    className="rounded-[var(--radius-md)] border border-border p-3"
                   >
-                    ×
-                  </button>
-                </div>
-              ))}
+                    <div className="flex items-start justify-between gap-2">
+                      {/* 요일 토글 */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {DAY_LIST.map((day) => {
+                          const on = selDays.includes(day);
+                          return (
+                            <button
+                              key={day}
+                              type="button"
+                              onClick={() => toggleDay(i, day)}
+                              aria-pressed={on}
+                              className={`h-8 w-8 rounded-full text-sm font-bold transition-colors ${
+                                on
+                                  ? "bg-point text-white"
+                                  : "border border-border text-muted-foreground hover:border-point/50"
+                              }`}
+                            >
+                              {day}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            times: draft.times.filter((_, j) => j !== i),
+                          })
+                        }
+                        aria-label="시간 삭제"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-error hover:text-error"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    {/* 시작 ~ 끝 (24시간제 / 10분 단위) */}
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+                      <TimeSel
+                        value={p.sh}
+                        onChange={(v) => setTimePart(i, "sh", v)}
+                        options={HOURS}
+                        ph="시"
+                      />
+                      <span>:</span>
+                      <TimeSel
+                        value={p.sm}
+                        onChange={(v) => setTimePart(i, "sm", v)}
+                        options={MINUTES}
+                        ph="분"
+                      />
+                      <span className="mx-1 font-semibold text-foreground">~</span>
+                      <TimeSel
+                        value={p.eh}
+                        onChange={(v) => setTimePart(i, "eh", v)}
+                        options={HOURS}
+                        ph="시"
+                      />
+                      <span>:</span>
+                      <TimeSel
+                        value={p.em}
+                        onChange={(v) => setTimePart(i, "em", v)}
+                        options={MINUTES}
+                        ph="분"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
