@@ -5,7 +5,6 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
-import TeacherScheduleSection from "@/components/schedule/TeacherScheduleSection";
 import { fetchPublicTeacherBySlug } from "@/lib/content/teachers";
 import type { Teacher } from "@/lib/data/teachers";
 
@@ -137,9 +136,6 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
           </dl>
         )}
       </Reveal>
-
-      {/* 2026 수업 시간표 (해당 강사) — Supabase 조회 */}
-      <TeacherScheduleSection slug={teacher.id} />
 
       <div className="mt-10">
         <Button href="/teachers" variant="secondary" withArrow>

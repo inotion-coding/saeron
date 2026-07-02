@@ -32,11 +32,11 @@
 │   ├── sitemap.ts            # sitemap.xml 자동 생성 (고정+공지/강사 상세 페이지 목록)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
-│   ├── admin/                # 관리자 영역(SiteChrome로 껍데기 제외) — page.tsx(게이트)/login/dashboard/notices/teachers/schedule/accounts/inquiries
+│   ├── admin/                # 관리자 영역(SiteChrome로 껍데기 제외) — page.tsx(게이트)/login/dashboard/notices/teachers/accounts/inquiries  ※시간표 관리 제거(재구성 예정)
 │   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
 │   ├── teachers/             # 강사 목록 + [id]/page.tsx 상세 (개별 주소 유지, 내용은 client 실시간 조회→수정 즉시반영)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
-│   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
+│   ├── schedule/             # 수업 시간표 page.tsx (준비 중 placeholder — UI·구성 재작성 예정)
 │   ├── about/                # 학원 소개 (미구현)
 │   └── programs/             # 프로그램 (상세 블록 page.tsx, 구현)
 ├── components/
@@ -48,10 +48,6 @@
 │   │   └── Footer.tsx        # 하단바 (사업자 정보 + 관리자 페이지 접속 링크)
 │   ├── ui/
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
-│   ├── schedule/
-│   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (Supabase 조회, client)
-│   │   ├── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
-│   │   └── TeacherScheduleSection.tsx # 강사 상세 하단 "2026 시간표"(해당 강사 Supabase 조회, client)
 │   ├── programs/
 │   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
 │   ├── admin/
@@ -59,7 +55,6 @@
 │   │   ├── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급별 메뉴, client)
 │   │   ├── NoticesAdmin.tsx  # 공지 관리 CRUD + 포스터 업로드(level≤2, client)
 │   │   ├── TeachersAdmin.tsx # 강사 프로필 CRUD + 사진 업로드(level≤2/본인, client)
-│   │   ├── ScheduleAdmin.tsx # 시간표(강사묶음·수업행·공통안내) CRUD(client)
 │   │   ├── AccountsAdmin.tsx # 계정 관리(생성·삭제·임시비번) — Edge Function 경유(1·2급, client)
 │   │   └── InquiriesAdmin.tsx # 상담 신청 열람·처리·삭제(1·2급, client)
 │   ├── NoticeBar.tsx         # 메인 공지 배너(Supabase featured 조회, client)
@@ -69,16 +64,14 @@
 │   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
 │   ├── content/
 │   │   ├── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
-│   │   ├── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, 서버/빌드)
-│   │   └── schedule.ts       # 공개 시간표 Supabase 조회(/schedule·강사상세, client)
+│   │   └── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, client 실시간)
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
-│       ├── teachers.ts       # 강사 데이터(부·과목·각오·이력)
-│       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
+│       └── teachers.ts       # 강사 타입·필터라벨(콘텐츠는 Supabase)
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
-├── supabase/                 # 관리자 백엔드 — schema.sql/login.sql/accounts.sql/inquiries.sql/schedule-self.sql(3급 본인시간표 생성) + functions/admin-users
+├── supabase/                 # 관리자 백엔드 — schema.sql/login.sql/accounts.sql/inquiries.sql + functions/admin-users. (시간표 테이블은 유지, 데이터만 비움: schedule-clear.sql. 재구성 예정)
 ├── .env.local                # Supabase 키(NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY) — git 무시
 ├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
 ├── CLAUDE.md / PROCESS.md / DESIGN.md / DATABASE.md  # DATABASE.md=관리자 DB·권한 설계도
