@@ -34,6 +34,11 @@ jobs:
 
       - name: Build static site (next export → out/)
         run: npm run build
+        # 강사 페이지가 빌드 시 Supabase를 읽으므로 공개 키 주입.
+        # NEXT_PUBLIC_* 는 공개용(클라 번들에 노출)이며 접근제어는 Supabase RLS가 담당.
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://cmustyrzeosffhcijubt.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_WHeTKTUgTyNAXlUIIQiB7w_jWQEzJif
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
