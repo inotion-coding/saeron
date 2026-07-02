@@ -201,3 +201,4 @@ Supabase 기본 `auth.users`(로그인 계정) + 우리 정보 테이블 `public
 - 2026-07-02: 시간표 공개 연결 — `lib/content/schedule.ts` + ScheduleView(Supabase client 조회, 즉시반영) + 강사상세 TeacherScheduleSection. teacher_id→slug로 강사 링크. 3급 본인 편집: TeachersAdmin/ScheduleAdmin이 3급이면 본인 강사/시간표만 로드(연결강사 select 숨김), 대시보드에 "내 프로필/내 시간표" 메뉴. RLS가 본인만 수정 강제.
 - 2026-07-02: 배포 완료(GitHub Actions deploy.yml에 NEXT_PUBLIC_SUPABASE_URL/ANON_KEY 주입, saeronedu.com 라이브). 강사 페이지는 빌드시 생성→수정 반영엔 재배포 필요.
 - 2026-07-02: 3급 본인 시간표 **직접 생성** 허용 — `supabase/schedule-self.sql`(sched_teachers_insert에 3급&본인 추가) + ScheduleAdmin에서 3급도 "내 시간표 만들기"(teacher_id 본인 고정, 이름·과목 자동채움). **schedule-self.sql 실행 필요.**
+- 2026-07-02: 강사 공개 페이지 **즉시반영 전환** — 빌드타임 렌더였던 강사 목록/상세를 **client 실시간 조회**로(TeacherDirectory 자체fetch, TeacherDetailClient). 개별 주소는 유지(빌드시 shell 생성). → 관리자 강사 수정이 **재배포 없이 즉시** 라이브 반영. (기존엔 강사만 재배포 필요했던 문제 해소. 단 완전히 새 강사 추가는 shell 생성 위해 재배포 필요.)

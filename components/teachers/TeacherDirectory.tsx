@@ -10,6 +10,7 @@ import {
   type SubjectGroup,
   type Teacher,
 } from "@/lib/data/teachers";
+import { fetchPublicTeachers } from "@/lib/content/teachers";
 
 type SubjectFilter = SubjectGroup | "전체";
 
@@ -51,15 +52,28 @@ function FilterTab({
  */
 const FILTER_STORAGE_KEY = "teachers-filter";
 
-export default function TeacherDirectory({
-  teachers,
-}: {
-  teachers: Teacher[];
-}) {
-  const all = teachers;
+export default function TeacherDirectory() {
+  const [all, setAll] = useState<Teacher[]>([]);
+  const [loading, setLoading] = useState(true);
   const [division, setDivision] = useState<Division>("middle");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
   const [restored, setRestored] = useState(false);
+
+  // Supabase에서 실시간 조회(관리자 수정 즉시 반영)
+  useEffect(() => {
+    let active = true;
+    fetchPublicTeachers()
+      .then((t) => {
+        if (active) setAll(t);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // 상세페이지에 다녀오거나 뒤로가기로 목록에 돌아와도 직전 필터(부·과목) 복원
   useEffect(() => {
@@ -130,7 +144,9 @@ export default function TeacherDirectory({
       </div>
 
       {/* 그리드 */}
-      {filtered.length > 0 ? (
+      {loading ? (
+        <p className="mt-12 text-center text-muted-foreground">불러오는 중…</p>
+      ) : filtered.length > 0 ? (
         <ul className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map((t, i) => (
             <Reveal as="li" key={t.id} delay={(i % 4) * 80}>

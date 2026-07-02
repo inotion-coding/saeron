@@ -34,7 +34,7 @@
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
 │   ├── admin/                # 관리자 영역(SiteChrome로 껍데기 제외) — page.tsx(게이트)/login/dashboard/notices/teachers/schedule/accounts/inquiries
 │   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
-│   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (Supabase 조회, 개별 주소 유지)
+│   ├── teachers/             # 강사 목록 + [id]/page.tsx 상세 (개별 주소 유지, 내용은 client 실시간 조회→수정 즉시반영)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
 │   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
 │   ├── about/                # 학원 소개 (미구현)
