@@ -7,10 +7,8 @@ import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
 import { fetchPublicTeacherBySlug } from "@/lib/content/teachers";
 import type { Teacher } from "@/lib/data/teachers";
-import {
-  getScheduleByTeacherSlug,
-  formatScheduleDays,
-} from "@/lib/data/schedule";
+import { formatScheduleDays, type ScheduleEntry } from "@/lib/data/schedule";
+import { fetchScheduleByTeacherSlug } from "@/lib/content/schedule";
 
 /**
  * 강사 상세(client) — slug로 Supabase에서 실시간 조회.
@@ -22,6 +20,20 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
   const [status, setStatus] = useState<"loading" | "ready" | "missing">(
     "loading",
   );
+  const [classes, setClasses] = useState<ScheduleEntry[]>([]);
+
+  // 수업 시간표 (Supabase, 관리자 편집 즉시 반영)
+  useEffect(() => {
+    let active = true;
+    fetchScheduleByTeacherSlug(slug)
+      .then((c) => {
+        if (active) setClasses(c);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [slug]);
 
   useEffect(() => {
     let active = true;
@@ -89,8 +101,6 @@ export default function TeacherDetailClient({ slug }: { slug: string }) {
     { label: "합격 · 수상 실적", items: teacher.achievements },
     { label: "저서", items: teacher.books },
   ].filter((s) => s.items && s.items.length > 0);
-
-  const classes = getScheduleByTeacherSlug(teacher.id); // 수업 시간표(코드 데이터)
 
   return (
     <div className="mx-auto max-w-3xl">

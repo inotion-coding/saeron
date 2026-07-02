@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import {
@@ -9,7 +9,8 @@ import {
   type Division,
   type SubjectGroup,
 } from "@/lib/data/teachers";
-import { getSchedule, formatScheduleDays } from "@/lib/data/schedule";
+import { formatScheduleDays, type ScheduleEntry } from "@/lib/data/schedule";
+import { fetchSchedule } from "@/lib/content/schedule";
 
 type SubjectFilter = SubjectGroup | "전체";
 
@@ -76,10 +77,31 @@ function TeacherName({
 export default function ScheduleView() {
   const [division, setDivision] = useState<Division>("high");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
+  const [entries, setEntries] = useState<ScheduleEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    fetchSchedule()
+      .then((e) => {
+        if (active) setEntries(e);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // 강사별로 묶기 (같은 강사 반복 X — 강사 아래 여러 수업)
   const groups = useMemo(() => {
-    const filtered = getSchedule(division, subject);
+    const filtered = entries.filter(
+      (e) =>
+        e.division === division &&
+        (subject === "전체" || e.subjectGroup === subject),
+    );
     const map = new Map<
       string,
       {
@@ -108,7 +130,7 @@ export default function ScheduleView() {
       g.courses.push({ course: e.course, target: e.target, times: e.times });
     }
     return Array.from(map.values());
-  }, [division, subject]);
+  }, [division, subject, entries]);
 
   return (
     <div>
@@ -136,7 +158,9 @@ export default function ScheduleView() {
       </div>
 
       {/* 목록 — 박스 없이 세로. 강사별 묶음, 강사 사이 회색 구분선 */}
-      {groups.length === 0 ? (
+      {loading ? (
+        <p className="mt-14 text-center text-muted-foreground">불러오는 중…</p>
+      ) : groups.length === 0 ? (
         <p className="mt-14 text-center text-muted-foreground">
           해당 조건의 시간표가 없습니다.
         </p>

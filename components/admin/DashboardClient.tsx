@@ -162,6 +162,13 @@ export default function DashboardClient() {
         )}
         {profile && profile.level <= 2 && (
           <AdminMenuCard
+            href="/admin/schedule"
+            title="시간표 관리"
+            desc="수업 추가·수정·삭제 (강사·과목·부·요일·시간)"
+          />
+        )}
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
             href="/admin/inquiries"
             title="상담 신청"
             desc="홈페이지 상담 폼으로 접수된 문의 확인·처리"
@@ -181,6 +188,13 @@ export default function DashboardClient() {
             href="/admin/teachers"
             title="내 프로필"
             desc="내 강사 프로필(사진·각오·학력·이력) 수정"
+          />
+        )}
+        {profile && profile.level === 3 && (
+          <AdminMenuCard
+            href="/admin/schedule"
+            title="내 시간표"
+            desc="내 수업 시간표 추가·수정"
           />
         )}
       </div>
