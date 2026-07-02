@@ -78,7 +78,7 @@
 │       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
-├── supabase/                 # 관리자 백엔드 — schema.sql/login.sql/accounts.sql/inquiries.sql(상담신청) + functions/admin-users(계정 Edge Function)
+├── supabase/                 # 관리자 백엔드 — schema.sql/login.sql/accounts.sql/inquiries.sql/schedule-self.sql(3급 본인시간표 생성) + functions/admin-users
 ├── .env.local                # Supabase 키(NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY) — git 무시
 ├── package.json / tsconfig.json / next.config.mjs / postcss.config.mjs
 ├── CLAUDE.md / PROCESS.md / DESIGN.md / DATABASE.md  # DATABASE.md=관리자 DB·권한 설계도

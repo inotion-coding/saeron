@@ -38,7 +38,7 @@ type GroupDraft = {
   rows: RowDraft[];
 };
 
-type TeacherOpt = { id: string; name: string };
+type TeacherOpt = { id: string; name: string; subject_group?: string };
 type CommonNotice = { id: string; text: string; sort_order: number };
 
 const fieldBase =
@@ -112,7 +112,7 @@ export default function ScheduleAdmin() {
     }
     const [g, t, c] = await Promise.all([
       gq.order("sort_order", { ascending: true }),
-      supabase.from("teachers").select("id, name").order("sort_order"),
+      supabase.from("teachers").select("id, name, subject_group").order("sort_order"),
       supabase.from("common_notices").select("id, text, sort_order").order("sort_order"),
     ]);
     setGroups((g.data as GroupRow[]) ?? []);
@@ -152,6 +152,7 @@ export default function ScheduleAdmin() {
   }, [router, load]);
 
   const canManageAll = level <= 2;
+  const canCreate = level <= 3; // 3급도 본인 시간표는 생성 가능
 
   async function openGroup(g: GroupRow) {
     setError("");
@@ -183,6 +184,17 @@ export default function ScheduleAdmin() {
 
   function startNewGroup() {
     setError("");
+    if (level === 3) {
+      // 3급: 본인 강사로 고정 + 이름·과목 자동 채움
+      const mine = teachers.find((t) => t.id === myTeacherId);
+      setDraft({
+        ...emptyGroup(groups.length),
+        teacher_id: myTeacherId,
+        display_name: mine?.name ?? "",
+        subject_group: mine?.subject_group ?? "국어",
+      });
+      return;
+    }
     setDraft(emptyGroup(groups.length));
   }
 
@@ -574,9 +586,9 @@ export default function ScheduleAdmin() {
             {canManageAll ? "시간표 관리" : "내 시간표"}
           </h1>
         </div>
-        {canManageAll && (
+        {canCreate && (
           <Button variant="primary" onClick={startNewGroup}>
-            새 시간표
+            {canManageAll ? "새 시간표" : "내 시간표 만들기"}
           </Button>
         )}
       </div>
