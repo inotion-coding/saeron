@@ -77,10 +77,38 @@ export default function ScheduleView() {
   const [division, setDivision] = useState<Division>("high");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
 
-  const rows = useMemo(
-    () => getSchedule(division, subject),
-    [division, subject],
-  );
+  // 강사별로 묶기 (같은 강사 반복 X — 강사 아래 여러 수업)
+  const groups = useMemo(() => {
+    const filtered = getSchedule(division, subject);
+    const map = new Map<
+      string,
+      {
+        teacherSlug?: string;
+        teacherName: string;
+        subjectGroup: SubjectGroup;
+        courses: {
+          course: string;
+          target?: string;
+          times: { days: string; time: string }[];
+        }[];
+      }
+    >();
+    for (const e of filtered) {
+      const key = e.teacherSlug ?? `${e.subjectGroup}|${e.teacherName}`;
+      let g = map.get(key);
+      if (!g) {
+        g = {
+          teacherSlug: e.teacherSlug,
+          teacherName: e.teacherName,
+          subjectGroup: e.subjectGroup,
+          courses: [],
+        };
+        map.set(key, g);
+      }
+      g.courses.push({ course: e.course, target: e.target, times: e.times });
+    }
+    return Array.from(map.values());
+  }, [division, subject]);
 
   return (
     <div>
@@ -107,55 +135,71 @@ export default function ScheduleView() {
         ))}
       </div>
 
-      {/* 목록 — 박스 없이 세로 행 + 골드선 */}
-      {rows.length === 0 ? (
+      {/* 목록 — 박스 없이 세로. 강사별 묶음, 강사 사이 회색 구분선 */}
+      {groups.length === 0 ? (
         <p className="mt-14 text-center text-muted-foreground">
           해당 조건의 시간표가 없습니다.
         </p>
       ) : (
-        <div className="mx-auto mt-12 max-w-md space-y-12">
-          {rows.map((e, i) => (
+        <div className="mx-auto mt-12 max-w-md">
+          {groups.map((g, gi) => (
             <Reveal
               as="div"
-              key={`${e.teacherSlug ?? e.teacherName}-${e.course}-${i}`}
-              delay={(i % 6) * 60}
+              key={g.teacherSlug ?? `${g.subjectGroup}-${g.teacherName}`}
+              delay={(gi % 6) * 60}
+              className={gi > 0 ? "mt-10 border-t border-border pt-10" : ""}
             >
-              {/* 행 1: (과목) 강사 */}
+              {/* 강사: (과목) 이름 */}
               <div className="flex items-baseline gap-2">
                 <span className="shrink-0 text-sm font-bold text-point">
-                  {e.subjectGroup}
+                  {g.subjectGroup}
                 </span>
                 <span className="text-lg">
-                  <TeacherName slug={e.teacherSlug} name={e.teacherName} />
+                  <TeacherName slug={g.teacherSlug} name={g.teacherName} />
                 </span>
               </div>
 
-              {/* 1↔2 굵은 골드선 */}
+              {/* 강사 아래 굵은 골드선 */}
               <div className="mt-3 border-t-[3px] border-point" aria-hidden="true" />
 
-              {/* 행 2: 수업 (+대상) */}
-              <div className="pt-3">
-                <span className="text-base font-semibold text-foreground">
-                  {e.course}
-                </span>
-                {e.target && (
-                  <span className="ml-2 text-sm text-muted-foreground">
-                    {e.target}
-                  </span>
-                )}
-              </div>
+              {/* 수업들 */}
+              <div className="mt-5 space-y-6">
+                {g.courses.map((c, ci) => (
+                  <div key={ci}>
+                    {/* 수업 (+대상) */}
+                    <div>
+                      <span className="text-base font-semibold text-foreground">
+                        {c.course}
+                      </span>
+                      {c.target && (
+                        <span className="ml-2 text-sm text-muted-foreground">
+                          {c.target}
+                        </span>
+                      )}
+                    </div>
 
-              {/* 2↔3 얇은 골드선 */}
-              <div className="mt-3 border-t border-point/50" aria-hidden="true" />
+                    {/* 수업 아래 얇은 골드선 */}
+                    <div
+                      className="mt-2 border-t border-point/50"
+                      aria-hidden="true"
+                    />
 
-              {/* 행 3: 시간들 (여러 개면 회색 얇은선) */}
-              <div className="mt-1 divide-y divide-border">
-                {e.times.map((t, j) => (
-                  <div key={j} className="py-2 text-sm leading-relaxed">
-                    <span className="font-semibold text-foreground">
-                      {t.days}
-                    </span>{" "}
-                    <span className="text-muted-foreground">{t.time}</span>
+                    {/* 시간들: 요일(왼쪽) · 시간(오른쪽) */}
+                    <div className="mt-1 divide-y divide-border">
+                      {c.times.map((t, j) => (
+                        <div
+                          key={j}
+                          className="flex items-baseline justify-between gap-6 py-2 text-sm"
+                        >
+                          <span className="font-semibold tracking-[0.02em] text-foreground">
+                            {t.days}
+                          </span>
+                          <span className="tabular-nums tracking-[0.04em] text-muted-foreground">
+                            {t.time}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>

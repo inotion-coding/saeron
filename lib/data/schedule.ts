@@ -38,10 +38,10 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "국어",
     division: "high",
     course: "화작",
-    target: "외고2",
+    target: "외고 2학년",
     times: [
-      { days: "월·수·금", time: "7:00~10:00" },
-      { days: "토", time: "1:00~4:00" },
+      { days: "월·수·금", time: "07:00~10:00" },
+      { days: "토", time: "01:00~04:00" },
     ],
   },
   {
@@ -50,8 +50,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "국어",
     division: "high",
     course: "독서",
-    target: "외고1",
-    times: [{ days: "화·목", time: "5:00~8:00" }],
+    target: "외고 1학년",
+    times: [{ days: "화·목", time: "05:00~08:00" }],
   },
   {
     teacherSlug: "lee-byeongeon",
@@ -59,9 +59,10 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "수학",
     division: "high",
     course: "미적분",
+    target: "일반고 1학년",
     times: [
-      { days: "월·수·금", time: "7:00~10:00" },
-      { days: "토", time: "2:00~6:00" },
+      { days: "월·수·금", time: "07:00~10:00" },
+      { days: "토", time: "02:00~06:00" },
     ],
   },
   {
@@ -70,8 +71,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "수학",
     division: "high",
     course: "확률과통계",
-    target: "외고3",
-    times: [{ days: "일", time: "1:00~4:00" }],
+    target: "외고 3학년",
+    times: [{ days: "일", time: "01:00~04:00" }],
   },
   {
     teacherSlug: "ho-jaeyu",
@@ -79,7 +80,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "영어",
     division: "high",
     course: "영어 독해",
-    times: [{ days: "화·목", time: "7:00~10:00" }],
+    target: "일반고 1학년",
+    times: [{ days: "화·목", time: "07:00~10:00" }],
   },
   {
     teacherSlug: "han-junho",
@@ -87,7 +89,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "사회",
     division: "high",
     course: "사회문화",
-    times: [{ days: "토", time: "4:00~7:00" }],
+    target: "외고 3학년",
+    times: [{ days: "토", time: "04:00~07:00" }],
   },
   {
     teacherSlug: "kim-yunsik",
@@ -95,7 +98,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "과학",
     division: "high",
     course: "생명과학",
-    times: [{ days: "토", time: "7:00~10:00" }],
+    target: "외고 2학년",
+    times: [{ days: "토", time: "07:00~10:00" }],
   },
   {
     teacherSlug: "seo-seungwon",
@@ -103,8 +107,8 @@ export const scheduleEntries: ScheduleEntry[] = [
     subjectGroup: "수학",
     division: "middle",
     course: "공통수학1",
-    target: "중3",
-    times: [{ days: "월·수·금", time: "5:00~7:30" }],
+    target: "중등 3학년",
+    times: [{ days: "월·수·금", time: "05:00~07:30" }],
   },
 ];
 // ════════════════════════════ ✋ 여기까지 ════════════════════════════
