@@ -153,12 +153,13 @@ export default function DashboardClient() {
             desc="공지 추가·수정·삭제, 포스터 이미지 업로드"
           />
         )}
-        <AdminMenuCard
-          href="/admin/dashboard"
-          title="강사 프로필 관리"
-          desc="준비 중 — 다음 단계에서 추가"
-          disabled
-        />
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
+            href="/admin/teachers"
+            title="강사 프로필 관리"
+            desc="강사 추가·수정·삭제, 사진·학력·이력 편집"
+          />
+        )}
         <AdminMenuCard
           href="/admin/dashboard"
           title="시간표 관리"
