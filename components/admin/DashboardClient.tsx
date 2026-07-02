@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -63,6 +64,38 @@ export default function DashboardClient() {
     router.replace("/admin/login");
   }
 
+  function AdminMenuCard({
+    href,
+    title,
+    desc,
+    disabled,
+  }: {
+    href: string;
+    title: string;
+    desc: string;
+    disabled?: boolean;
+  }) {
+    if (disabled) {
+      return (
+        <div className="cursor-not-allowed rounded-[var(--radius-lg)] border border-border bg-surface p-5 opacity-60">
+          <h2 className="text-h3 font-bold text-foreground">{title}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+        </div>
+      );
+    }
+    return (
+      <Link
+        href={href}
+        className="group rounded-[var(--radius-lg)] border-2 border-border bg-background p-5 shadow-card transition-colors hover:border-point"
+      >
+        <h2 className="text-h3 font-bold text-foreground group-hover:text-point">
+          {title}
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+      </Link>
+    );
+  }
+
   if (status === "loading") {
     return (
       <p className="text-center text-sm text-muted-foreground">불러오는 중…</p>
@@ -90,8 +123,27 @@ export default function DashboardClient() {
         </Button>
       </div>
 
-      <div className="mt-10 rounded-[var(--radius-lg)] border border-border bg-surface p-6 text-sm leading-relaxed text-muted-foreground">
-        관리 메뉴(공지·강사 프로필·시간표·계정)는 다음 단계에서 등급에 맞게 추가됩니다.
+      {/* 관리 메뉴 (등급별) */}
+      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
+            href="/admin/notices"
+            title="공지 관리"
+            desc="공지 추가·수정·삭제, 포스터 이미지 업로드"
+          />
+        )}
+        <AdminMenuCard
+          href="/admin/dashboard"
+          title="강사 프로필 관리"
+          desc="준비 중 — 다음 단계에서 추가"
+          disabled
+        />
+        <AdminMenuCard
+          href="/admin/dashboard"
+          title="시간표 관리"
+          desc="준비 중 — 다음 단계에서 추가"
+          disabled
+        />
       </div>
     </div>
   );

@@ -32,8 +32,8 @@
 │   ├── sitemap.ts            # sitemap.xml 자동 생성 (고정+공지/강사 상세 페이지 목록)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
-│   ├── admin/                # 관리자 영역(SiteChrome로 사이트 껍데기 제외) — page.tsx(접속 경고 게이트) / login(로그인 폼) / dashboard(로그인 후 보호 영역)
-│   ├── notices/              # 공지 목록 page.tsx + [id]/page.tsx 상세 (구현)
+│   ├── admin/                # 관리자 영역(SiteChrome로 사이트 껍데기 제외) — page.tsx(접속 게이트) / login / dashboard / notices(공지 관리)
+│   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
 │   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (구현)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
 │   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
@@ -55,15 +55,18 @@
 │   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
 │   ├── admin/
 │   │   ├── LoginForm.tsx     # 로그인 폼(과목+이름+비번 → Supabase, client)
-│   │   └── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급 표시, client)
-│   ├── NoticeBar.tsx         # 메인 공지 영역
-│   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션(client, 정적 export 호환)
+│   │   ├── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급별 메뉴, client)
+│   │   └── NoticesAdmin.tsx  # 공지 관리 CRUD + 포스터 업로드(level≤2, client)
+│   ├── NoticeBar.tsx         # 메인 공지 배너(Supabase featured 조회, client)
+│   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션+크게보기 라이트박스(Supabase, client)
 │   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
 ├── lib/
 │   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
+│   ├── content/
+│   │   └── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
-│       ├── notices.ts        # 공지 더미
+│       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
 │       ├── teachers.ts       # 강사 데이터(부·과목·각오·이력)
 │       └── schedule.ts       # 수업 시간표(강사 id 연결, 부·과목·요일·시간)
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포

@@ -1,82 +1,13 @@
 /**
- * 공지 데이터 (더미) — 메인 배너 슬라이드, /notices(목록·상세)에서 사용.
- * 공지는 제목 + 포스터(이미지) 중심. images[0]=대표사진(목록·배너 썸네일).
- * 현재 이미지는 예시(placeholder, public/notices/*.jpg) — 실제 포스터로 교체.
- * TODO(content): 실제 공지/포스터로 교체. date는 ISO(YYYY-MM-DD).
+ * 공지 타입 정의.
+ * 공지 콘텐츠는 이제 Supabase(public.notices)에서 관리하며, 조회는 lib/content/notices.ts 사용.
+ * 이 파일은 화면 컴포넌트가 공유하는 Notice 형태(타입)만 제공한다.
  */
-
 export type Notice = {
-  id: string;
+  id: string; // 화면 key용 식별자(slug 우선)
   title: string;
-  date: string;
+  date: string; // YYYY-MM-DD
   content: string;
-  images?: string[]; // 포스터 경로들. images[0]=대표사진. 미지정 시 플레이스홀더
-  featured?: boolean; // 메인 배너 슬라이드 + 공지 하단 연결 슬롯 노출
+  images?: string[]; // 포스터 이미지 URL들. images[0]=대표
+  featured?: boolean; // 메인 배너 노출
 };
-
-export const notices: Notice[] = [
-  {
-    id: "2026-suwon-summer",
-    title: "2026 새론학원 수원외고 여름방학 특강 안내",
-    date: "2026-07-01",
-    featured: true,
-    // 표시 순서: 1(대표) → 4 → 3 → 2
-    images: [
-      "/notices/2026-suwon-summer/1.jpg",
-      "/notices/2026-suwon-summer/4.jpg",
-      "/notices/2026-suwon-summer/3.jpg",
-      "/notices/2026-suwon-summer/2.jpg",
-    ],
-    content: "",
-  },
-  {
-    id: "2026-general-summer",
-    title: "2026 새론학원 일반고 여름방학 특강 안내",
-    date: "2026-07-01",
-    featured: true,
-    // 표시 순서: 1(대표) → 2
-    images: [
-      "/notices/2026-general-summer/1.png",
-      "/notices/2026-general-summer/2.jpg",
-    ],
-    content: "",
-  },
-  {
-    id: "2026-middle3-summer",
-    title: "2026 새론학원 중학교 3학년 여름방학 특강 안내",
-    date: "2026-07-01",
-    featured: true,
-    // 표시 순서: 1(대표) → 2
-    images: [
-      "/notices/2026-middle3-summer/1.jpg",
-      "/notices/2026-middle3-summer/2.jpg",
-    ],
-    content: "",
-  },
-  // 새 공지 추가 형식(참고):
-  // {
-  //   id: "고유-id",              // URL 경로가 됨 (영문/숫자/하이픈)
-  //   title: "공지 제목",
-  //   date: "2026-07-01",          // YYYY-MM-DD
-  //   featured: true,              // 메인 배너 슬라이드에 노출하려면 true
-  //   images: ["/notices/파일명.jpg"], // 포스터 이미지(첫 번째가 대표사진)
-  //   content: "본문 내용",         // 없으면 "" (본문 문단 숨김)
-  // },
-];
-
-/** 전체 공지 (최신순) */
-export function getSortedNotices(): Notice[] {
-  return [...notices].sort((a, b) => b.date.localeCompare(a.date));
-}
-
-/** 메인 배너·하단 연결 슬롯용 featured 공지 (최신순, 최대 5개) */
-export function getFeaturedNotices(): Notice[] {
-  return getSortedNotices()
-    .filter((n) => n.featured)
-    .slice(0, 5);
-}
-
-/** id로 공지 조회 (상세 페이지용) */
-export function getNoticeById(id: string): Notice | undefined {
-  return notices.find((n) => n.id === id);
-}

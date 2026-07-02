@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { notices } from "@/lib/data/notices";
 import { teachers } from "@/lib/data/teachers";
 
 /**
@@ -24,10 +23,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact/", // 상담 문의
   ];
 
-  const noticePaths = notices.map((n) => `/notices/${n.id}/`);
+  // 공지 상세는 개별 주소 없이 목록에서 포스터 크게보기(라이트박스)로 표시 → 사이트맵엔 /notices/ 만.
   const teacherPaths = teachers.map((t) => `/teachers/${t.id}/`);
 
-  const all = [...staticPaths, ...noticePaths, ...teacherPaths];
+  const all = [...staticPaths, ...teacherPaths];
 
   return all.map((path) => ({
     url: `${SITE_URL}${path}`,

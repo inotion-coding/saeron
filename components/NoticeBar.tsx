@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getFeaturedNotices } from "@/lib/data/notices";
+import { fetchFeaturedNotices } from "@/lib/content/notices";
+import type { Notice } from "@/lib/data/notices";
 import Container from "./layout/Container";
 
 const AUTO_INTERVAL = 4500; // ms
@@ -12,9 +13,10 @@ const AUTO_INTERVAL = 4500; // ms
  * 메인 공지 배너 슬라이드 (풀블리드) — DESIGN.md §5
  * 대표사진이 배너 전체를 덮고, 좌측 어두운 스크림 위에 흰 글씨(또렷).
  * featured 자동 롤링, 점 인디케이터, 일시정지·reduced-motion. 닫기·화살표 없음.
+ * 데이터: Supabase(관리자 편집 즉시 반영). 배너 클릭 → /notices.
  */
 export default function NoticeBar() {
-  const items = getFeaturedNotices();
+  const [items, setItems] = useState<Notice[]>([]);
   const count = items.length;
 
   const [index, setIndex] = useState(0);
@@ -25,6 +27,9 @@ export default function NoticeBar() {
     reducedMotion.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    fetchFeaturedNotices()
+      .then(setItems)
+      .catch(() => setItems([]));
   }, []);
 
   useEffect(() => {
@@ -80,7 +85,7 @@ export default function NoticeBar() {
                     공지사항
                   </span>
                   <Link
-                    href={`/notices/${notice.id}`}
+                    href="/notices"
                     tabIndex={i === index ? 0 : -1}
                     className="group mt-3 block max-w-2xl"
                     title={notice.title}
