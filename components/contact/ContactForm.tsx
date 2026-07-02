@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
+import { supabase } from "@/lib/supabaseClient";
 
 const SUBJECTS = ["국어", "수학", "영어", "사회", "과학", "기타"];
 
@@ -113,13 +114,18 @@ function SubjectChip({ value }: { value: string }) {
 export default function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
     const name = (data.get("name") as string)?.trim() ?? "";
     const phone = (data.get("phone") as string)?.trim() ?? "";
+    const division = (data.get("division") as string) ?? "";
+    const message = (data.get("message") as string)?.trim() ?? "";
+    const subjects = data.getAll("subjects").map(String);
     const agree = data.get("agree");
 
     const next: Errors = {};
@@ -132,7 +138,18 @@ export default function ContactForm() {
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
-    // TODO(form): 실제 전송 연동. 현재는 접수 처리만.
+    setSending(true);
+    setSendError("");
+    const { error } = await supabase
+      .from("inquiries")
+      .insert({ name, phone, division, subjects, message });
+    setSending(false);
+    if (error) {
+      setSendError(
+        "전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화(031-257-0011)로 문의해 주세요.",
+      );
+      return;
+    }
     setSubmitted(true);
     form.reset();
   }
@@ -239,8 +256,16 @@ export default function ContactForm() {
       </label>
       {errors.agree && <p className="-mt-2 text-xs text-error">{errors.agree}</p>}
 
-      <Button type="submit" size="lg" className="mt-1 w-full" withArrow>
-        상담 신청하기
+      {sendError && <p className="text-sm text-error">{sendError}</p>}
+
+      <Button
+        type="submit"
+        size="lg"
+        className="mt-1 w-full"
+        withArrow
+        disabled={sending}
+      >
+        {sending ? "전송 중…" : "상담 신청하기"}
       </Button>
     </form>
   );

@@ -169,6 +169,13 @@ export default function DashboardClient() {
         )}
         {profile && profile.level <= 2 && (
           <AdminMenuCard
+            href="/admin/inquiries"
+            title="상담 신청"
+            desc="홈페이지 상담 폼으로 접수된 문의 확인·처리"
+          />
+        )}
+        {profile && profile.level <= 2 && (
+          <AdminMenuCard
             href="/admin/accounts"
             title="계정 관리"
             desc="강사 계정 생성·삭제·임시 비밀번호 설정"
