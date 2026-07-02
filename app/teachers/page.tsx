@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Section from "@/components/layout/Section";
 import Reveal from "@/components/ui/Reveal";
 import TeacherDirectory from "@/components/teachers/TeacherDirectory";
+import { fetchPublicTeachers } from "@/lib/content/teachers";
 
 export const metadata: Metadata = {
   title: "강사 소개",
   description: "신뢰로 증명하는 새론학원 전임 강사진을 소개합니다.",
 };
 
-export default function TeachersPage() {
+export default async function TeachersPage() {
+  const teachers = await fetchPublicTeachers();
+
   return (
     <>
       <Section tone="paper">
@@ -26,7 +29,7 @@ export default function TeachersPage() {
         </Reveal>
 
         <div className="mt-12">
-          <TeacherDirectory />
+          <TeacherDirectory teachers={teachers} />
         </div>
       </Section>
     </>

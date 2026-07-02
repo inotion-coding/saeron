@@ -6,9 +6,9 @@ import Reveal from "@/components/ui/Reveal";
 import {
   DIVISIONS,
   SUBJECT_GROUPS,
-  getTeachers,
   type Division,
   type SubjectGroup,
+  type Teacher,
 } from "@/lib/data/teachers";
 
 type SubjectFilter = SubjectGroup | "전체";
@@ -51,8 +51,12 @@ function FilterTab({
  */
 const FILTER_STORAGE_KEY = "teachers-filter";
 
-export default function TeacherDirectory() {
-  const all = getTeachers();
+export default function TeacherDirectory({
+  teachers,
+}: {
+  teachers: Teacher[];
+}) {
+  const all = teachers;
   const [division, setDivision] = useState<Division>("middle");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
   const [restored, setRestored] = useState(false);

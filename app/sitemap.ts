@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { teachers } from "@/lib/data/teachers";
+import { fetchPublicTeachers } from "@/lib/content/teachers";
 
 /**
  * sitemap.xml 자동 생성 (정적 export 시 out/sitemap.xml 로 출력).
@@ -12,7 +12,7 @@ const SITE_URL = "https://saeronedu.com";
 // 정적 export(output:'export')에서 sitemap.xml 파일로 출력되도록 강제
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPaths = [
     "/", // 메인
     "/about/", // 학원 소개
@@ -23,7 +23,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact/", // 상담 문의
   ];
 
-  // 공지 상세는 개별 주소 없이 목록에서 포스터 크게보기(라이트박스)로 표시 → 사이트맵엔 /notices/ 만.
+  // 공지 상세는 개별 주소 없이 라이트박스로 표시 → 사이트맵엔 /notices/ 만.
+  // 강사 상세는 개별 주소 유지 → Supabase(공개 강사)에서 수집.
+  const teachers = await fetchPublicTeachers();
   const teacherPaths = teachers.map((t) => `/teachers/${t.id}/`);
 
   const all = [...staticPaths, ...teacherPaths];

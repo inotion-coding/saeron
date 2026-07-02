@@ -5,23 +5,27 @@ import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import TeacherPhoto from "@/components/TeacherPhoto";
-import { teachers, getTeacherById } from "@/lib/data/teachers";
+import {
+  fetchPublicTeachers,
+  fetchPublicTeacherBySlug,
+} from "@/lib/content/teachers";
 
 type Params = { params: Promise<{ id: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const teachers = await fetchPublicTeachers();
   return teachers.map((t) => ({ id: t.id }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
-  const teacher = getTeacherById(id);
+  const teacher = await fetchPublicTeacherBySlug(id);
   return { title: teacher ? `${teacher.name} 선생님` : "강사 소개" };
 }
 
 export default async function TeacherDetailPage({ params }: Params) {
   const { id } = await params;
-  const teacher = getTeacherById(id);
+  const teacher = await fetchPublicTeacherBySlug(id);
   if (!teacher) notFound();
 
   const sections = [

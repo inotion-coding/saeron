@@ -34,7 +34,7 @@
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
 │   ├── admin/                # 관리자 영역(SiteChrome로 사이트 껍데기 제외) — page.tsx(접속 게이트) / login / dashboard / notices(공지 관리)
 │   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
-│   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (구현)
+│   ├── teachers/             # 강사 소개 목록 + [id]/page.tsx 상세 (Supabase 조회, 개별 주소 유지)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
 │   ├── schedule/             # 수업 시간표 (필터+요일별 시간표, 구현)
 │   ├── about/                # 학원 소개 (미구현)
@@ -63,7 +63,8 @@
 ├── lib/
 │   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
 │   ├── content/
-│   │   └── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
+│   │   ├── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
+│   │   └── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, 서버/빌드)
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
