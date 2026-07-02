@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import {
@@ -46,6 +46,13 @@ function CategoryTab({
  */
 export default function ProgramList() {
   const [active, setActive] = useState<ProgramDivision>("prep");
+
+  // 홈 등에서 ?tab=high 로 들어오면 해당 부 탭을 연다
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    if (t === "prep" || t === "middle" || t === "high") setActive(t);
+  }, []);
+
   const items = getProgramsByDivision(active);
 
   return (
