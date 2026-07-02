@@ -152,6 +152,7 @@ function ArrayField({
 export default function TeachersAdmin() {
   const router = useRouter();
   const [level, setLevel] = useState<number>(9);
+  const [myTeacherId, setMyTeacherId] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "denied">("loading");
   const [rows, setRows] = useState<TeacherRow[]>([]);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -161,12 +162,17 @@ export default function TeachersAdmin() {
   const [origPhoto, setOrigPhoto] = useState<string | null>(null);
   const [sessionPhotos, setSessionPhotos] = useState<string[]>([]);
 
-  const load = useCallback(async () => {
-    const { data } = await supabase
+  const load = useCallback(async (lv: number, ownId: string | null) => {
+    let query = supabase
       .from("teachers")
       .select(
         "id, slug, name, photo_path, divisions, subject_group, subject, resolve, education, experience, achievements, books, sort_order, is_visible",
-      )
+      );
+    // 3급(선생님)은 본인 프로필만
+    if (lv >= 3) {
+      query = query.eq("id", ownId ?? "00000000-0000-0000-0000-000000000000");
+    }
+    const { data } = await query
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true });
     setRows((data as TeacherRow[]) ?? []);
@@ -182,17 +188,20 @@ export default function TeachersAdmin() {
       }
       const { data: prof } = await supabase
         .from("profiles")
-        .select("level")
+        .select("level, teacher_id")
         .eq("id", s.session.user.id)
         .single();
       if (!active) return;
-      const lv = (prof as { level: number } | null)?.level ?? 9;
+      const p = prof as { level: number; teacher_id: string | null } | null;
+      const lv = p?.level ?? 9;
+      const tid = p?.teacher_id ?? null;
       setLevel(lv);
+      setMyTeacherId(tid);
       if (lv > 3) {
         setStatus("denied");
         return;
       }
-      await load();
+      await load(lv, tid);
       if (active) setStatus("ready");
     })();
     return () => {
@@ -324,7 +333,7 @@ export default function TeachersAdmin() {
       setOrigPhoto(null);
       setSessionPhotos([]);
       setDraft(null);
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     } finally {
@@ -340,7 +349,7 @@ export default function TeachersAdmin() {
       const { error: e } = await supabase.from("teachers").delete().eq("id", t.id);
       if (e) throw e;
       if (t.photo_path) await supabase.storage.from(BUCKET).remove([t.photo_path]);
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("삭제에 실패했습니다.");
     } finally {
@@ -391,7 +400,7 @@ export default function TeachersAdmin() {
         if (insErr) throw insErr;
         added += 1;
       }
-      await load();
+      await load(level, myTeacherId);
       if (added === 0) setError("이미 모두 가져와 있습니다.");
     } catch {
       setError("가져오기 중 오류가 발생했습니다. 다시 시도해 주세요.");
@@ -645,7 +654,9 @@ export default function TeachersAdmin() {
           >
             ← 대시보드
           </Link>
-          <h1 className="mt-2 text-h2 font-bold text-foreground">강사 프로필 관리</h1>
+          <h1 className="mt-2 text-h2 font-bold text-foreground">
+            {canManageAll ? "강사 프로필 관리" : "내 프로필"}
+          </h1>
         </div>
         {canManageAll && (
           <Button variant="primary" onClick={startNew}>
@@ -659,7 +670,9 @@ export default function TeachersAdmin() {
       {rows.length === 0 ? (
         <div className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            등록된 강사가 없습니다.
+            {canManageAll
+              ? "등록된 강사가 없습니다."
+              : "연결된 강사 프로필이 없습니다. 관리자에게 문의하세요."}
           </p>
           {canManageAll && (
             <div className="mt-5">

@@ -92,6 +92,7 @@ function emptyGroup(order: number): GroupDraft {
 export default function ScheduleAdmin() {
   const router = useRouter();
   const [level, setLevel] = useState(9);
+  const [myTeacherId, setMyTeacherId] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "denied">("loading");
   const [groups, setGroups] = useState<GroupRow[]>([]);
   const [teachers, setTeachers] = useState<TeacherOpt[]>([]);
@@ -101,12 +102,16 @@ export default function ScheduleAdmin() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (lv: number, ownId: string | null) => {
+    let gq = supabase
+      .from("schedule_teachers")
+      .select("id, teacher_id, display_name, subject_group, note, sort_order");
+    // 3급(선생님)은 본인 시간표만
+    if (lv >= 3) {
+      gq = gq.eq("teacher_id", ownId ?? "00000000-0000-0000-0000-000000000000");
+    }
     const [g, t, c] = await Promise.all([
-      supabase
-        .from("schedule_teachers")
-        .select("id, teacher_id, display_name, subject_group, note, sort_order")
-        .order("sort_order", { ascending: true }),
+      gq.order("sort_order", { ascending: true }),
       supabase.from("teachers").select("id, name").order("sort_order"),
       supabase.from("common_notices").select("id, text, sort_order").order("sort_order"),
     ]);
@@ -125,17 +130,20 @@ export default function ScheduleAdmin() {
       }
       const { data: prof } = await supabase
         .from("profiles")
-        .select("level")
+        .select("level, teacher_id")
         .eq("id", s.session.user.id)
         .single();
       if (!active) return;
-      const lv = (prof as { level: number } | null)?.level ?? 9;
+      const p = prof as { level: number; teacher_id: string | null } | null;
+      const lv = p?.level ?? 9;
+      const tid = p?.teacher_id ?? null;
       setLevel(lv);
+      setMyTeacherId(tid);
       if (lv > 3) {
         setStatus("denied");
         return;
       }
-      await load();
+      await load(lv, tid);
       if (active) setStatus("ready");
     })();
     return () => {
@@ -238,7 +246,7 @@ export default function ScheduleAdmin() {
         if (e) throw e;
       }
       setDraft(null);
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     } finally {
@@ -256,7 +264,7 @@ export default function ScheduleAdmin() {
         .delete()
         .eq("id", g.id);
       if (e) throw e;
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("삭제에 실패했습니다.");
     } finally {
@@ -279,7 +287,7 @@ export default function ScheduleAdmin() {
         if (e) throw e;
       }
       setCommonDraft(null);
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("공통 안내 저장에 실패했습니다.");
     } finally {
@@ -337,7 +345,7 @@ export default function ScheduleAdmin() {
       if (commonPayload.length) {
         await supabase.from("common_notices").insert(commonPayload);
       }
-      await load();
+      await load(level, myTeacherId);
     } catch {
       setError("가져오기 중 오류가 발생했습니다. 다시 시도해 주세요.");
     } finally {
@@ -401,22 +409,24 @@ export default function ScheduleAdmin() {
                 ))}
               </select>
             </Field>
-            <Field label="연결 강사 (프로필 링크·본인권한, 선택)">
-              <select
-                className={`${fieldBase} h-10 cursor-pointer appearance-none pr-9`}
-                value={draft.teacher_id ?? ""}
-                onChange={(e) =>
-                  setDraft({ ...draft, teacher_id: e.target.value || null })
-                }
-              >
-                <option value="">없음 (외부 강사)</option>
-                {teachers.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            {canManageAll && (
+              <Field label="연결 강사 (프로필 링크·본인권한, 선택)">
+                <select
+                  className={`${fieldBase} h-10 cursor-pointer appearance-none pr-9`}
+                  value={draft.teacher_id ?? ""}
+                  onChange={(e) =>
+                    setDraft({ ...draft, teacher_id: e.target.value || null })
+                  }
+                >
+                  <option value="">없음 (외부 강사)</option>
+                  {teachers.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            )}
             <Field label="강사 비고 (선택)">
               <input
                 className={`${fieldBase} h-10`}
@@ -560,7 +570,9 @@ export default function ScheduleAdmin() {
           >
             ← 대시보드
           </Link>
-          <h1 className="mt-2 text-h2 font-bold text-foreground">시간표 관리</h1>
+          <h1 className="mt-2 text-h2 font-bold text-foreground">
+            {canManageAll ? "시간표 관리" : "내 시간표"}
+          </h1>
         </div>
         {canManageAll && (
           <Button variant="primary" onClick={startNewGroup}>

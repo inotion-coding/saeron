@@ -181,6 +181,22 @@ export default function DashboardClient() {
             desc="강사 계정 생성·삭제·임시 비밀번호 설정"
           />
         )}
+
+        {/* 3급(선생님) — 본인 것만 */}
+        {profile && profile.level === 3 && (
+          <AdminMenuCard
+            href="/admin/teachers"
+            title="내 프로필"
+            desc="내 강사 프로필(사진·각오·학력·이력) 수정"
+          />
+        )}
+        {profile && profile.level === 3 && (
+          <AdminMenuCard
+            href="/admin/schedule"
+            title="내 시간표"
+            desc="내 수업 시간표 수정"
+          />
+        )}
       </div>
     </div>
   );

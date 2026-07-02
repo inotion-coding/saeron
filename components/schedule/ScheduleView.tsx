@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import {
@@ -10,11 +10,10 @@ import {
   type SubjectGroup,
 } from "@/lib/data/teachers";
 import {
-  schedules,
-  COMMON_NOTICES,
   type TeacherSchedule,
   type ScheduleRow,
 } from "@/lib/data/schedule";
+import { fetchSchedules, fetchCommonNotices } from "@/lib/content/schedule";
 import ScheduleRowList from "./ScheduleRowList";
 
 type SubjectFilter = SubjectGroup | "전체";
@@ -102,6 +101,27 @@ function TeacherBlock({ t, rows }: { t: TeacherSchedule; rows: ScheduleRow[] }) 
 export default function ScheduleView() {
   const [division, setDivision] = useState<Division>("high");
   const [subject, setSubject] = useState<SubjectFilter>("전체");
+  const [allSchedules, setAllSchedules] = useState<TeacherSchedule[]>([]);
+  const [common, setCommon] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([fetchSchedules(), fetchCommonNotices()])
+      .then(([s, c]) => {
+        if (active) {
+          setAllSchedules(s);
+          setCommon(c);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const groups = useMemo(() => {
     const result: {
@@ -110,14 +130,14 @@ export default function ScheduleView() {
     }[] = [];
     for (const sg of SUBJECT_GROUPS) {
       if (subject !== "전체" && subject !== sg) continue;
-      const items = schedules
+      const items = allSchedules
         .filter((t) => t.subjectGroup === sg)
         .map((t) => ({ t, rows: t.rows.filter((r) => r.division === division) }))
         .filter((x) => x.rows.length > 0);
       if (items.length) result.push({ subjectGroup: sg, items });
     }
     return result;
-  }, [division, subject]);
+  }, [division, subject, allSchedules]);
 
   return (
     <div>
@@ -144,7 +164,9 @@ export default function ScheduleView() {
         ))}
       </div>
 
-      {groups.length === 0 ? (
+      {loading ? (
+        <p className="mt-14 text-center text-muted-foreground">불러오는 중…</p>
+      ) : groups.length === 0 ? (
         <p className="mt-14 text-center text-muted-foreground">
           해당 조건의 시간표가 준비 중입니다.
         </p>
@@ -185,19 +207,21 @@ export default function ScheduleView() {
       )}
 
       {/* 공통 안내 — 선으로 구분(박스 없음) */}
-      <Reveal className="mx-auto mt-16 max-w-3xl border-t border-point/30 pt-8">
-        <p className="text-sm font-bold text-point">공통 안내</p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-          {COMMON_NOTICES.map((n, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="select-none text-point" aria-hidden="true">
-                ·
-              </span>
-              <span>{n}</span>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      {common.length > 0 && (
+        <Reveal className="mx-auto mt-16 max-w-3xl border-t border-point/30 pt-8">
+          <p className="text-sm font-bold text-point">공통 안내</p>
+          <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
+            {common.map((n, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="select-none text-point" aria-hidden="true">
+                  ·
+                </span>
+                <span>{n}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      )}
     </div>
   );
 }

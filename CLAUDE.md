@@ -49,8 +49,9 @@
 │   ├── ui/
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
 │   ├── schedule/
-│   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (client)
-│   │   └── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
+│   │   ├── ScheduleView.tsx  # 시간표 필터(부·과목)+과목별 강사 카드 (Supabase 조회, client)
+│   │   ├── ScheduleRowList.tsx # 시간표 행 목록(대상·반·시간·개강·비고) /schedule·강사상세 공용
+│   │   └── TeacherScheduleSection.tsx # 강사 상세 하단 "2026 시간표"(해당 강사 Supabase 조회, client)
 │   ├── programs/
 │   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
 │   ├── admin/
@@ -68,7 +69,8 @@
 │   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
 │   ├── content/
 │   │   ├── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
-│   │   └── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, 서버/빌드)
+│   │   ├── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, 서버/빌드)
+│   │   └── schedule.ts       # 공개 시간표 Supabase 조회(/schedule·강사상세, client)
 │   └── data/
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
