@@ -2,8 +2,14 @@
 
 import { useState, type ReactNode } from "react";
 import Reveal from "@/components/ui/Reveal";
+import Button from "@/components/ui/Button";
+import {
+  PROGRAM_DIVISIONS,
+  getProgramsByDivision,
+  type ProgramDivision,
+} from "@/lib/data/programs";
 
-/** 카테고리 탭 (텍스트 + 골드 언더라인) — 시간표·강사 페이지와 동일 패턴 */
+/** 카테고리 탭 (텍스트 + 골드 언더라인) — 강사·시간표 페이지와 동일 패턴 */
 function CategoryTab({
   active,
   onClick,
@@ -33,48 +39,80 @@ function CategoryTab({
   );
 }
 
-/** 프로그램 카테고리 — 부(部)별로 눌러서 확인. 내용은 추후 채움. */
-const CATEGORIES = [
-  { id: "prep", label: "예비 중등부" },
-  { id: "middle", label: "중등부" },
-  { id: "high", label: "고등부" },
-] as const;
-
-type CategoryId = (typeof CATEGORIES)[number]["id"];
-
 /**
  * 프로그램 — /programs.
- * 상단 카테고리 탭(예비 중등부·중등부·고등부)으로 부별 전환.
- * 탭 아래 상세 내용은 준비 중(추후 카테고리별로 채움).
+ * 부(예비 중등부·중등부·고등부) 탭 → 해당 부의 과정 카드 목록 + 하단 상담 CTA.
+ * 콘텐츠는 lib/data/programs.ts에서 주입.
  */
 export default function ProgramList() {
-  const [active, setActive] = useState<CategoryId>("prep");
-  const activeLabel =
-    CATEGORIES.find((c) => c.id === active)?.label ?? "";
+  const [active, setActive] = useState<ProgramDivision>("prep");
+  const items = getProgramsByDivision(active);
 
   return (
     <div>
-      {/* 카테고리 탭 */}
+      {/* 부 탭 */}
       <div className="flex flex-wrap justify-center gap-7 sm:gap-10">
-        {CATEGORIES.map((c) => (
+        {PROGRAM_DIVISIONS.map((d) => (
           <CategoryTab
-            key={c.id}
-            active={active === c.id}
-            onClick={() => setActive(c.id)}
+            key={d.id}
+            active={active === d.id}
+            onClick={() => setActive(d.id)}
           >
-            {c.label}
+            {d.label}
           </CategoryTab>
         ))}
       </div>
 
-      {/* 내용 — 준비 중 (추후 카테고리별 상세로 교체) */}
-      <div className="mx-auto mt-16 max-w-3xl">
-        <Reveal key={active} className="text-center">
-          <p className="text-muted-foreground">
-            {activeLabel} 프로그램 내용은 준비 중입니다.
-          </p>
-        </Reveal>
+      {/* 해당 부의 과정 카드 */}
+      <div className="mx-auto mt-12 max-w-2xl space-y-5">
+        {items.map((p, i) => (
+          <Reveal
+            as="div"
+            key={p.id}
+            delay={(i % 3) * 90}
+            className="rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-card sm:p-8"
+          >
+            <span className="inline-flex rounded-full border border-point/45 px-2.5 py-0.5 text-xs font-bold tracking-[0.02em] text-point">
+              {p.target}
+            </span>
+            <h2 className="mt-3 text-h3 font-bold text-foreground">{p.name}</h2>
+            <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              {p.summary}
+            </p>
+            <ul className="mt-5 space-y-2">
+              {p.points.map((pt, j) => (
+                <li
+                  key={j}
+                  className="flex gap-2.5 text-sm leading-relaxed text-foreground/90"
+                >
+                  <span
+                    className="mt-0.5 shrink-0 font-bold text-point"
+                    aria-hidden="true"
+                  >
+                    ·
+                  </span>
+                  <span className="break-keep">{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        ))}
       </div>
+
+      {/* 하단 상담 CTA */}
+      <Reveal className="mx-auto mt-14 max-w-2xl rounded-[var(--radius-lg)] border border-border bg-surface px-6 py-8 text-center">
+        <p className="text-base font-semibold text-foreground">
+          우리 아이에게 맞는 과정이 궁금하신가요?
+        </p>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          현재 학년·성적에 맞춰 학습 방향을 상담해 드립니다.
+        </p>
+        <div className="mt-5 flex justify-center">
+          <Button href="/contact" variant="primary" withArrow>
+            상담 신청
+          </Button>
+        </div>
+      </Reveal>
     </div>
   );
 }

@@ -38,7 +38,7 @@
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
 │   ├── schedule/             # 수업 시간표 page.tsx (준비 중 placeholder — UI·구성 재작성 예정)
 │   ├── about/                # 학원 소개 (미구현)
-│   └── programs/             # 프로그램 (상세 블록 page.tsx, 구현)
+│   └── programs/             # 프로그램 page.tsx (부별 탭 + 과정 카드, 코드 데이터)
 ├── components/
 │   ├── layout/
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
@@ -49,7 +49,7 @@
 │   ├── ui/
 │   │   └── Button.tsx        # 공용 버튼 (link/button)
 │   ├── programs/
-│   │   └── ProgramList.tsx   # 프로그램 상세 블록 목록 (박스 없는 금색 섹션형)
+│   │   └── ProgramList.tsx   # 프로그램 — 부별 탭(예비중등부·중등부·고등부)+과정 카드+상담CTA (client)
 │   ├── admin/
 │   │   ├── LoginForm.tsx     # 로그인 폼(과목+이름+비번 → Supabase, client)
 │   │   ├── DashboardClient.tsx # 로그인 후 대시보드(세션 가드+등급별 메뉴, client)
