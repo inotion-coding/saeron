@@ -38,7 +38,7 @@ export const logoFooter: LogoConfig = {
 export const site = {
   name: "새론학원",
   description:
-    "입시·종합 광교 새론학원 — 날마다 새로운 생각과 도전으로 신세계를 창조하라!",
+    "광교 새론학원 | 날마다 새로운 생각과 도전으로 신세계를 창조하라!",
 
   /** 상단바·푸터 공통 내비게이션 */
   nav: [
