@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import NoticePoster from "@/components/NoticePoster";
 import NoticeArticle from "@/components/NoticeArticle";
 import Reveal from "@/components/ui/Reveal";
@@ -12,12 +12,26 @@ const PER_PAGE = 10;
 /**
  * 공지 포스터 그리드 + 페이지네이션 + 포스터 크게보기(라이트박스).
  * 데이터: Supabase(관리자 편집 즉시 반영). 포스터 클릭 → 팝업에서 포스터·본문 표시(별도 주소 없음).
+ *
+ * 가로 사진 대응: 포스터가 로드되면 원본 비율을 받아(PosterFrame onRatio),
+ * 가로(가로>세로) 사진은 그리드에서 **2칸을 차지**하고 원본 비율 그대로 표시한다.
+ * (세로 A4 틀에 넣어 위아래 여백이 크게 남는 문제 해결)
  */
 export default function NoticeList() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(1);
   const [selected, setSelected] = useState<Notice | null>(null);
+  const [wide, setWide] = useState<Record<string, boolean>>({});
+
+  // 포스터 로드 시 원본 비율 기록 (가로 = 비율 1 초과)
+  const markRatio = useCallback((id: string, ratio: number) => {
+    setWide((prev) => {
+      const isWide = ratio > 1;
+      if (prev[id] === isWide) return prev;
+      return { ...prev, [id]: isWide };
+    });
+  }, []);
 
   useEffect(() => {
     fetchNotices()
@@ -61,29 +75,44 @@ export default function NoticeList() {
   return (
     <>
       <ul className="mt-14 grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:grid-cols-5">
-        {items.map((notice, i) => (
-          <Reveal as="li" key={notice.id} delay={(i % 5) * 70}>
-            <button
-              type="button"
-              onClick={() => setSelected(notice)}
-              className="group block w-full text-left"
+        {items.map((notice, i) => {
+          const isWide = wide[notice.id] === true;
+          return (
+            <Reveal
+              as="li"
+              key={notice.id}
+              delay={(i % 5) * 70}
+              className={isWide ? "col-span-2" : ""}
             >
-              <NoticePoster
-                notice={notice}
-                className="transition-colors group-hover:border-point"
-              />
-              <h3 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-point">
-                {notice.title}
-              </h3>
-              <time
-                dateTime={notice.date}
-                className="mt-1 block text-xs text-muted-foreground"
+              <button
+                type="button"
+                onClick={() => setSelected(notice)}
+                className="group block w-full text-left"
               >
-                {notice.date.replaceAll("-", ".")}
-              </time>
-            </button>
-          </Reveal>
-        ))}
+                <NoticePoster
+                  notice={notice}
+                  fit={isWide ? "natural" : "frame"}
+                  sizes={
+                    isWide
+                      ? "(max-width: 640px) 92vw, (max-width: 1024px) 62vw, 500px"
+                      : "(max-width: 640px) 46vw, 240px"
+                  }
+                  onRatio={(r) => markRatio(notice.id, r)}
+                  className="transition-colors group-hover:border-point"
+                />
+                <h3 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-point">
+                  {notice.title}
+                </h3>
+                <time
+                  dateTime={notice.date}
+                  className="mt-1 block text-xs text-muted-foreground"
+                >
+                  {notice.date.replaceAll("-", ".")}
+                </time>
+              </button>
+            </Reveal>
+          );
+        })}
       </ul>
 
       {totalPages > 1 && (
@@ -119,7 +148,7 @@ export default function NoticeList() {
           onClick={() => setSelected(null)}
         >
           <div
-            className="relative my-auto w-full max-w-2xl rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-hover sm:p-9"
+            className="relative my-auto w-full max-w-3xl rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-hover sm:p-9"
             onClick={(e) => e.stopPropagation()}
           >
             <button
