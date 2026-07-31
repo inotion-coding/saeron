@@ -42,6 +42,10 @@ export default function Footer() {
             <dd>{business.registrationNumber}</dd>
           </div>
           <div className="flex gap-2">
+            <dt className="shrink-0 font-semibold">학원 등록번호</dt>
+            <dd>{business.academyRegistrationNumber}</dd>
+          </div>
+          <div className="flex gap-2">
             <dt className="shrink-0 font-semibold">주소</dt>
             <dd>{business.address}</dd>
           </div>

@@ -77,6 +77,8 @@ export const site = {
     companyName: "(주)새론학원",
     owner: "이병언",
     registrationNumber: "770-88-00617",
+    /** 학원 설립·운영 등록번호(교육청) */
+    academyRegistrationNumber: "6290-2호",
     address: "경기도 수원시 영통구 센트럴타운로 94, 2층(이의동, 앤에스코어빌딩)",
     phone: "031-257-0011",
     phone2: "031-257-0033",

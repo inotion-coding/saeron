@@ -119,7 +119,7 @@
 | `NoticeBar` | [NoticeBar.tsx](components/NoticeBar.tsx) | 메인 공지 배너, **featured 자동 슬라이드**(점 인디케이터만·대표사진 우측 페이드·일시정지·reduced-motion), 클릭→상세 |
 | `PosterFrame` | [PosterFrame.tsx](components/PosterFrame.tsx) | client. `fit="frame"` A4 210:297 썸네일(가로 사진은 contain으로 잘림 방지) / `fit="natural"` 원본 비율 그대로(+`maxHeight`). 이미지 없으면 플레이스홀더 |
 | `NoticePoster` | [NoticePoster.tsx](components/NoticePoster.tsx) | 공지 대표 썸네일(=images[0]) — PosterFrame 래퍼(`fit`/`sizes`/`onRatio` 전달) |
-| `NoticeGallery` | [NoticeGallery.tsx](components/NoticeGallery.tsx) | 포스터 갤러리 1/2/3+ 배치(3+: 서브 2개 가로 꽉+스크롤) |
+| `NoticeGallery` | [NoticeGallery.tsx](components/NoticeGallery.tsx) | client. 포스터 갤러리 1/2/3+ 배치(3+: 가로 사진은 대표와 같은 폭 한 줄씩, 세로 사진만 2개 가로 꽉+스크롤) |
 | `NoticeArticle` | [NoticeArticle.tsx](components/NoticeArticle.tsx) | 공지 상세 본문(제목·날짜·갤러리·본문). 상세/주요공지 공용 |
 | `TeacherPhoto` | [TeacherPhoto.tsx](components/TeacherPhoto.tsx) | 강사 3:4 인물(이미지/실루엣 플레이스홀더) |
 | `TeacherCard` | [teachers/TeacherCard.tsx](components/teachers/TeacherCard.tsx) | 강사 카드(미니멀: 사진·과목·이름·강사각오1줄, hover 줌+"프로필 보기") |
@@ -174,7 +174,7 @@
 
 페이지별 적용 메모:
 - **공지(/notices)**: 포스터(A4 210:297) 중심. 중앙 서브 히어로 → **포스터 카드 그리드(5개/페이지, 페이지 번호 페이지네이션 `?page=N`, 가로 사진은 `col-span-2`로 2칸 차지 + 원본 비율)** → 하단 **"주요 공지"**: featured 3~5개의 **상세 모습(NoticeArticle)을 페이지에 그대로 펼쳐** `divide-y` 경계선으로 구분(클릭 진입이 아니라 "들어간 모습"을 표시). 메인 배너([NoticeBar](components/NoticeBar.tsx))는 featured 자동 슬라이드 — **점 인디케이터만**(닫기·화살표 없음), 대표사진이 우측에 페이드로 살짝 노출, 클릭→상세. 포스터는 [NoticePoster](components/NoticePoster.tsx)(이미지 없으면 플레이스홀더). 상세 `/notices/[id]`(async params, `generateStaticParams`/`generateMetadata`, 없으면 `notFound()`): [NoticeArticle](components/NoticeArticle.tsx)(제목·날짜 + 포스터 갤러리 + 본문, 상세/주요공지 공용). CTA 없음. 데이터·`getFeaturedNotices`/`getNoticeById`는 [lib/data/notices.ts](lib/data/notices.ts).
-  - **포스터 갤러리**([NoticeGallery](components/NoticeGallery.tsx)) 규칙 — 대표=`images[0]`: **1장** 1장만 / **2장** 위아래 동일 배치 / **3장+** 대표를 크게 위, 서브는 **2개가 대표 가로폭을 꽉 채우는 크기**로 가로 배치(3개 이상이면 옆으로 스크롤). 개별 프레임은 [PosterFrame](components/PosterFrame.tsx). **본문 포스터는 `fit="natural"`(원본 비율 그대로, 최대 높이 72vh) — 가로 사진이 A4 세로로 잘리지 않게 함.** 아래 가로 스크롤 서브 썸네일과 목록 썸네일만 A4 210:297 프레임 유지(가로 사진은 `object-contain`으로 전체 표시). 이미지 없으면 플레이스홀더. 이미지는 `notice.images: string[]`.
+  - **포스터 갤러리**([NoticeGallery](components/NoticeGallery.tsx)) 규칙 — 대표=`images[0]`: **1장** 1장만 / **2장** 위아래 동일 배치 / **3장+** 대표를 크게 위, 나머지는 **모양(가로/세로)에 따라** — **가로 사진은 대표와 같은 폭으로 한 줄씩**(작은 썸네일 줄에 넣지 않음), **세로 사진만** 2개가 대표 가로폭을 꽉 채우는 크기로 가로 배치(3개 이상이면 옆으로 스크롤, 1장만 남으면 그 1장도 대표 폭). 가로/세로 판별은 원본 이미지를 미리 읽어 비율(가로/세로>1=가로)로 결정. 개별 프레임은 [PosterFrame](components/PosterFrame.tsx). **본문 포스터는 `fit="natural"`(원본 비율 그대로, 최대 높이 72vh) — 가로 사진이 A4 세로로 잘리지 않게 함.** 아래 가로 스크롤 서브 썸네일과 목록 썸네일만 A4 210:297 프레임 유지(가로 사진은 `object-contain`으로 전체 표시). 이미지 없으면 플레이스홀더. 이미지는 `notice.images: string[]`.
 - **학원 소개(/about)**: 서브 히어로 → 교육 철학(리드+측면 포인트) → 강점 상세(Strengths 재사용/확장) → 연혁/시설 → CtaBand.
 - **프로그램(/programs)**: 서브 히어로 → 대상/학년 그룹별 `ProgramCard` 그리드 → CtaBand.
 - **시간표(/schedule)**: 서브 히어로 → 시간표 테이블(넓은 폭 가로 테이블 / 좁은 폭 가로 스크롤·요일 카드) → 안내.
