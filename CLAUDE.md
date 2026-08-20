@@ -44,10 +44,19 @@
 │   │   ├── Container.tsx     # 최대폭+좌우패딩 래퍼
 │   │   ├── Section.tsx       # 섹션 수직 리듬
 │   │   ├── Header.tsx        # 상단바 (내비·모바일 햄버거)
+│   │   ├── Logo.tsx          # 로고 마크+워드마크
+│   │   ├── PageBackdrop.tsx  # 페이지 배경 레이어
 │   │   ├── SiteChrome.tsx    # /admin은 헤더·푸터·배경 없이 렌더(조건부 껍데기, client)
 │   │   └── Footer.tsx        # 하단바 (사업자 정보 + 관리자 페이지 접속 링크)
 │   ├── ui/
-│   │   └── Button.tsx        # 공용 버튼 (link/button)
+│   │   ├── Button.tsx        # 공용 버튼 (link/button)
+│   │   ├── Badge.tsx         # 라벨 배지
+│   │   ├── SectionHeading.tsx # 섹션 제목(eyebrow+제목+설명)
+│   │   └── Reveal.tsx        # 진입 페이드업 모션 래퍼(client)
+│   ├── home/                 # 메인 섹션 — Hero / Strengths / ProgramsPreview / CtaBand
+│   ├── teachers/             # TeacherDirectory(목록·필터) / TeacherCard / TeacherDetailClient (client 실시간)
+│   ├── contact/
+│   │   └── ContactForm.tsx   # 상담 신청 폼 → Supabase inquiries 저장(client)
 │   ├── programs/
 │   │   └── ProgramList.tsx   # 프로그램 — 부별 탭(예비중등부·중등부·고등부)+과정 카드+상담CTA (client)
 │   ├── schedule/
@@ -62,10 +71,19 @@
 │   │   ├── InquiriesAdmin.tsx # 상담 신청 열람·처리·삭제(1·2급, client)
 │   │   └── PasswordChange.tsx # 내 비밀번호 변경(전 등급 본인 — 재인증 후 auth.updateUser, client)
 │   ├── NoticeBar.tsx         # 메인 공지 배너(Supabase featured 조회, client)
-│   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션+크게보기 라이트박스(Supabase, client)
-│   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
+│   ├── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션+크게보기 라이트박스(Supabase, client)
+│   ├── NoticeArticle.tsx     # 공지 상세 본문(제목·날짜·갤러리·내용) — 팝업 공용
+│   ├── NoticeGallery.tsx     # 공지 사진 배치(장수·가로/세로별) + 사진 클릭 시 전체화면(client)
+│   ├── NoticePoster.tsx      # 공지 대표 썸네일(images[0])
+│   ├── PosterFrame.tsx       # 포스터 틀(A4 고정/원본비율 + 비율 통지, client)
+│   ├── ImageViewer.tsx       # 전체화면 사진 뷰어(body 포털·Esc/←→·좌우 이동, client)
+│   ├── ProgramCard.tsx       # 프로그램 과정 카드
+│   ├── TeacherPhoto.tsx      # 강사 사진(없으면 기본 실루엣)
+│   ├── ScrollTheme.tsx       # 스크롤 위치에 따른 테마 전환(client)
+│   └── SocialLinks.tsx       # 인스타·블로그 등 외부 링크
 ├── lib/
 │   ├── supabaseClient.ts     # Supabase 브라우저 클라이언트(로그인·데이터, .env.local 키 주입)
+│   ├── imageLoader.js        # next/image 커스텀 로더(정적 export·basePath 대응)
 │   ├── content/
 │   │   ├── notices.ts        # 공개 공지 Supabase 조회(홈 배너·/notices, client)
 │   │   ├── teachers.ts       # 공개 강사 Supabase 조회(/teachers 목록·상세, client 실시간)
@@ -74,6 +92,8 @@
 │       ├── site.ts           # 학원·사업자정보·내비 (단일 출처)
 │       ├── notices.ts        # 공지 타입만(콘텐츠는 Supabase로 이관)
 │       ├── teachers.ts       # 강사 타입·필터라벨(콘텐츠는 Supabase)
+│       ├── home.ts          # 메인 히어로·강점 등 고정 콘텐츠
+│       ├── programs.ts      # 프로그램 부·과정 데이터(코드 관리)
 │       └── schedule.ts       # 시간표 타입·요일포맷·샘플(가져오기 시드) — 콘텐츠는 Supabase
 ├── .github/workflows/        # deploy.yml — 정적 export → 깃허브 페이지 자동 배포
 ├── public/                   # 이미지·정적 자산
@@ -375,7 +395,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ---
 
-**Last Updated**: 2026-08-20 (비밀번호 보안 개선 — 본인 변경 페이지 + 임시비번 랜덤 발급)
+**Last Updated**: 2026-08-20 (공지 사진 전체화면 뷰어 + 비밀번호 보안 개선)
 **Version**: 0.1.0
 **Maintainer**: 새론학원 (inotion-coding)
 
