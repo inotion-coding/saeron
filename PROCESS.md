@@ -57,69 +57,82 @@
 
 각 단계의 ☐ 항목이 곧 실행 작업 단위다. **Phase 0은 1단계 진입 전 준비(스캐폴딩)**이고, 사용자가 정의한 1~5단계는 아래와 같다. 강사 소개는 별도 단계(6)로 추가한다.
 
-### Phase 0 — 프로젝트 스캐폴딩 (준비)
-- ☐ `npx create-next-app@latest`로 초기화 (App Router, TypeScript, Tailwind, ESLint, `src/` 미사용, import alias `@/*`)
-- ☐ 불필요한 보일러플레이트 정리 (기본 `page.tsx`·예제 스타일 제거)
-- ☐ 폴더 구조 생성 (§5)
-- ☐ 디자인 토큰 연결: `app/globals.css`에 CSS 변수(DESIGN.md §2) 선언 → `tailwind.config.ts` theme.extend에 매핑
-- ☐ 폰트 설정 (Pretendard, `next/font` 또는 CDN 폴백)
-- ☐ 루트 메타데이터 기본값 (`app/layout.tsx`의 `metadata`)
-- ☐ `lib/data/site.ts` 생성 (학원명="새론학원", 연락처/주소/운영시간 + **사업자 정보** 플레이스홀더)
+> **현황(2026-08-20)**: 2단계(학원 소개)를 제외한 전 단계 구현·배포 완료.
+> 콘텐츠는 대부분 코드 더미에서 **Supabase(관리자 편집)** 로 이관됐다(공지·강사·시간표·상담).
+> 남은 것: 학원 소개 페이지, 접근성·Lighthouse 점검, 최종 QA. (자세한 배경은 DATABASE.md 진행 로그)
+
+### Phase 0 — 프로젝트 스캐폴딩 (준비) — ✅ 완료
+- ☑ `npx create-next-app@latest`로 초기화 (App Router, TypeScript, Tailwind, ESLint, `src/` 미사용, import alias `@/*`)
+- ☑ 불필요한 보일러플레이트 정리 (기본 `page.tsx`·예제 스타일 제거)
+- ☑ 폴더 구조 생성 (§5)
+- ☑ 디자인 토큰 연결 — **Tailwind v4라 `tailwind.config.ts` 없이 `app/globals.css`의 `@theme`에 정의**
+- ☑ 폰트 설정 (Pretendard)
+- ☑ 루트 메타데이터 기본값 (`app/layout.tsx`의 `metadata`)
+- ☑ `lib/data/site.ts` 생성 — 실제 사업자 정보·연락처 반영 완료(단일 출처)
 - **완료 기준**: 빈 페이지가 토큰·폰트가 적용된 채로 `npm run dev`에서 렌더
 
-### 1단계 — 메인 페이지 골격 (상단바 + 공지 + 하단바)
+### 1단계 — 메인 페이지 골격 (상단바 + 공지 + 하단바) — ✅ 완료
 > 메인 페이지의 **공통 골격**만 구현. 메인 본문(히어로·미리보기 섹션)은 각 페이지 완성 후 별도로 채운다.
-- ☐ `components/layout/Container.tsx` (최대폭+좌우패딩 래퍼)
-- ☐ `components/layout/Section.tsx` (수직 리듬 통일, default/muted 변형)
-- ☐ `components/ui/Button.tsx` (primary/secondary/ghost, hover·focus·disabled)
-- ☐ **상단바** `components/layout/Header.tsx` + 내비게이션 (데스크톱 가로 / 모바일 햄버거, 현재 페이지 active, sticky 검토)
-- ☐ **기본 공지 영역** `components/NoticeBar.tsx` — 메인 상단의 최신 공지 노출(닫기/슬라이드 등), 데이터는 `lib/data/notices.ts`(더미)
-- ☐ **하단바(사업자 정보)** `components/layout/Footer.tsx` — 상호·대표자·사업자등록번호·주소·전화·이메일 등 사업자 정보 + 간단 메뉴, 데이터는 `site.ts` 참조
-- ☐ `app/layout.tsx`에 Header/Footer 배치, `app/page.tsx`에 NoticeBar 배치(임시 본문 자리표시)
+- ☑ `components/layout/Container.tsx` (최대폭+좌우패딩 래퍼)
+- ☑ `components/layout/Section.tsx` (수직 리듬 통일, default/muted 변형)
+- ☑ `components/ui/Button.tsx` (primary/secondary/ghost/inverse, hover·focus·disabled)
+- ☑ **상단바** `components/layout/Header.tsx` + 내비게이션 (데스크톱 가로 / 모바일 햄버거)
+- ☑ **기본 공지 영역** `components/NoticeBar.tsx` — 데이터는 **Supabase featured 공지**(더미에서 이관)
+- ☑ **하단바(사업자 정보)** `components/layout/Footer.tsx` — 사업자·학원 등록번호·연락처, `site.ts` 참조
+- ☑ `app/layout.tsx`에 Header/Footer 배치(SiteChrome로 /admin 제외), `app/page.tsx` 구성
 - **완료 기준**: 메인 페이지에서 상단바·공지·하단바가 반응형으로 동작, 모바일 메뉴 토글 작동, 사업자 정보 표시
 
-### 2단계 — 학원 소개
+### 2단계 — 학원 소개 — ⛔ 미구현 (유일한 미완료 단계)
 - ☐ `app/about/page.tsx` — 교육 철학·미션, 학원 강점, (연혁/시설 플레이스홀더)
+- ⚠️ 현재 `app/about/`은 `.gitkeep`만 있는 빈 디렉토리다. 없는 주소를 검색엔진이 수집하지 않도록
+  **`app/sitemap.ts`에서 `/about/`을 주석 처리해 뒀다(2026-08-20)** → 페이지를 만들면 그 줄을 되살릴 것.
 - **완료 기준**: §7 체크리스트 통과
 
-### 3단계 — 프로그램
-- ☐ `app/programs/page.tsx` + `components/ProgramCard.tsx` + `lib/data/programs.ts`(더미)
-- ☐ 대상/학년별 그룹 + 프로그램 카드 그리드(유동, §3-1)
+### 3단계 — 프로그램 — ✅ 완료
+- ☑ `app/programs/page.tsx` + `components/programs/ProgramList.tsx` + `components/ProgramCard.tsx` + `lib/data/programs.ts`
+- ☑ **부별 탭**(예비중등부·중등부·고등부) + 과정 카드 그리드(유동, §3-1) + 상담 CTA
 - **완료 기준**: §7 체크리스트 통과
 
-### 4단계 — 수업 시간표
-- ☐ `app/schedule/page.tsx` + `components/ScheduleTable.tsx` + `lib/data/schedule.ts`(더미)
-- ☐ 요일×시간 테이블, 좁은 폭 대응(가로 스크롤 또는 요일별 카드, DESIGN.md §7)
+### 4단계 — 수업 시간표 — ✅ 완료 (설계 변경)
+- ☑ `app/schedule/page.tsx` + `components/schedule/ScheduleView.tsx` (계획의 `ScheduleTable` 대신)
+- ☑ 요일×시간 표 대신 **부·과목 필터 + 강사별 그룹(수업·요일·시간)** 으로 구성 — 좁은 폭 대응
+- ☑ 콘텐츠는 Supabase `schedule_classes`(관리자 `/admin/schedule`에서 편집 → 즉시 반영)
 - **완료 기준**: §7 체크리스트 통과
 
-### 5단계 — 상담/문의
-- ☐ `app/contact/page.tsx` + `components/ContactForm.tsx`
-- ☐ 폼 필드·클라이언트 검증·에러 상태까지 구현
-- ☐ 연락처·운영시간·오시는 길(지도 자리표시) 영역
-- ☐ 제출 핸들러는 **placeholder**(임시 성공 메시지) — 실제 전송은 마무리 단계
-- **완료 기준**: §7 체크리스트 통과 (전송 동작 제외)
-
-### 6단계 — 강사 소개 (별도 단계 추가)
-- ☐ `app/teachers/page.tsx` + `components/TeacherCard.tsx` + `lib/data/teachers.ts`(더미)
-- ☐ 강사 카드 그리드 (사진·담당과목·이력), 유동 레이아웃
+### 5단계 — 상담/문의 — ✅ 완료 (전송까지 연동)
+- ☑ `app/contact/page.tsx` + `components/contact/ContactForm.tsx`
+- ☑ 폼 필드·클라이언트 검증·에러 상태
+- ☑ 연락처·운영시간·오시는 길 영역
+- ☑ 제출 핸들러 **연동 완료** — Supabase `inquiries` 저장 → 관리자 `/admin/inquiries`에서 확인·처리
+  (계획상 "마무리 단계"였으나 5단계에서 함께 처리됨)
 - **완료 기준**: §7 체크리스트 통과
-- *(순서는 변경 가능 — 내비게이션/메인 미리보기에 강사 항목이 필요하면 앞당길 수 있음)*
 
-### 마무리 단계 — 메인 본문 + 폼 전송 + 최적화
-- ☐ **메인 본문 채우기**: `app/page.tsx`에 히어로·강점 요약·프로그램/강사 미리보기·CTA 섹션 추가
-- ☐ 상담 폼 전송 방식 확정 후 `ContactForm` 제출 로직 연결
-- ☐ SEO: 페이지별 `metadata`, OG 태그, `app/sitemap.ts`, `app/robots.ts`
-- ☐ 접근성 점검(색 대비·포커스·라벨·alt, DESIGN.md §6), 이미지 최적화(`next/image`)
+### 6단계 — 강사 소개 — ✅ 완료
+- ☑ `app/teachers/page.tsx` + `components/teachers/`(TeacherDirectory·TeacherCard·TeacherDetailClient)
+- ☑ 강사 카드 그리드(사진·담당과목·이력) + 부·과목 필터, 개별 상세 주소 `/teachers/[id]/`
+- ☑ 콘텐츠는 Supabase — 관리자 수정이 **재배포 없이 즉시 반영**(단, 새 강사 *추가* 시엔 상세 주소 생성을 위해 재배포 필요)
+- **완료 기준**: §7 체크리스트 통과
+
+### 마무리 단계 — 메인 본문 + 폼 전송 + 최적화 — 🔸 일부 남음
+- ☑ **메인 본문 채우기**: 히어로·강점·프로그램 미리보기·CTA (`components/home/`)
+- ☑ 상담 폼 전송 로직 연결(5단계에서 완료)
+- ☑ SEO: 페이지별 `metadata`, OG, `app/sitemap.ts`, `app/robots.ts`, 구글·네이버 소유확인
+- ☐ 접근성 점검(색 대비·포커스·라벨·alt, DESIGN.md §6)
 - ☐ Lighthouse 성능/접근성 점검 (접근성 90+ 목표)
 
-### 배포 단계
-- ☐ 배포 플랫폼 확정 및 환경변수 설정
-- ☐ 도메인 연결, 최종 QA(크로스 브라우저·모바일 실기기)
+### 배포 단계 — 🔸 운영 중 (QA 남음)
+- ☑ 배포 플랫폼 확정 — 정적 export → **깃허브 페이지**(GitHub Actions `deploy.yml`, `main` push 시 자동)
+- ☑ 환경변수 — 빌드 시 `NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY` 주입
+- ☑ 도메인 연결 — **saeronedu.com** (커스텀 도메인 루트 서빙, `basePath` 비움)
+- ☐ 최종 QA(크로스 브라우저·모바일 실기기)
 - **완료 기준**: 운영 URL에서 전 페이지 정상 동작
 
 ---
 
 ## 5. 디렉토리 구조 (예정)
+
+> ⚠️ 아래는 **초기 계획안**이다. 실제 구조는 그동안 늘어난 파일까지 반영해
+> **CLAUDE.md의 `File Structure` 섹션이 단일 출처**로 관리한다(변경 시 그쪽을 갱신할 것).
 
 ```
 .
@@ -181,14 +194,16 @@
 
 ## 8. 보류 항목 (결정 대기)
 
-| 항목 | 결정 시점 | 영향 |
-|------|-----------|------|
-| 상담 폼 전송 방식 | 마무리 단계 | `ContactForm` 제출 로직 |
-| 배포 플랫폼 | 배포 단계 | 환경변수·도메인 |
-| 실제 콘텐츠(공지·강사·프로그램·시간표) | 확보 시 수시 | `lib/data/*` 교체 |
-| 대표 연락처·주소·**사업자 정보**·대상 학년 상세 | 확보 시 | `lib/data/site.ts` |
+| 항목 | 상태 | 결과 |
+|------|------|------|
+| 상담 폼 전송 방식 | ✅ 결정 | Supabase `inquiries` 저장 → 관리자 `/admin/inquiries` |
+| 배포 플랫폼 | ✅ 결정 | 정적 export → 깃허브 페이지 + saeronedu.com |
+| 실제 콘텐츠(공지·강사·시간표) | ✅ 이관 | Supabase에서 관리자가 직접 편집(코드 더미 아님) |
+| 프로그램 콘텐츠 | 🔸 코드 관리 | `lib/data/programs.ts` (관리자 편집 대상 아님) |
+| 대표 연락처·주소·**사업자 정보** | ✅ 확보 | `lib/data/site.ts` 반영 완료 |
+| 메인 히어로 카피·수치 | ⛔ 더미 | `lib/data/home.ts` — 검증된 값만 노출할 것 |
 
 ---
 
-**Last Updated**: 2026-06-30
+**Last Updated**: 2026-08-20 (로드맵 현황·보류 항목 실제 상태로 갱신)
 **Maintainer**: 새론학원 (inotion-coding)

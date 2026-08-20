@@ -10,7 +10,8 @@ import SocialLinks from "@/components/SocialLinks";
  */
 export default function Footer() {
   const { business, contact } = site;
-  const year = 2026; // TODO: 동적 연도 검토(서버/클라 일관성)
+  // 서버 컴포넌트라 빌드 시점에 확정된다(정적 export) → 배포할 때마다 자동 갱신.
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border bg-surface">

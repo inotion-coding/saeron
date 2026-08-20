@@ -10,7 +10,7 @@ const SITE_URL = "https://saeronedu.com";
  * 검색엔진 소유확인(verification) 코드.
  * - 구글 서치콘솔 / 네이버 서치어드바이저에서 "HTML 태그" 방식으로 받은 content 값을 붙여넣는다.
  * - 값이 비어 있으면 해당 태그를 출력하지 않는다(빈 태그 방지).
- * TODO(seo): 등록 후 발급받은 코드로 교체.
+ * (구글·네이버 모두 등록·입력 완료 — 사이트 소유권이 바뀌면 다시 발급받아 교체할 것.)
  */
 const VERIFY = {
   google: "6Nbo6WdqRBE8mKLuY1n3w4dzpsFJ2NmqHcws6ucm1s8", // 구글 서치콘솔 소유확인

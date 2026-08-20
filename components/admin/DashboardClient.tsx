@@ -17,7 +17,8 @@ type Profile = { level: number; name: string };
 /**
  * 관리자 대시보드(보호 영역) — 로그인 세션 확인 후 표시.
  * 세션 없으면 로그인 화면으로. 프로필(등급·이름) 조회해 환영 + 로그아웃.
- * TODO(admin): 등급별 관리 메뉴(공지·강사·시간표·계정)를 다음 단계에서 추가.
+ * 메뉴는 등급별로 갈린다 — 1·2급: 공지·강사·시간표·상담·계정 관리,
+ * 3급: 내 프로필·내 시간표. 비밀번호 변경은 전 등급 공통.
  */
 export default function DashboardClient() {
   const router = useRouter();

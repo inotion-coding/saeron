@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabaseClient";
+import { site } from "@/lib/data/site";
 
 const SUBJECTS = ["국어", "수학", "영어", "사회", "과학", "기타"];
 
@@ -109,7 +110,7 @@ function SubjectChip({ value }: { value: string }) {
 /**
  * 상담 신청 폼 (client) — DESIGN.md §6 (상담)
  * 카드 컨테이너는 페이지에서 제공. 검증 실패 시 필드별 에러.
- * TODO(form): 실제 전송(이메일/DB) 미연동 — 현재는 접수 메시지만(데모).
+ * 제출 시 Supabase `inquiries` 테이블에 저장 → 관리자 /admin/inquiries 에서 확인.
  */
 export default function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
@@ -146,7 +147,7 @@ export default function ContactForm() {
     setSending(false);
     if (error) {
       setSendError(
-        "전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화(031-257-0011)로 문의해 주세요.",
+        `전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화(${site.contact.phone})로 문의해 주세요.`,
       );
       return;
     }
@@ -172,7 +173,7 @@ export default function ContactForm() {
           상담 신청이 접수되었습니다
         </h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          확인 후 빠르게 연락드리겠습니다. 급하신 경우 전화(031-257-0011)로
+          확인 후 빠르게 연락드리겠습니다. 급하신 경우 전화({site.contact.phone})로
           문의해 주세요.
         </p>
         <Button variant="secondary" className="mt-6" onClick={() => setSubmitted(false)}>
