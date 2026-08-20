@@ -32,7 +32,7 @@
 │   ├── sitemap.ts            # sitemap.xml 자동 생성 (고정+공지/강사 상세 페이지 목록)
 │   ├── globals.css           # 디자인 토큰(@theme) + 기본 스타일 (DESIGN.md §2)
 │   ├── page.tsx              # 메인 (히어로·강점·프로그램·CTA)
-│   ├── admin/                # 관리자 영역(SiteChrome로 껍데기 제외) — page.tsx(게이트)/login/dashboard/notices/teachers/schedule/accounts/inquiries
+│   ├── admin/                # 관리자 영역(SiteChrome로 껍데기 제외) — page.tsx(게이트)/login/dashboard/notices/teachers/schedule/accounts/inquiries/password
 │   ├── notices/              # 공지 목록 page.tsx (Supabase 조회 + 포스터 크게보기 라이트박스, 개별 상세주소 없음)
 │   ├── teachers/             # 강사 목록 + [id]/page.tsx 상세 (개별 주소 유지, 내용은 client 실시간 조회→수정 즉시반영)
 │   ├── contact/              # 상담·문의 (폼+연락+지도, 구현)
@@ -58,8 +58,9 @@
 │   │   ├── NoticesAdmin.tsx  # 공지 관리 CRUD + 포스터 업로드(level≤2, client)
 │   │   ├── TeachersAdmin.tsx # 강사 프로필 CRUD + 사진 업로드(level≤2/본인, client)
 │   │   ├── ScheduleAdmin.tsx # 시간표 CRUD(schedule_classes) — 강사·과목·부·수업·대상·요일/시간(level≤2/본인, client)
-│   │   ├── AccountsAdmin.tsx # 계정 관리(생성·삭제·임시비번) — Edge Function 경유(1·2급, client)
-│   │   └── InquiriesAdmin.tsx # 상담 신청 열람·처리·삭제(1·2급, client)
+│   │   ├── AccountsAdmin.tsx # 계정 관리(생성·삭제·임시비번 랜덤 발급·1회 표시) — Edge Function 경유(1·2급, client)
+│   │   ├── InquiriesAdmin.tsx # 상담 신청 열람·처리·삭제(1·2급, client)
+│   │   └── PasswordChange.tsx # 내 비밀번호 변경(전 등급 본인 — 재인증 후 auth.updateUser, client)
 │   ├── NoticeBar.tsx         # 메인 공지 배너(Supabase featured 조회, client)
 │   └── NoticeList.tsx        # 공지 포스터 그리드+페이지네이션+크게보기 라이트박스(Supabase, client)
 │   # TeacherCard, ProgramCard, ContactForm 등은 해당 단계에서 추가
@@ -374,7 +375,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ---
 
-**Last Updated**: 2026-06-30 (정적 export + 깃허브 페이지 배포 / 강사·시간표 구현)
+**Last Updated**: 2026-08-20 (비밀번호 보안 개선 — 본인 변경 페이지 + 임시비번 랜덤 발급)
 **Version**: 0.1.0
 **Maintainer**: 새론학원 (inotion-coding)
 

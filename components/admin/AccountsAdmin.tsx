@@ -21,6 +21,21 @@ type Account = {
   level: number;
   teacherName?: string;
 };
+/** 방금 발급한 임시 비밀번호 — 화면에 1회만 표시(어디에도 저장하지 않음). */
+type Issued = { subject: string; name: string; password: string };
+
+/** 임시 비밀번호에 쓰는 문자 — 0/O, 1/l/I 처럼 헷갈리는 글자는 제외(구두 전달 시 오인 방지). */
+const PW_CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+/**
+ * 임시 비밀번호 자동 생성 — 계정마다 서로 다른 값.
+ * 고정 비밀번호를 코드에 두면 공개 저장소·배포본에 그대로 노출되므로 쓰지 않는다.
+ */
+function randomPassword(length = 10) {
+  const buf = new Uint32Array(length);
+  crypto.getRandomValues(buf);
+  return Array.from(buf, (n) => PW_CHARS[n % PW_CHARS.length]).join("");
+}
 
 const fieldBase =
   "w-full rounded-[var(--radius-md)] border border-border bg-surface px-3.5 text-sm text-foreground transition-colors " +
@@ -49,6 +64,7 @@ export default function AccountsAdmin() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [issued, setIssued] = useState<Issued[]>([]);
 
   // 생성 폼
   const [showForm, setShowForm] = useState(false);
@@ -124,18 +140,25 @@ export default function AccountsAdmin() {
   async function createAccount() {
     setError("");
     setNotice("");
-    if (!fSubject || !fName.trim() || !fPassword) {
-      setError("과목·이름·비밀번호를 입력해 주세요.");
+    if (!fSubject || !fName.trim()) {
+      setError("과목·이름을 입력해 주세요.");
       return;
     }
+    if (fPassword && fPassword.length < 6) {
+      setError("비밀번호는 6자 이상이어야 합니다. (비워두면 자동 생성)");
+      return;
+    }
+    // 비워두면 자동 생성 — 고정 비밀번호를 쓰지 않기 위한 기본 경로
+    const pw = fPassword || randomPassword();
+    const name = fName.trim();
     setBusy(true);
     try {
       const { data, error: e } = await supabase.functions.invoke("admin-users", {
         body: {
           action: "create",
           subject: fSubject,
-          name: fName.trim(),
-          password: fPassword,
+          name,
+          password: pw,
           level: fLevel,
           teacher_id: fTeacher || null,
         },
@@ -145,7 +168,8 @@ export default function AccountsAdmin() {
         setError(data?.error ?? "계정 생성에 실패했습니다.");
         return;
       }
-      setNotice(`"${fName.trim()}" 계정을 만들었습니다.`);
+      setIssued([{ subject: fSubject, name, password: pw }]);
+      setNotice(`"${name}" 계정을 만들었습니다.`);
       resetForm();
       setShowForm(false);
       await load();
@@ -156,28 +180,31 @@ export default function AccountsAdmin() {
     }
   }
 
-  /** 강사 전원 계정 일괄 생성 (비번 saeronedu, 3급, 프로필 연결). 이미 있으면 건너뜀. */
+  /** 강사 전원 계정 일괄 생성 (강사마다 다른 임시 비번, 3급, 프로필 연결). 이미 있으면 건너뜀. */
   async function bulkCreateTeachers() {
     if (
       !window.confirm(
-        `강사 ${teachers.length}명의 로그인 계정을 만들까요?\n비밀번호는 모두 "saeronedu"로 설정됩니다.`,
+        `강사 ${teachers.length}명의 로그인 계정을 만들까요?\n임시 비밀번호는 강사마다 다르게 자동 생성되며, 생성 직후 화면에 한 번만 표시됩니다.`,
       )
     )
       return;
     setError("");
     setNotice("");
     setBusy(true);
+    const madeList: Issued[] = [];
     let created = 0;
     let skipped = 0;
     let failed = 0;
     try {
       for (const t of teachers) {
+        const subject = t.subject_group ?? "관리자";
+        const pw = randomPassword();
         const { data, error: e } = await supabase.functions.invoke("admin-users", {
           body: {
             action: "create",
-            subject: t.subject_group ?? "관리자",
+            subject,
             name: t.name,
-            password: "saeronedu",
+            password: pw,
             level: 3,
             teacher_id: t.id,
           },
@@ -186,15 +213,18 @@ export default function AccountsAdmin() {
           failed += 1;
           continue;
         }
-        if (data?.ok) created += 1;
-        else if (String(data?.error ?? "").includes("이미")) skipped += 1;
+        if (data?.ok) {
+          created += 1;
+          madeList.push({ subject, name: t.name, password: pw });
+        } else if (String(data?.error ?? "").includes("이미")) skipped += 1;
         else failed += 1;
       }
       await load();
+      setIssued(madeList);
       setNotice(
         `완료 — 생성 ${created}명, 건너뜀(이미 있음) ${skipped}명${
           failed ? `, 실패 ${failed}명` : ""
-        }. (비번: saeronedu)`,
+        }.`,
       );
       if (created === 0 && failed > 0) {
         setError(
@@ -231,9 +261,29 @@ export default function AccountsAdmin() {
     }
   }
 
+  /** 발급 목록을 클립보드로 — 전달용(과목·이름·비밀번호 한 줄씩). */
+  async function copyIssued() {
+    const text = issued
+      .map((i) => `${i.subject} · ${i.name} : ${i.password}`)
+      .join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      setError("");
+      setNotice("임시 비밀번호 목록을 복사했습니다.");
+    } catch {
+      setError("복사에 실패했습니다. 아래 목록을 직접 선택해 복사해 주세요.");
+    }
+  }
+
+  /** 임시 비밀번호 재발급 — 자동 생성 값으로 교체하고 화면에 1회 표시. */
   async function resetPassword(a: Account) {
-    const pw = window.prompt(`"${a.name}"의 새 임시 비밀번호 (6자 이상)`);
-    if (!pw) return;
+    if (
+      !window.confirm(
+        `"${a.name}"의 임시 비밀번호를 새로 발급할까요?\n새 비밀번호가 화면에 한 번만 표시됩니다. (기존 비밀번호는 즉시 사용 불가)`,
+      )
+    )
+      return;
+    const pw = randomPassword();
     setError("");
     setNotice("");
     setBusy(true);
@@ -246,7 +296,8 @@ export default function AccountsAdmin() {
         setError(data?.error ?? "변경에 실패했습니다.");
         return;
       }
-      setNotice(`"${a.name}"의 임시 비밀번호를 설정했습니다.`);
+      setIssued([{ subject: a.subject, name: a.name, password: pw }]);
+      setNotice(`"${a.name}"의 임시 비밀번호를 재발급했습니다.`);
     } catch {
       setError("요청에 실패했습니다.");
     } finally {
@@ -309,6 +360,52 @@ export default function AccountsAdmin() {
       {error && <p className="mt-4 text-sm text-error">{error}</p>}
       {notice && <p className="mt-4 text-sm text-point">{notice}</p>}
 
+      {/* 방금 발급한 임시 비밀번호 — 서버에 평문으로 남지 않으므로 이 화면에서만 볼 수 있다 */}
+      {issued.length > 0 && (
+        <div className="mt-6 rounded-[var(--radius-lg)] border-2 border-point bg-background p-5 shadow-card">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-h3 font-bold text-foreground">
+              발급된 임시 비밀번호 ({issued.length}건)
+            </h2>
+            <div className="flex shrink-0 gap-2">
+              <button
+                type="button"
+                onClick={copyIssued}
+                className="rounded-[var(--radius-md)] border border-border px-3 py-1.5 text-sm font-semibold text-foreground hover:border-point/50"
+              >
+                전체 복사
+              </button>
+              <button
+                type="button"
+                onClick={() => setIssued([])}
+                className="rounded-[var(--radius-md)] border border-border px-3 py-1.5 text-sm font-semibold text-muted-foreground hover:border-point/50"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+          <p className="mt-2 text-sm text-error">
+            새로고침하거나 화면을 벗어나면 다시 볼 수 없습니다. 지금 본인에게 전달하고,
+            받은 사람은 <b>로그인 후 [내 비밀번호 변경]</b>으로 즉시 바꾸도록 안내하세요.
+          </p>
+          <ul className="mt-4 divide-y divide-border overflow-hidden rounded-[var(--radius-md)] border border-border">
+            {issued.map((i) => (
+              <li
+                key={`${i.subject}-${i.name}`}
+                className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5"
+              >
+                <span className="text-sm text-foreground">
+                  {i.subject} · {i.name}
+                </span>
+                <code className="rounded-[var(--radius-sm)] bg-surface px-2 py-1 font-mono text-sm font-bold tracking-wider text-point">
+                  {i.password}
+                </code>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* 생성 폼 */}
       {showForm && (
         <div className="mt-6 rounded-[var(--radius-lg)] border border-border bg-background p-6 shadow-card">
@@ -338,13 +435,22 @@ export default function AccountsAdmin() {
                 placeholder="선생님 이름"
               />
             </Field>
-            <Field label="임시 비밀번호">
-              <input
-                className={`${fieldBase} h-11`}
-                value={fPassword}
-                onChange={(e) => setFPassword(e.target.value)}
-                placeholder="6자 이상 (첫 로그인 후 변경 안내)"
-              />
+            <Field label="임시 비밀번호 (비워두면 자동 생성)">
+              <div className="flex gap-2">
+                <input
+                  className={`${fieldBase} h-11 flex-1`}
+                  value={fPassword}
+                  onChange={(e) => setFPassword(e.target.value)}
+                  placeholder="자동 생성 권장"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFPassword(randomPassword())}
+                  className="shrink-0 rounded-[var(--radius-md)] border border-border px-3 text-sm font-semibold text-foreground hover:border-point/50"
+                >
+                  자동 생성
+                </button>
+              </div>
             </Field>
             <Field label="등급">
               <select

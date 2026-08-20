@@ -197,6 +197,13 @@ export default function DashboardClient() {
             desc="내 수업 시간표 추가·수정"
           />
         )}
+
+        {/* 전 등급 공통 — 본인 비밀번호는 스스로 변경(임시 비번 사용 중이면 필수) */}
+        <AdminMenuCard
+          href="/admin/password"
+          title="내 비밀번호 변경"
+          desc="임시 비밀번호를 본인만 아는 비밀번호로 변경"
+        />
       </div>
     </div>
   );
