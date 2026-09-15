@@ -6,7 +6,6 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabaseClient";
 import {
-  teachers as seedTeachers,
   DIVISIONS,
   SUBJECT_GROUPS,
   type Division,
@@ -357,58 +356,6 @@ export default function TeachersAdmin() {
     }
   }
 
-  /** 기존 코드(lib/data/teachers) 12명 → Supabase 이전 (사진 포함) */
-  async function migrateSeed() {
-    setBusy(true);
-    setError("");
-    try {
-      const { data: existing } = await supabase.from("teachers").select("slug");
-      const have = new Set(((existing as { slug: string }[]) ?? []).map((r) => r.slug));
-      let added = 0;
-      for (let i = 0; i < seedTeachers.length; i++) {
-        const t = seedTeachers[i];
-        if (have.has(t.id)) continue;
-        let photoPath: string | null = null;
-        if (t.photo) {
-          const res = await fetch(t.photo);
-          if (res.ok) {
-            const blob = await res.blob();
-            const ext = t.photo.split(".").pop() || "jpg";
-            const path = `${crypto.randomUUID()}.${ext}`;
-            const { error: upErr } = await supabase.storage
-              .from(BUCKET)
-              .upload(path, blob, { contentType: blob.type });
-            if (upErr) throw upErr;
-            photoPath = path;
-          }
-        }
-        const { error: insErr } = await supabase.from("teachers").insert({
-          slug: t.id,
-          name: t.name,
-          photo_path: photoPath,
-          divisions: t.divisions,
-          subject_group: t.subjectGroup,
-          subject: t.subject,
-          resolve: t.resolve,
-          education: t.education ?? [],
-          experience: t.experience ?? [],
-          achievements: t.achievements ?? [],
-          books: t.books ?? [],
-          sort_order: i,
-          is_visible: true,
-        });
-        if (insErr) throw insErr;
-        added += 1;
-      }
-      await load(level, myTeacherId);
-      if (added === 0) setError("이미 모두 가져와 있습니다.");
-    } catch {
-      setError("가져오기 중 오류가 발생했습니다. 다시 시도해 주세요.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   if (status === "loading") {
     return <p className="text-center text-sm text-muted-foreground">불러오는 중…</p>;
   }
@@ -668,23 +615,11 @@ export default function TeachersAdmin() {
       {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       {rows.length === 0 ? (
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            {canManageAll
-              ? "등록된 강사가 없습니다."
-              : "연결된 강사 프로필이 없습니다. 관리자에게 문의하세요."}
-          </p>
-          {canManageAll && (
-            <div className="mt-5">
-              <Button variant="secondary" onClick={migrateSeed} disabled={busy}>
-                {busy ? "가져오는 중…" : "기존 강사 12명 가져오기"}
-              </Button>
-              <p className="mt-2 text-xs text-muted-foreground">
-                (현재 강사 12명을 사진과 함께 Supabase로 옮깁니다)
-              </p>
-            </div>
-          )}
-        </div>
+        <p className="mt-12 text-center text-sm text-muted-foreground">
+          {canManageAll
+            ? "등록된 강사가 없습니다."
+            : "연결된 강사 프로필이 없습니다. 관리자에게 문의하세요."}
+        </p>
       ) : (
         <ul className="mt-8 divide-y divide-border overflow-hidden rounded-[var(--radius-lg)] border border-border">
           {rows.map((t) => (

@@ -9,11 +9,7 @@ import { hero, stats } from "@/lib/data/home";
  */
 export default function Hero() {
   return (
-    <section
-      id="about"
-      data-tone="paper"
-      className="relative scroll-mt-20 overflow-hidden"
-    >
+    <section data-tone="paper" className="relative overflow-hidden">
       {/* 브랜드 데코 — 토큰 기반, 정적 (backdrop 위, 콘텐츠 아래) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute -top-32 right-[-10%] h-[28rem] w-[28rem] rounded-full bg-brand-blue/8 blur-3xl" />

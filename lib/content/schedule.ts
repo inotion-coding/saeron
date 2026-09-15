@@ -8,10 +8,9 @@ import type { ScheduleEntry, ScheduleTime } from "@/lib/data/schedule";
 import type { Division, SubjectGroup } from "@/lib/data/teachers";
 
 const COLS =
-  "id, teacher_id, teacher_name, subject_group, division, course, target, times, sort_order";
+  "teacher_id, teacher_name, subject_group, division, course, target, times";
 
 type Row = {
-  id: string;
   teacher_id: string | null;
   teacher_name: string;
   subject_group: string;
@@ -19,7 +18,6 @@ type Row = {
   course: string;
   target: string | null;
   times: ScheduleTime[] | null;
-  sort_order: number;
 };
 
 function toEntry(r: Row, slug?: string): ScheduleEntry {

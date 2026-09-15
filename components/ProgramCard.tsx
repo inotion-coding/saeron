@@ -6,18 +6,11 @@ import type { Program } from "@/lib/data/programs";
  * hover 시 위로 뜨지 않고, 골드(point) 얇은 테두리가 들어온다.
  * 콘텐츠 최소화: 대상 라벨 · 과정명 · 한 줄 요약 · 진입 화살표.
  */
-export default function ProgramCard({
-  program,
-  href,
-}: {
-  program: Program;
-  href?: string;
-}) {
-  // 기본 링크: 해당 부(division) 탭이 열린 상태로 프로그램 페이지 이동
-  const target = href ?? `/programs?tab=${program.division}`;
+export default function ProgramCard({ program }: { program: Program }) {
   return (
+    // 해당 부(division) 탭이 열린 상태로 프로그램 페이지 이동
     <Link
-      href={target}
+      href={`/programs?tab=${program.division}`}
       className="group flex h-full flex-col rounded-[var(--radius-sm)] border-2 border-border bg-background p-7 shadow-card transition-colors duration-200 ease-[var(--ease-out-soft)] hover:border-point"
     >
       <span className="text-xs font-bold uppercase tracking-[0.06em] text-accent">

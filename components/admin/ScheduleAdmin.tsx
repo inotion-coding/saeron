@@ -6,7 +6,6 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabaseClient";
 import { DIVISIONS, SUBJECT_GROUPS } from "@/lib/data/teachers";
-import { scheduleEntries as seedEntries } from "@/lib/data/schedule";
 
 type TimeItem = { days: string; time: string };
 
@@ -315,42 +314,6 @@ export default function ScheduleAdmin() {
     }
   }
 
-  /** 기존 예시 시간표를 Supabase로 가져오기 (비어있을 때) */
-  async function migrateSeed() {
-    setBusy(true);
-    setError("");
-    try {
-      const { data: existing } = await supabase
-        .from("schedule_classes")
-        .select("id");
-      if ((existing?.length ?? 0) > 0) {
-        setError("이미 시간표가 있습니다. (가져오기는 비어있을 때만)");
-        return;
-      }
-      const { data: tData } = await supabase.from("teachers").select("id, slug");
-      const idBySlug = new Map(
-        ((tData as { id: string; slug: string }[]) ?? []).map((x) => [x.slug, x.id]),
-      );
-      const payload = seedEntries.map((e, i) => ({
-        teacher_id: e.teacherSlug ? idBySlug.get(e.teacherSlug) ?? null : null,
-        teacher_name: e.teacherName,
-        subject_group: e.subjectGroup,
-        division: e.division,
-        course: e.course,
-        target: e.target ?? null,
-        times: e.times,
-        sort_order: i,
-      }));
-      const { error: e } = await supabase.from("schedule_classes").insert(payload);
-      if (e) throw e;
-      await load(level, myTeacherId);
-    } catch {
-      setError("가져오기 중 오류가 발생했습니다.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   if (status === "loading") {
     return <p className="text-center text-sm text-muted-foreground">불러오는 중…</p>;
   }
@@ -583,19 +546,9 @@ export default function ScheduleAdmin() {
       {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       {rows.length === 0 ? (
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">등록된 수업이 없습니다.</p>
-          {canManageAll && (
-            <div className="mt-5">
-              <Button variant="secondary" onClick={migrateSeed} disabled={busy}>
-                {busy ? "가져오는 중…" : "예시 시간표 가져오기"}
-              </Button>
-              <p className="mt-2 text-xs text-muted-foreground">
-                (샘플 시간표를 넣어 형식을 보고 편집하실 수 있어요)
-              </p>
-            </div>
-          )}
-        </div>
+        <p className="mt-12 text-center text-sm text-muted-foreground">
+          등록된 수업이 없습니다.
+        </p>
       ) : (
         <ul className="mt-8 divide-y divide-border overflow-hidden rounded-[var(--radius-lg)] border border-border">
           {rows.map((r) => (

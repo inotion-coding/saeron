@@ -159,7 +159,7 @@ export default function NoticeList() {
             >
               ×
             </button>
-            <NoticeArticle notice={selected} as="h2" titleClassName="text-h2" />
+            <NoticeArticle notice={selected} />
           </div>
         </div>
       )}

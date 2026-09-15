@@ -8,9 +8,8 @@ import type { Notice } from "@/lib/data/notices";
 
 const BUCKET = "notice-images";
 
-/** Storage 경로 → 공개 URL (이미 절대/루트 경로면 그대로) */
+/** Storage 경로 → 공개 URL */
 function toImageUrl(path: string): string {
-  if (/^https?:\/\//.test(path) || path.startsWith("/")) return path;
   return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 }
 

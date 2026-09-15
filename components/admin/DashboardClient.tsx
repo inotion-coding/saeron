@@ -69,26 +69,11 @@ export default function DashboardClient() {
     href,
     title,
     desc,
-    disabled,
   }: {
     href: string;
     title: string;
     desc: string;
-    disabled?: boolean;
   }) {
-    if (disabled) {
-      return (
-        <div className="flex cursor-not-allowed items-center gap-4 rounded-[var(--radius-lg)] border border-border bg-surface px-5 py-4 opacity-60">
-          <div className="min-w-0 flex-1">
-            <h2 className="text-h3 font-bold text-foreground">{title}</h2>
-            <p className="mt-0.5 text-sm text-muted-foreground">{desc}</p>
-          </div>
-          <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-            준비 중
-          </span>
-        </div>
-      );
-    }
     return (
       <Link
         href={href}

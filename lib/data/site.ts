@@ -1,7 +1,6 @@
 /**
  * 사이트 전역 정보 단일 출처 (CLAUDE.md 도메인 규칙)
  * 학원·사업자 정보는 여기에만 두고 컴포넌트가 참조한다.
- * TODO(content): 모든 값은 실제 정보 확보 시 교체.
  */
 
 export type NavItem = { href: string; label: string };
@@ -12,23 +11,17 @@ export type SocialLink = {
   icon: "blog" | "instagram";
 };
 
-/**
- * 로고 이미지 설정.
- * - src=null 이면 텍스트 마크(폴백)로 표시된다.
- * - 로고를 넣으려면: 이미지 파일을 `public/` 에 두고(예: public/logo.svg)
- *   src 를 "/logo.svg" 로 지정한 뒤 width/height 를 실제 비율에 맞게 조정.
- *   (Header/Footer 의 <Logo /> 가 자동으로 이미지로 전환된다.)
- */
-export type LogoConfig = { src: string | null; width: number; height: number };
+/** 로고 이미지 설정 — public/ 기준 경로 + 원본 크기(비율 유지용) */
+export type LogoConfig = { src: string; width: number; height: number };
 
-/** 헤더용 가로형 로고 (public/1.png 여백 제거본) */
+/** 헤더용 가로형 로고 */
 export const logo: LogoConfig = {
   src: "/logo.png",
   width: 750,
   height: 181,
 };
 
-/** 푸터용 세로형(스택) 로고 (public/2.png 여백 제거본) */
+/** 푸터용 세로형(스택) 로고 */
 export const logoFooter: LogoConfig = {
   src: "/logo-stacked.png",
   width: 884,
@@ -66,8 +59,6 @@ export const site = {
   /** 대표 연락 정보 */
   contact: {
     phone: "031-257-0011",
-    phone2: "031-257-0033",
-    directorPhone: "010-3270-2523", // 원장 직통
     address: "경기도 수원시 영통구 센트럴타운로 94, 2층(이의동, 앤에스코어빌딩)",
     hours: "10:00 ~ 22:00",
   },

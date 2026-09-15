@@ -9,7 +9,6 @@ const SITE_URL = "https://saeronedu.com";
 /**
  * 검색엔진 소유확인(verification) 코드.
  * - 구글 서치콘솔 / 네이버 서치어드바이저에서 "HTML 태그" 방식으로 받은 content 값을 붙여넣는다.
- * - 값이 비어 있으면 해당 태그를 출력하지 않는다(빈 태그 방지).
  * (구글·네이버 모두 등록·입력 완료 — 사이트 소유권이 바뀌면 다시 발급받아 교체할 것.)
  */
 const VERIFY = {
@@ -75,10 +74,8 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   verification: {
-    ...(VERIFY.google ? { google: VERIFY.google } : {}),
-    ...(VERIFY.naver
-      ? { other: { "naver-site-verification": VERIFY.naver } }
-      : {}),
+    google: VERIFY.google,
+    other: { "naver-site-verification": VERIFY.naver },
   },
 };
 

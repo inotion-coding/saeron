@@ -1,7 +1,6 @@
 /**
- * 공개 강사 데이터 (Supabase 읽기) — /teachers 목록·상세에서 사용(서버/빌드).
+ * 공개 강사 데이터 (Supabase 읽기) — /teachers 목록·상세(client 실시간) + 빌드 시 상세 주소·사이트맵 생성.
  * DB(public.teachers)의 visible 강사만 화면용 Teacher 형태로 변환. 사진은 Storage 공개 URL.
- * 정적 export에서는 빌드 시점 데이터로 생성(재배포 시 갱신). dev에서는 요청마다 최신 조회.
  */
 import { supabase } from "@/lib/supabaseClient";
 import type { Teacher, Division, SubjectGroup } from "@/lib/data/teachers";
@@ -9,7 +8,7 @@ import type { Teacher, Division, SubjectGroup } from "@/lib/data/teachers";
 const BUCKET = "teacher-photos";
 
 const COLS =
-  "slug, name, photo_path, divisions, subject_group, subject, resolve, education, experience, achievements, books, sort_order";
+  "slug, name, photo_path, divisions, subject_group, subject, resolve, education, experience, achievements, books";
 
 type Row = {
   slug: string;
@@ -25,9 +24,9 @@ type Row = {
   books: string[] | null;
 };
 
+/** Storage 경로 → 공개 URL (사진 없으면 undefined → 기본 실루엣) */
 function photoUrl(path: string | null): string | undefined {
   if (!path) return undefined;
-  if (/^https?:\/\//.test(path) || path.startsWith("/")) return path;
   return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
